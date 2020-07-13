@@ -1,0 +1,1 @@
+- move spotify, weather, and homebridge update requests to server side to avoid maxing out api calls when multiple clients connect

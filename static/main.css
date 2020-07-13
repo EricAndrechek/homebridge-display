@@ -1,0 +1,464 @@
+html {
+    position: fixed;
+    width: 1024px;
+    min-height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-text-size-adjust: none;
+    background-image: url("/static/background-image.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    -webkit-background-size: cover;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#spotify {
+    border: 3px solid black;
+}
+
+#spotify_uri {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 300px;
+    height: 300px;
+    height: 300px;
+    width: 300px;;
+}
+
+#song_title {
+    position: absolute;
+    top: 310px;
+    left: 5px;
+    width: 245px;
+    margin-left: 5px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 30px;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+#artist {
+    position: absolute;
+    top: 345px;
+    left: 5px;
+    width: 250px;
+    margin-left: 5px;
+    margin-top: 5px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 20px;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+#heart-box {
+    position: absolute;
+    top: 310px;
+    left: 255px;
+    width: 50px;
+    height: 65px;
+    text-align: right;
+    vertical-align: middle;
+}
+
+#heart-box .material-icons {
+    color: white;
+    font-size: 50px;
+    
+}
+
+#progress {
+    position: absolute;
+    top: 385px;
+    left: 5px;
+    background-color: #888888;
+    height: 20px;
+    width: 300px;
+    border-radius: 15px;
+    overflow: hidden;
+    -webkit-appearance: none;
+}
+#progress:focus {
+    outline: none;
+}
+#progress::-webkit-slider-runnable-track {
+    height: 20px;
+    -webkit-appearance: none;
+    color: #888888;
+}
+
+#progress::-webkit-slider-thumb {
+    width: 20px;
+    -webkit-appearance: none;
+    height: 20px;
+    cursor: ew-resize;
+    background: #1DB954;
+    border-radius: 15px;
+    box-shadow: -300px 0 0 290px #1DB954;
+    border: 0;
+    outline: none;
+}
+
+#mini_timestamps {
+    position: absolute;
+    top: 410px;
+    left: 5px;
+    width: 300px;
+    height: 15px;
+    font-size: 15px;
+    line-height: 15px;
+    vertical-align: middle;
+    color: white;
+}
+
+#progress_ms {
+    margin-left: 5px;
+    float: left;
+}
+
+#duration_ms {
+    float: right;
+    margin-right: 5px;
+}
+
+#second_row {
+    color: white;
+    position: absolute;
+    top: 425px;
+    left: 5px;
+    width: 300px;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    vertical-align: middle;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+#second_row .material-icons {
+    font-size: 50px;
+}
+
+#last_row {
+    color: white;
+    position: absolute;
+    top: 480px;
+    left: 5px;
+    width: 300px;
+    height: 25px;
+    display: flex;
+    flex-direction: row;
+    vertical-align: middle;
+    justify-content: space-between;
+    overflow: hidden;
+    font-size: 20px;
+}
+
+#device_selection {
+    color: white;
+    height: 20px;
+    line-height: 20px;
+    font-size: 15px;
+    border: none;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.lyric-box {
+    position: absolute;
+    top: 505px;
+    height: 245px;
+    left: 375px;
+    width: 245px;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+#lyrics {
+    font-size: 30px;
+    color: white;
+    text-align: center;
+}
+
+#last-lyrics {
+    font-size: 20px;
+    color: white;
+    text-align: center;
+}
+
+#next-lyrics {
+    font-size: 20px;
+    color: white;
+    text-align: center;
+}
+
+#weather {
+    margin-right: 5px;
+}
+
+.header {
+    position: absolute;
+    top: -10px;
+    right: 5px;
+    width: 300px;
+    height: 75px;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    overflow: hidden;
+    vertical-align: bottom;
+    padding-bottom: 5px;
+    border-bottom: 2px solid white;
+}
+
+#temp {
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: 75px;
+}
+
+#temp sup {
+    font-size: 35px;
+}
+
+#feels {
+    margin-top: auto;
+    font-size: 40px;
+}
+
+#feels sup {
+    font-size: 20px;
+}
+
+#current_weather {
+    margin-top: auto;
+    font-size: 60px;
+}
+
+.wandh {
+    position: absolute;
+    top: 75px;
+    right: 5px;
+    width: 300px;
+    height: 30px;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    overflow: hidden;
+    vertical-align: bottom;
+    font-size: 30px;
+}
+
+.wandh .right {
+    margin-right: 5px;
+}
+
+#precip_graph {
+    position: absolute;
+    top: 85px;
+    right: 5px;
+    width: 300px;
+    height: 85px;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 2px solid white;
+    overflow: hidden;
+}
+
+.maxmin {
+    margin-bottom: 3px;
+    margin-top: auto;
+    height: 50px;
+    width: 35px;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    font-size: 10px;
+    overflow: hidden;
+}
+
+#graph_max {
+    height: 25px;
+    margin-bottom: auto;
+}
+
+#graph_max {
+    height: 25px;
+    margin-top: auto;
+}
+
+#precipitation_parent {
+    width: 265px;
+    height: 100px;
+}
+
+#precipitation_parent .apexcharts-toolbar {
+    display: none;
+}
+
+#precipitation_parent .apexcharts-legend {
+    display: none;
+}
+
+#hours48 {
+    position: absolute;
+    left: 719px;
+    top: 175px;
+    height: 80px;
+    overflow: scroll;
+    display: flex;
+    flex-direction: row;
+    width: 300px;
+    border-bottom: 2px solid white;
+    -webkit-overflow-scrolling: touch;
+}
+
+.hour1 {
+    height: 80px;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    font-size: 20px;
+    color: white;
+}
+
+#hours48::-webkit-scrollbar {
+    display: none;
+}
+
+.hour1 sup {
+    font-size: 10px;
+}
+
+#weekdays {
+    position: absolute;
+    width: 300px;
+    top: 260px;
+    right: 5px;
+    height: 175px;
+    display: flex;
+    flex-direction: column;
+}
+
+.day {
+    width: 110px;
+}
+
+.weekday {
+    width: 300px;
+    height: 20px;
+    margin-bottom: 5px;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    color: white;
+    justify-content: space-between;
+}
+
+#iot {
+    position: absolute;
+    top: 505px;
+    left: 5px;
+    height: 245px;
+    width: 360px;
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    height: 115px;
+    width: 360px;
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.row div {
+    width: 115px;
+    height: 115px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-weight: bold;
+    overflow-wrap: break-word;
+    overflow: hidden;
+}
+
+.false {
+    background-color: #a0a0a0;
+    color: #696969;
+}
+
+.false .material-icons {
+    padding-top: 10px;
+    font-size: 40px;
+    color: #696969;
+}
+
+.true .material-icons {
+    padding-top: 10px;
+    font-size: 40px;
+    color: #bdbd00;
+}
+
+.true {
+    background-color: white;
+    color: black;
+}
+
+.name {
+    padding: 0 10px 0 10px;
+}
+
+.state {
+    padding-bottom: 10px;
+    color: #696969;
+}
+
+#news {
+    position: absolute;
+    top: 5px;
+    left: 320px;
+    width: 390px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#news-title {
+    color: white;
+    font-size: 30px;
+    text-align: left;
+    text-justify: inter-word;
+    margin-bottom: 5px;
+}
+
+#news-description {
+    color: #b6b6b6;
+    font-size: 20px;
+    text-align: left;
+    text-justify: inter-word;
+}
