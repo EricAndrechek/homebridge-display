@@ -1,6 +1,8 @@
 # Welcome to Homebridge-Display, the unofficial iPad display for Homebridge
 Homebridge is amazing, but don't you wish there was a way to view it in a prettier, less developer focused dashboard?
 
+![Preview of Homebridge-Display in action](demo.jpeg)
+
 With Homebridge-Display, you can control and view Spotify, see the weather forecast and current conditions, see news articles, control some homebridge devices, and even see realtime lyrics to whatever song is playing!
 
 ## Setup
