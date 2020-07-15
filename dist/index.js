@@ -17,10 +17,10 @@ class HomebridgeDisplay {
         const server = http.createServer((req, res) => {
             this.log.debug('Received HTTP Path - ' + req.url);
             if (req.url === "/static/background-image.png") {
-                fs.readFile(__dirname + "/static/background-image.png")
+                fs.readFile(__dirname + "/static/background-image.jpg")
                 .then(contents => {
                     res.statusCode = 200;
-                    res.setHeader("Content-Type", "image/png");
+                    res.setHeader("Content-Type", "image/jpeg");
                     res.end(contents);
                 })
                 .catch(err => {
@@ -88,7 +88,67 @@ class HomebridgeDisplay {
                     res.end(err);
                     return;
                 });
-            } 
+            } else if (req.url === "/static/font/weathericons-regular-webfont.eot") {
+                fs.readFile(__dirname + "/static/font/weathericons-regular-webfont.eot")
+                .then(contents => {
+                    res.statusCode = 200;
+                    res.setHeader("Content-Type", "application/vnd.ms-fontobject");
+                    res.end(contents);
+                })
+                .catch(err => {
+                    res.writeHead(500);
+                    res.end(err);
+                    return;
+                });
+            } else if (req.url === "/static/font/weathericons-regular-webfont.svg") {
+                fs.readFile(__dirname + "/static/font/weathericons-regular-webfont.svg")
+                .then(contents => {
+                    res.statusCode = 200;
+                    res.setHeader("Content-Type", "image/svg+xml");
+                    res.end(contents);
+                })
+                .catch(err => {
+                    res.writeHead(500);
+                    res.end(err);
+                    return;
+                });
+            } else if (req.url === "/static/font/weathericons-regular-webfont.ttf") {
+                fs.readFile(__dirname + "/static/font/weathericons-regular-webfont.ttf")
+                .then(contents => {
+                    res.statusCode = 200;
+                    res.setHeader("Content-Type", "font/ttf");
+                    res.end(contents);
+                })
+                .catch(err => {
+                    res.writeHead(500);
+                    res.end(err);
+                    return;
+                });
+            } else if (req.url === "/static/font/weathericons-regular-webfont.woff") {
+                fs.readFile(__dirname + "/static/font/weathericons-regular-webfont.woff")
+                .then(contents => {
+                    res.statusCode = 200;
+                    res.setHeader("Content-Type", "font/woff");
+                    res.end(contents);
+                })
+                .catch(err => {
+                    res.writeHead(500);
+                    res.end(err);
+                    return;
+                });
+            } else if (req.url === "/static/font/weathericons-regular-webfont.woff2") {
+                fs.readFile(__dirname + "/static/font/weathericons-regular-webfont.woff2")
+                .then(contents => {
+                    res.statusCode = 200;
+                    res.setHeader("Content-Type", "font/woff2");
+                    res.end(contents);
+                })
+                .catch(err => {
+                    res.writeHead(500);
+                    res.end(err);
+                    return;
+                });
+            }
             else if (req.url === "/home" || req.url === "/index.html" || req.url === "/" || req.url === "") {
                 fs.readFile(__dirname + "/index.html")
                 .then(contents => {
@@ -109,6 +169,15 @@ class HomebridgeDisplay {
                 res.writeHead(404);
                 res.end('404 not found')
             }
+        });
+        io = require('socket.io').listen(server)
+        io.sockets.on('connection', function (socket) {
+            socket.on('update', function (data) {
+                this.log("requested update");
+            });
+        });
+        server.on('error', (err) => {
+            this.log.warning(err);
         });
         server.listen(parseInt(this.config.Config.port), () => {
             this.log('Starting Homebridge-Display server on port ', parseInt(this.config.Config.port));
