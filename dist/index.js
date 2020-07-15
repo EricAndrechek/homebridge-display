@@ -172,8 +172,59 @@ class HomebridgeDisplay {
         });
         const io = require('socket.io').listen(server)
         io.sockets.on('connection', function (socket) {
-            socket.on('update', function (data) {
-                this.log("requested update");
+            socket.on('update', function () {
+                this.log.debug("requested update");
+            });
+            socket.on('lyrics', function (data) {
+                this.log.debug("requested lyrics " + data);
+            });
+            socket.on('switch', function (data) {
+                this.log.debug("requested switch " + data);
+            });
+            socket.on('news', function (dta) {
+                this.log.debug("requested news");
+            });
+            socket.on('iot', function () {
+                this.log.debug("requested iot");
+            });
+            socket.on('debugger', function (data) {
+                this.log.debug("sent debug" + data);
+            });
+            socket.on('weather', function () {
+                this.log.debug("requested weather");
+            });
+            socket.on('transfer', function (data) {
+                this.log.debug("requested transfer " + data);
+            });
+            socket.on('like', function (data) {
+                this.log.debug("sent like" + data);
+            });
+            socket.on('unlike', function (data) {
+                this.log.debug("sent unlike" + data);
+            });
+            socket.on('next', function () {
+                this.log.debug("requested next");
+            });
+            socket.on('pause', function () {
+                this.log.debug("requested pause");
+            });
+            socket.on('back', function () {
+                this.log.debug("requested back");
+            });
+            socket.on('resume', function () {
+                this.log.debug("requested resume");
+            });
+            socket.on('seek', function (data) {
+                this.log.debug("requested seek to " + data);
+            });
+            socket.on('volume', function (data) {
+                this.log.debug("requested volume to " + data);
+            });
+            socket.on('shuffle', function (data) {
+                this.log.debug("requested shuffle " + data);
+            });
+            socket.on('repeat', function (data) {
+                this.log.debug("requested repeat" + data);
             });
         });
         server.on('error', (err) => {
