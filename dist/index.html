@@ -1,55 +1,724 @@
 <!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <title>My Website</title>
-    <style>
-        *,
-        html {
-            margin: 0;
-            padding: 0;
-            border: 0;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
 
-        html {
-            width: 100%;
-            height: 100%;
-        }
+    <title>Home2.0</title>
 
-        body {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            background-color: rgb(236, 152, 42);
-        }
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon" href="/static/home-black-ios.png">
+    <meta name="apple-mobile-web-app-title" content="Home2.0">
 
-        .center {
-            width: 100%;
-            height: 50%;
-            margin: 0;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-family: "Trebuchet MS", Helvetica, sans-serif;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 144px;
-        }
-
-        p {
-            font-size: 64px;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="/static/weather-icons.min.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/static/main.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="/static/home-black-ios.png">
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
 </head>
 
 <body>
-    <div class="center">
-        <h1>Hello Again!</h1>
-        <p>This is served from a file</p>
+    <div class="spotify">
+        <img src="/static/placeholder.png" id="spotify_uri">
+        <span id="song_title"></span>
+        <span id="artist"></span>
+        <div id="heart-box">
+            <span id="heart" class="material-icons ">favorite</span>
+        </div>
+        <input id="progress" type="range" min="0" max="100" value="0" onchange="seekTime()">
+        <div id="mini_timestamps">
+            <span id="progress_ms">00:00</span>
+            <span id="duration_ms">00:00</span>
+        </div>
+        <div id="second_row">
+            <span id="shuffle" class="material-icons ">shuffle</span>
+            <span id="back" class="material-icons ">skip_previous</span>
+            <span id="toggle" class="material-icons ">play_arrow</span>
+            <span id="next" class="material-icons ">skip_next</span>
+            <span id="repeat" class="material-icons ">repeat</span>
+        </div>
+        <div id="last_row">
+            <select id="device_selection">
+                <option selected id="device_name">Not Playing</option>
+            </select>
+            <span id="speaker" class="material-icons ">volume_up</span>
+        </div>
+        <div class="lyric-box">
+            <span id="last-lyrics"></span>
+            <span id="lyrics"></span>
+            <span id="next-lyrics"></span>
+        </div>
     </div>
+    <div id="weather">
+        <div class="header">
+            <span id="temp">XX<sup>&#8457;</sup></span>
+            <sub id="feels">XX<sup>&#8457;</sup></sub>
+            <i id="current_weather" class="wi wi-day-sunny"></i>
+        </div>
+        <div class="wandh">
+            <span class='left'>
+                <span id="windspeed">X.XX mph</span>
+                <i class="wi wi-strong-wind"></i>
+            </span>
+            <span class='dash'>&nbsp;-&nbsp;</span>
+            <span class='right'>
+                <span id="humid">XX%</span>
+                <i class="wi wi-raindrops"></i>
+            </span>
+        </div>
+        <div id="precip_graph">
+            <div class="maxmin">
+                <span id='graph_max'>100mm</span>
+                <span id='graph_min'>0mm</span>
+            </div>
+            <div id='precipitation_parent'></div>
+        </div>
+        <div id="hours48">
+            <span class="hour1"></span>
+        </div>
+        <div id="weekdays">
+            <span class="weekday"></span>
+        </div>
+    </div>
+    <div id="iot">
+        <div id="row_one" class="row"></div>
+        <div id="row_two" class="row"></div>
+    </div>
+    <div id="news">
+        <span id="news-title"></span>
+        <span id="news-description"></span>
+    </div>
+    <script>
+
+
+        window.onresize = function () {
+            $(document.body).width(window.innerWidth).height(window.innerHeight);
+        }
+
+        $(function () {
+            window.onresize();
+        });
+
+        var socket = io();
+
+        socket.on('connect', function () {
+            socket.emit('update');
+        });
+
+        let lastupdate = (new Date(0)).getTime();
+        let titlescroll = setInterval(function () { }, 100);
+        let artistscroll = setInterval(function () { }, 100);
+        let lastdata;
+        let isplaying = false;
+
+        document.getElementById('shuffle').onclick = function () {
+            socket.emit('shuffle', !lastdata.shuffle_state);
+        };
+
+        document.getElementById('heart-box').onclick = function () {
+            if (lastdata.liked == true) {
+                socket.emit('unlike', lastdata.song_id);
+            } else {
+                socket.emit('like', lastdata.song_id);
+            }
+        };
+
+        document.getElementById('repeat').onclick = function () {
+            if (lastdata.repeat_state === "off") {
+                socket.emit('repeat', 'track');
+            } else {
+                socket.emit('repeat', 'off');
+            }
+        };
+
+        document.getElementById('back').onclick = function () {
+            socket.emit('back');
+        };
+
+        document.getElementById('next').onclick = function () {
+            socket.emit('next');
+        };
+
+        document.getElementById('toggle').onclick = function () {
+            if (isplaying == true) {
+                socket.emit('pause');
+            } else {
+                socket.emit('resume');
+            }
+        };
+
+        function seekTime() {
+            let desired_ms = Math.round(($('#progress').val() / 100) * lastdata.duration_ms);
+            socket.emit('seek', desired_ms);
+        }
+
+        function titlescroller(title) {
+            clearInterval(titlescroll);
+            titlescroll = false;
+            let allchars = title + " --- ";
+            let charend = allchars.length;
+            titlescroll = setInterval(function () {
+                $('#song_title').html(allchars);
+                allchars = allchars.substring(2, charend) + allchars.substring(0, 2);
+            }, 600);
+        }
+
+        function artistscroller(artist) {
+            clearInterval(artistscroll);
+            artistscroll = false;
+            let allchars = artist + " --- ";
+            let charend = allchars.length;
+            artistscroll = setInterval(function () {
+                $('#artist').html(allchars);
+                allchars = allchars.substring(2, charend) + allchars.substring(0, 2);
+            }, 600);
+        }
+
+        function totalSeconds(s) {
+            var ms = s % 1000;
+            s = (s - ms) / 1000;
+            return s;
+        }
+
+        function msToTime(s) {
+            var ms = s % 1000;
+            s = (s - ms) / 1000;
+            var secs = s % 60;
+            s = (s - secs) / 60;
+            var mins = s % 60;
+            if (secs == 0) {
+                secs = '00';
+            } else if (secs < 10) {
+                secs = '0' + secs;
+            }
+
+            return mins + ':' + secs;
+        }
+
+        function update_lyrics() {
+            if (lyrics != undefined && lyrics.error == undefined) {
+                let seconds = totalSeconds(lastdata.progress_ms);
+                for (let i = 0; i < lyrics.length; i++) {
+                    let current_distance = Math.abs(lyrics[i].seconds - seconds);
+                    if (current_distance < 1) {
+                        if (i === 0) {
+                            $('#last-lyrics').html('');
+                            $('#lyrics').html(lyrics[i].lyrics);
+                            $('#next-lyrics').html(lyrics[i + 1].lyrics);
+                        } else if (i === lyrics.length - 1) {
+                            $('#last-lyrics').html(lyrics[i - 1].lyrics);
+                            $('#lyrics').html(lyrics[i].lyrics);
+                            $('#next-lyrics').html('');
+                        } else if (i === lyrics.length - 2) {
+                            $('#last-lyrics').html(lyrics[i - 1].lyrics);
+                            $('#lyrics').html(lyrics[i].lyrics);
+                            $('#next-lyrics').html(lyrics[i + 1].lyrics);
+                        } else if (i === 1) {
+                            $('#last-lyrics').html(lyrics[i - 1].lyrics);
+                            $('#lyrics').html(lyrics[i].lyrics);
+                            $('#next-lyrics').html(lyrics[i + 1].lyrics);
+                        } else {
+                            $('#last-lyrics').html(lyrics[i - 1].lyrics);
+                            $('#lyrics').html(lyrics[i].lyrics);
+                            $('#next-lyrics').html(lyrics[i + 1].lyrics);
+                        }
+                        return true;
+                    }
+                }
+            } else {
+                $('#last-lyrics').html();
+                $('#lyrics').html();
+                $('#next-lyrics').html();
+            }
+        }
+
+        let lyrics;
+        let lyric_updater = setInterval(function () { }, 100);
+        let lyrics_running = false;
+
+        socket.on("lyrics", function (msg) {
+            lyrics = JSON.parse(msg);
+        })
+
+        socket.on('update', function (msg) {
+            let newdata = JSON.parse(msg);
+            if (newdata.error == undefined) {
+                if (newdata.is_playing) {
+                    lastupdate = (new Date()).getTime();
+
+                    if (lastdata == false) {
+                        $('#toggle').html('pause');
+                    }
+                    if (isplaying == false) {
+                        $('#toggle').html('pause');
+                    }
+
+                    if (lyrics_running === false) {
+                        $('#last-lyrics').html();
+                        $('#lyrics').html();
+                        $('#next-lyrics').html();
+                        clearInterval(lyric_updater);
+                        lyrics_running = false;
+                        lyric_updater = setInterval(function () {
+                            update_lyrics();
+                        }, 250);
+                    }
+
+                    isplaying = true;
+
+                    if (lastdata == undefined || lastdata.avaliable_devices !== newdata.avaliable_devices || lastdata.device !== newdata.device) {
+                        $("#device_selection").empty();
+                        Object.entries(newdata.avaliable_devices).forEach(([key, value]) => {
+                            if (key === newdata.device) {
+                                $('#device_selection').append(
+                                    "<option selected value='" + value + "'>" + key + "</value>"
+                                );
+                            } else {
+                                $('#device_selection').append(
+                                    "<option value='" + value + "'>" + key + "</value>"
+                                );
+                            }
+                        });
+                    }
+
+                    if (lastdata == undefined || lastdata.volume !== newdata.volume) {
+                        if (newdata.volume > 55) {
+                            $('#speaker').html('volume_up');
+                        } else if (newdata.volume > 10) {
+                            $('#speaker').html('volume_down');
+                        } else if (newdata.volume > 0) {
+                            $('#speaker').html('volume_mute');
+                        } else if (newdata.volume == 0) {
+                            $('#speaker').html('volume_off');
+                        }
+                    }
+
+                    if (lastdata == undefined || lastdata.shuffle_state !== newdata.shuffle_state) {
+                        if (newdata.shuffle_state == true) {
+                            $('#shuffle').css('color', '#1DB954');
+                        } else {
+                            $('#shuffle').css('color', 'white');
+                        }
+                    }
+
+                    if (lastdata == undefined || lastdata.liked !== newdata.liked) {
+                        if (newdata.liked == true) {
+                            $('#heart').html('favorite');
+                        } else {
+                            $('#heart').html('favorite_border');
+                        }
+                    }
+
+                    if (lastdata == undefined || lastdata.repeat_state !== newdata.repeat_state) {
+                        if (newdata.repeat_state == "off") {
+                            $('#repeat').css('color', 'white');
+                        } else {
+                            $('#repeat').css('color', '#1DB954');
+                        }
+                    }
+                    if (lastdata == undefined || lastdata.title !== newdata.title) { // check for change and modify this data:
+                        socket.emit("lyrics", "https://api.textyl.co/api/lyrics?q=" + newdata.title + "+" + newdata.artists);
+                        $('#spotify_uri').attr('src', newdata.img_url)
+                        clearInterval(titlescroll)
+                        titlescroll = false;
+                        clearInterval(artistscroll)
+                        artistscroll = false;
+                        $('#duration_ms').html(msToTime(newdata.duration_ms));
+                        if ($('#song_title').prop('scrollWidth') > $('#song_title').width()) {
+                            titlescroller(newdata.title);
+                        } else {
+                            $('#song_title').html(newdata.title);
+                        }
+                        if ($('#artist').prop('scrollWidth') > $('#artist').width()) {
+                            artistscroller(newdata.artists);
+                        } else {
+                            $('#artist').html(newdata.artists);
+                        }
+                        
+                    } else if (lastdata == undefined || lastdata.img_url !== newdata.url) {
+                        $('#spotify_uri').attr('src', newdata.img_url)
+                    }
+
+                    $('#progress').val(Math.round((newdata.progress_ms / newdata.duration_ms) * 100));
+                    $('#progress_ms').html(msToTime(newdata.progress_ms));
+
+                    if ($('#song_title').prop('scrollWidth') > $('#song_title').width() && titlescroll == false) {
+                        titlescroller(newdata.title);
+                    }
+                    if ($('#artist').prop('scrollWidth') > $('#artist').width() && artistscroll == false) {
+                        artistscroller(newdata.artists);
+                    }
+
+                    lastdata = newdata;
+                } else {
+                    let current_time = (new Date()).getTime();
+                    isplaying = false;
+                    let elapsed = current_time - lastupdate;
+                    if (elapsed > 300000) { // if no update in 5 minutes
+                        $('#spotify').html('No music is currently playing');
+                        $('#spotify_uri').attr('src', '/static/placeholder.png')
+                        clearInterval(titlescroll)
+                        titlescroll = false;
+                        clearInterval(artistscroll)
+                        artistscroll = false;
+                        clearInterval(lyric_updater)
+                        lyrics_running = false;
+                        $('#song_title').html('Nothing Playing')
+                        $('#artist').html('Nothing Playing')
+                        $('#shuffle').css('color', 'white');
+                        $('#repeat').css('color', 'white');
+                        $('#progress').val(0);
+                        $('#progress_ms').html('0:00');
+                        $('#duration_ms').html('0:00');
+                    } else {// else keep the current info on-screen
+                        clearInterval(titlescroll)
+                        titlescroll = false;
+                        clearInterval(artistscroll)
+                        artistscroll = false;
+                        clearInterval(lyric_updater)
+                        lyrics_running = false;
+                        $('#song_title').html(lastdata.title)
+                        $('#artist').html(lastdata.artists)
+                        $('#toggle').html('play_arrow');
+                        $('#last-lyrics').html();
+                        $('#lyrics').html();
+                        $('#next-lyrics').html();
+                    }
+                }
+            } else {
+                isplaying = false;
+            }
+        });
+
+        let weather_data;
+
+        function add_hour(key) {
+            let newtime = weather_data.hourly[key].name;
+            if (parseInt(newtime.substring(0, 2)) === 0) {
+                newtime = "12" + newtime.substring(2) + "AM"
+            } else if (newtime.charAt(0) === "0") {
+                newtime = newtime.substring(1) + "AM";
+            } else if (newtime.charAt(0) === "1") {
+                if (parseInt(newtime.substring(0, 2)) <= 11) {
+                    newtime = newtime + "AM";
+                } else if (parseInt(newtime.substring(0, 2)) === 12) {
+                    newtime = newtime + "PM";
+                } else {
+                    newtime = "" + (parseInt(newtime.substring(0, 2)) - 12) + newtime.substring(2) + "PM";
+                }
+            } else if (newtime.charAt(0) === "2") {
+                newtime = "" + (parseInt(newtime.substring(0, 2)) - 12) + newtime.substring(2) + "PM";
+            }
+            let iconid = weather_data.hourly[key].id;
+            if (iconid === 1) {
+                iconid = "sunrise";
+            } else if (iconid === 2) {
+                iconid = "sunset";
+            } else {
+                iconid = "owm-" + iconid;
+            }
+            let tempert = weather_data.hourly[key].temp;
+            if (tempert !== "Sunrise" && tempert !== "Sunset") {
+                tempert = Math.round(tempert) + "<sup>&#8457;</sup>";
+            }
+            if (key === 0) {
+                newtime = "NOW";
+            }
+            $('#hours48').append(
+                "<span class='hour1'><span class='hour'>" + newtime + "</span><i class='wi wi-" + iconid + "'></i><span class='tempert'>" + tempert + "</span></span>"
+            );
+        }
+
+        let devices;
+
+        function iot_toggle(e) {
+            let aid = e.id;
+            let state = $(e).attr('class');
+            if (state === 'true') {
+                state = false;
+            } else if (state === 'false') {
+                state = true;
+            }
+            let device = [aid, state];
+            socket.emit('switch', device);
+        }
+
+        socket.on('iot', function (msg) {
+            let new_devices = JSON.parse(msg);
+            if (!_.isEqual(new_devices, devices)) {
+                devices = new_devices;
+                $('#row_one').empty();
+                $('#row_two').empty();
+                let r1_full = 0;
+                let r2_full = 0;
+                for (let device = 0; device < devices.length; device++) {
+                    let iconid = devices[device].name;
+                    if (iconid.toLowerCase().includes("lamp") || iconid.toLowerCase().includes("light")) {
+                        iconid = "emoji_objects";
+                    } else if (iconid.toLowerCase().includes("fan")) {
+                        iconid = "toys";
+                    } else if (iconid.toLowerCase().includes("outlet")) {
+                        iconid = "outlet";
+                    } else {
+                        iconid = "error";
+                    }
+                    let fancystate = devices[device].state;
+                    if (fancystate) {
+                        fancystate = "On";
+                    } else {
+                        fancystate = "Off";
+                    }
+                    if (r1_full < 3) {
+                        $('#row_one').append(
+                            "<div id='" + devices[device].aid + "' class='" + devices[device].state + "' onclick='iot_toggle(this)'><span class='material-icons'>" + iconid + "</span><span class='name'>" + devices[device].name + "</span><span class='state'>" + fancystate + "</span></div>"
+                        );
+                        r1_full += 1;
+                    } else if (r2_full < 3) {
+                        $('#row_two').append(
+                            "<div id='" + devices[device].aid + "' class='" + devices[device].state + "' onclick='iot_toggle(this)'><span class='material-icons'>" + iconid + "</span><span class='name'>" + devices[device].name + "</span><span class='state'>" + fancystate + "</span></div>"
+                        );
+                        r2_full += 1;
+                    }
+                }
+            }
+        });
+
+        socket.on('weather', function (msg) {
+            weather_data = JSON.parse(msg);
+            $('#current_weather').removeClass();
+            $('#current_weather').addClass('wi');
+            $('#current_weather').addClass('wi-owm-' + weather_data.id);
+            $('#temp').html(Math.round(weather_data.temp) + '<sup>&#8457;</sup>');
+            $('#feels').html(Math.round(weather_data.feels) + '<sup>&#8457;</sup>');
+            $('#windspeed').html(weather_data.wind + ' mph');
+            $('#humid').html(weather_data.humidity + '%');
+
+            $('#hours48').empty();
+            $('#weekdays').empty();
+
+            for (let key = 0; key < 7; key++) {
+                let day = weather_data.days[key];
+                $('#weekdays').append(
+                    "<span class='weekday'><span class='day'>" + day.name + "</span><i class='wi wi-owm-" + day.id + "'></i><span class='tempmax'>" + Math.round(day.max) + "</span><span class='tempmin'>" + Math.round(day.min) + "</span></span>"
+                );
+            }
+            
+            for (let key = 0; key < 48; key++) {
+                if (weather_data.sunrise < key && weather_data.sunrise > (key -1)) {
+                    add_hour(key - 0.5);
+                }
+                if (weather_data.sunset < key && weather_data.sunset > (key -1)) {
+                    add_hour(key - 0.5);
+                }
+                add_hour(key);
+            }
+
+            let minute_points = []
+            let time_points = []
+            Object.entries(weather_data.minutes).forEach(([key, value]) => {
+                minute_points.push(value);
+                time_points.push(key);
+            });
+            var options = {
+                series: [{
+                    name: 'Precipitation',
+                    data: minute_points
+                }],
+
+                chart: {
+                    height: 100,
+                    type: 'line',
+                    zoom: {
+                        enabled: false
+                    },
+                    animations: {
+                        enabled: false
+                    },
+                },
+
+                grid: {
+                    show: false
+                },
+
+                dataLabels: {
+                    enabled: false
+                },
+
+                stroke: {
+                    curve: 'smooth'
+                },
+                
+                xaxis: {
+                    categories: time_points,
+                    labels: {
+                        show: false
+                    },
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    },
+                    tickAmount: 0,
+                },
+
+                yaxis: {
+                    show: false
+                },
+
+                tooltip: {
+                    enabled: false
+                }
+            };
+            $('#graph_max').html(Math.round(Math.max(...minute_points)) + 'mm');
+            $('#precipitation_parent').empty();
+            var chart = new ApexCharts(document.querySelector("#precipitation_parent"), options);
+            chart.render();
+        });
+
+        let current_index = 0;
+        let feed;
+
+        socket.on('news', function (msg) {
+            feed = JSON.parse(msg);
+            if (current_index == 0) {
+                $('#news-title').html(feed[current_index].title);
+                $('#news-description').html(feed[current_index].description);
+            }
+        })
+
+        socket.emit('update');
+        socket.emit('weather');
+        socket.emit('iot');
+        socket.emit('news');
+
+        window.setInterval(function () {
+            socket.emit('update');
+        }, 500);
+
+        window.setInterval(function () {
+            socket.emit('weather');
+        }, 120000);
+        
+        window.setInterval(function () {
+            current_index++;
+            if (current_index >= feed.length) {
+                current_index = 0;
+            }
+            $('#news-title').html(feed[current_index].title);
+            $('#news-description').html(feed[current_index].description);
+        }, 60000);
+
+        window.setInterval(function () {
+            socket.emit('news');
+        }, 1800000);
+
+        window.setInterval(function () {
+            socket.emit('iot');
+        }, 200);
+
+        const container = document.getElementById("spotify_uri");
+
+        container.addEventListener("touchstart", startTouch, false);
+        container.addEventListener("touchend", endTouch, false);
+
+        let startX, startY, endX, endY;
+
+        function startTouch(e) {
+            let touchobj = e.changedTouches[0];
+            startX = touchobj.pageX;
+            startY = touchobj.pageY;
+        }
+
+        function endTouch(e) {
+            let touchobj = e.changedTouches[0];
+            endX = touchobj.pageX;
+            endY = touchobj.pageY;
+            let totalY = Math.abs(endY - startY);
+            let difY = endY - startY;
+            let totalX = Math.abs(endX - startX);
+            let difX = endX - startX;
+            // socket.emit('debugger', '(' + startX + ', ' + startY + ') to (' + endX + ', ' + endY + ')');
+            if (totalX > totalY) { // x movement greater than y so either left or right
+                if (difX > 0) { // swipe left to right
+                    // alert('Right swipe');
+                    spot_swipe('b');
+                } else if (difX < 0) { // swipe right to left
+                    // alert('Left swipe');
+                    spot_swipe('n');
+                } else {
+                    // alert('Horizontal swipe');
+                }
+            } else if (totalY > totalX) {
+                if (difY > 0) { // swipe top to bottom
+                    // alert('Down swipe');
+                    spot_swipe('d');
+                } else if (difY < 0) { // swipe bottom to top
+                    // alert('Up swipe');
+                    spot_swipe('u');
+                } else {
+                    // alert('Vertical swipe');
+                }
+            } else {
+                // alert('Unknown swipe');
+            }
+        }
+
+        function spot_swipe(d) {
+            if (d === "b") {
+                socket.emit('back');
+            } else if (d === "n") {
+                socket.emit('next');
+            } else if (d === "u") {
+                let curvol = lastdata.volume;
+                curvol += 10;
+                if (curvol > 100) {
+                    curvol = 100;
+                }
+                socket.emit('volume', curvol);
+            } else if (d === "d") {
+                let curvol = lastdata.volume;
+                curvol -= 10;
+                if (curvol < 0) {
+                    curvol = 0;
+                }
+                socket.emit('volume', curvol);
+            }
+        }
+
+        document.getElementById("spotify_uri").addEventListener("click", function () {
+            if (isplaying == true) {
+                socket.emit('pause');
+            } else {
+                socket.emit('resume');
+            }
+        });
+
+        document.getElementById("heart").addEventListener("click", function () {
+            if (lastdata.liked == true) {
+                // socket.emit('like', false);
+            } else {
+                // socket.emit('like', true);
+            }
+        });
+
+        document.getElementById("device_selection").addEventListener("change", function () {
+            socket.emit('transfer', this.value)
+        });
+
+        function sendToServer(msg, url, linenumber) {
+            socket.emit('debugger', "Client error on line number " + linenumber + ' - ' + msg)
+        }
+
+        window.onerror = sendToServer;
+        window.console = sendToServer;
+    </script>
 </body>
 
 </html>
