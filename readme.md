@@ -7,7 +7,7 @@ With Homebridge-Display, you can control and view Spotify, see the weather forec
 
 ## Installation
 
-Using the [Config UI X PLugin](https://github.com/oznu/homebridge-config-ui-x#readme) search for "homebridge display" and install it. Alternatively, install it from npm as homebridge-display
+Using the [Config UI X PLugin](https://github.com/oznu/homebridge-config-ui-x#readme) search for "homebridge display" and install it. Alternatively, install it from npm using `sudo -E -n npm install homebridge-display@latest`
 
 ## Setup
 

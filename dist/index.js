@@ -22,11 +22,13 @@ class HomebridgeDisplay {
                     case "home":
                         res.statusCode = 200;
                         res.setHeader("Content-Type", "text/html");
-                        res.end('<html><body><h1>' + this.config.Config.background +  req.url + '</h1></body></html>');
+                        res.write('<html><body><h1>' + this.config.Config.background +  req.url + '</h1></body></html>');
+                        res.end();
                     case "callback":
                         res.writeHead(200);
                         res.setHeader("Content-Type", "text/html");
-                        res.end('<html><body><h1>' + req.url + '</h1></body></html>');
+                        res.write('<html><body><h1>' + req.url + '</h1></body></html>');
+                        res.end();
                     default:
                         res.writeHead(404);
                         res.end()
