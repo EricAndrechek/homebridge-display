@@ -14,9 +14,10 @@ class HomebridgeDisplay {
         });
     }
     createServer() {
+        const log = this.log;
         const server = http.createServer((req, res) => {
-            this.log.debug('Received HTTP Path - ' + req.url);
-            if (req.url === "/static/background-image.png") {
+            log.debug('Received HTTP Path - ' + req.url);
+            if (req.url === "/static/background-image.jpg") {
                 fs.readFile(__dirname + "/static/background-image.jpg")
                 .then(contents => {
                     res.statusCode = 200;
@@ -76,8 +77,8 @@ class HomebridgeDisplay {
                     res.end(err);
                     return;
                 });
-            } else if (req.url === "/static/black-home-ios.png") {
-                fs.readFile(__dirname + "/static/black-home-ios.png")
+            } else if (req.url === "/static/home-black-ios.png") {
+                fs.readFile(__dirname + "/static/home-black-ios.png")
                 .then(contents => {
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "image/png");
@@ -173,65 +174,65 @@ class HomebridgeDisplay {
         const io = require('socket.io').listen(server)
         io.sockets.on('connection', function (socket) {
             socket.on('update', function () {
-                this.log.debug("requested update");
+                log.debug("requested update");
             });
             socket.on('lyrics', function (data) {
-                this.log.debug("requested lyrics " + data);
+                log.debug("requested lyrics " + data);
             });
             socket.on('switch', function (data) {
-                this.log.debug("requested switch " + data);
+                log.debug("requested switch " + data);
             });
             socket.on('news', function (dta) {
-                this.log.debug("requested news");
+                log.debug("requested news");
             });
             socket.on('iot', function () {
-                this.log.debug("requested iot");
+                log.debug("requested iot");
             });
             socket.on('debugger', function (data) {
-                this.log.debug("sent debug" + data);
+                log.debug("sent debug" + data);
             });
             socket.on('weather', function () {
-                this.log.debug("requested weather");
+                log.debug("requested weather");
             });
             socket.on('transfer', function (data) {
-                this.log.debug("requested transfer " + data);
+                log.debug("requested transfer " + data);
             });
             socket.on('like', function (data) {
-                this.log.debug("sent like" + data);
+                log.debug("sent like" + data);
             });
             socket.on('unlike', function (data) {
-                this.log.debug("sent unlike" + data);
+                log.debug("sent unlike" + data);
             });
             socket.on('next', function () {
-                this.log.debug("requested next");
+                log.debug("requested next");
             });
             socket.on('pause', function () {
-                this.log.debug("requested pause");
+                log.debug("requested pause");
             });
             socket.on('back', function () {
-                this.log.debug("requested back");
+                log.debug("requested back");
             });
             socket.on('resume', function () {
-                this.log.debug("requested resume");
+                log.debug("requested resume");
             });
             socket.on('seek', function (data) {
-                this.log.debug("requested seek to " + data);
+                log.debug("requested seek to " + data);
             });
             socket.on('volume', function (data) {
-                this.log.debug("requested volume to " + data);
+                log.debug("requested volume to " + data);
             });
             socket.on('shuffle', function (data) {
-                this.log.debug("requested shuffle " + data);
+                log.debug("requested shuffle " + data);
             });
             socket.on('repeat', function (data) {
-                this.log.debug("requested repeat" + data);
+                log.debug("requested repeat" + data);
             });
         });
         server.on('error', (err) => {
-            this.log.warning(err);
+            log.warning(err);
         });
         server.listen(parseInt(this.config.Config.port), () => {
-            this.log('Starting Homebridge-Display server on port ', parseInt(this.config.Config.port));
+            log('Starting Homebridge-Display server on port ', parseInt(this.config.Config.port));
         });
     }
 }
