@@ -126,7 +126,7 @@
             }
         },
         "Spotify": {
-            "title": "Create a Spotify API Key at (Spotify Developer)[https://developer.spotify.com/dashboard/applications] and follow the instructions at (Spotify Config Setup)[https://github.com/EricAndrechek/homebridge-display#setup] to use the Spotify player functionality. ** Note: This only works with Spotify Premium Accounts **",
+            "title": "Create a Spotify API Key to use the Spotify player functionality. ** Note: This only works with Spotify Premium Accounts **",
             "expandable": true,
             "type": "object",
             "properties": {
@@ -172,7 +172,7 @@
             }
         },
         "Weather": {
-            "title": "Show the current weather on your display. Register for an API Key with (OpenWeather)[https://openweathermap.org/api] and follow the instructions at (Weather Config Setup)[https://github.com/EricAndrechek/homebridge-display#setup]",
+            "title": "Show the current weather on your display. Register for an API Key with OpenWeather and follow the instructions on my GitHub",
             "expandable": true,
             "type": "object",
             "properties": {
