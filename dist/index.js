@@ -170,7 +170,7 @@ class HomebridgeDisplay {
                 res.end('404 not found')
             }
         });
-        io = require('socket.io').listen(server)
+        const io = require('socket.io').listen(server)
         io.sockets.on('connection', function (socket) {
             socket.on('update', function (data) {
                 this.log("requested update");
