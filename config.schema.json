@@ -1,0 +1,199 @@
+{
+    "pluginAlias": "homebridge-display",
+    "pluginType": "platform",
+    "singular": true,
+    "headerDisplay": "Instructions for setting up the config can be found on the [Github](https://github.com/EricAndrechek/homebridge-display#setup)",
+    "schema": {
+        "Config": {
+            "expandable": false,
+            "type": "object",
+            "properties": {
+                "background": {
+                    "title": "Background Image URL",
+                    "type": "string",
+                    "default": "https://github.com/EricAndrechek/homebridge-display/raw/master/static/background-image.jpg",
+                    "required": true
+                },
+                "private": {
+                    "title": "Password Protection Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "required": true
+                },
+                "port": {
+                    "title": "Homebridge-Display Port",
+                    "type": "integer",
+                    "default": 6969,
+                    "required": true
+                }
+            }
+        },
+        "Boxes": {
+            "title": "Decide what each box displays",
+            "type": "object",
+            "expandable": false,
+            "properties": {
+                "Box1": {
+                    "title": "First Box",
+                    "type": "string",
+                    "default": "blank",
+                    "oneOf": [
+                            { "title": "Spotify Control", "enum": ["spotify"] },
+                            { "title": "Calculator", "enum": ["calculator"] },
+                            { "title": "Weather", "enum": ["weather"] },
+                            { "title": "RSS News Feed", "enum": ["news"] },
+                            { "title": "Lyrics", "enum": ["lyrics"] },
+                            { "title": "Accessory Control", "enum": ["iot"] },
+                            { "title": "Blank", "enum": ["blank"] }
+                    ],
+                    "required": true
+                },
+                "Box2": {
+                    "title": "Second Box",
+                    "type": "string",
+                    "default": "blank",
+                    "oneOf": [
+                            { "title": "Spotify Control", "enum": ["spotify"] },
+                            { "title": "Calculator", "enum": ["calculator"] },
+                            { "title": "Weather", "enum": ["weather"] },
+                            { "title": "RSS News Feed", "enum": ["news"] },
+                            { "title": "Lyrics", "enum": ["lyrics"] },
+                            { "title": "Accessory Control", "enum": ["iot"] },
+                            { "title": "Blank", "enum": ["blank"] }
+                    ],
+                    "required": true
+                },
+                "Box3": {
+                    "title": "Third Box",
+                    "type": "string",
+                    "default": "blank",
+                    "oneOf": [
+                            { "title": "Spotify Control", "enum": ["spotify"] },
+                            { "title": "Calculator", "enum": ["calculator"] },
+                            { "title": "Weather", "enum": ["weather"] },
+                            { "title": "RSS News Feed", "enum": ["news"] },
+                            { "title": "Lyrics", "enum": ["lyrics"] },
+                            { "title": "Accessory Control", "enum": ["iot"] },
+                            { "title": "Blank", "enum": ["blank"] }
+                    ],
+                    "required": true
+                },
+                "Box4": {
+                    "title": "Fourth Box",
+                    "type": "string",
+                    "default": "blank",
+                    "oneOf": [
+                            { "title": "Spotify Control", "enum": ["spotify"] },
+                            { "title": "Calculator", "enum": ["calculator"] },
+                            { "title": "Weather", "enum": ["weather"] },
+                            { "title": "RSS News Feed", "enum": ["news"] },
+                            { "title": "Lyrics", "enum": ["lyrics"] },
+                            { "title": "Accessory Control", "enum": ["iot"] },
+                            { "title": "Blank", "enum": ["blank"] }
+                    ],
+                    "required": true
+                },
+                "Box5": {
+                    "title": "Fifth Box",
+                    "type": "string",
+                    "default": "blank",
+                    "oneOf": [
+                            { "title": "Spotify Control", "enum": ["spotify"] },
+                            { "title": "Calculator", "enum": ["calculator"] },
+                            { "title": "Weather", "enum": ["weather"] },
+                            { "title": "RSS News Feed", "enum": ["news"] },
+                            { "title": "Lyrics", "enum": ["lyrics"] },
+                            { "title": "Accessory Control", "enum": ["iot"] },
+                            { "title": "Blank", "enum": ["blank"] }
+                    ],
+                    "required": true
+                },
+                "Box6": {
+                    "title": "Sixth Box",
+                    "type": "string",
+                    "default": "blank",
+                    "oneOf": [
+                            { "title": "Spotify Control", "enum": ["spotify"] },
+                            { "title": "Calculator", "enum": ["calculator"] },
+                            { "title": "Weather", "enum": ["weather"] },
+                            { "title": "RSS News Feed", "enum": ["news"] },
+                            { "title": "Lyrics", "enum": ["lyrics"] },
+                            { "title": "Accessory Control", "enum": ["iot"] },
+                            { "title": "Blank", "enum": ["blank"] }
+                    ],
+                    "required": true
+                }
+            }
+        },
+        "Spotify": {
+            "title": "Create a Spotify API Key at (Spotify Developer)[https://developer.spotify.com/dashboard/applications] and follow the instructions at (Spotify Config Setup)[https://github.com/EricAndrechek/homebridge-display#setup] to use the Spotify player functionality. ** Note: This only works with Spotify Premium Accounts **",
+            "expandable": true,
+            "type": "object",
+            "properties": {
+                "cid": {
+                    "title": "Client ID",
+                    "type": "string",
+                    "default": "",
+                    "required": false
+                },
+                "cs": {
+                    "title": "Client Secret",
+                    "type": "string",
+                    "default": "",
+                    "required": false
+                },
+                "refresh": {
+                    "title": "Refresh Token (Do not put anything here)",
+                    "type": "string",
+                    "placeholder": "Do not touch this, a refresh token will be generated when you first login with Spotify",
+                    "required": false
+                },
+                "rurl": {
+                    "title": "Callback URL for Spotify Login",
+                    "type": "string",
+                    "placeholder": "http://homebridge.local:6969/callback",
+                    "required": false
+                }
+            }
+        },
+        "Newsfeed": {
+            "title": "Add links to RSS News Feeds below",
+            "expandable": true,
+            "type": "object",
+            "properties": {
+                "feed": {
+                    "type": "array",
+                    "items": {
+                        "title": "RSS Feed URL",
+                        "type": "string"
+                    },
+                    "required": false
+                }
+            }
+        },
+        "Weather": {
+            "title": "Show the current weather on your display. Register for an API Key with (OpenWeather)[https://openweathermap.org/api] and follow the instructions at (Weather Config Setup)[https://github.com/EricAndrechek/homebridge-display#setup]",
+            "expandable": true,
+            "type": "object",
+            "properties": {
+                "api_key": {
+                    "title": "API Key",
+                    "type": "string",
+                    "required": false
+                },
+                "lat": {
+                    "title": "Latitude",
+                    "type": "number",
+                    "placeholder": "42.5986",
+                    "required": false
+                },
+                "lon": {
+                    "title": "Latitude",
+                    "type": "number",
+                    "placeholder": "-84.5986",
+                    "required": false
+                }
+            }
+        }
+    }
+}

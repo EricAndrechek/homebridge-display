@@ -51,9 +51,13 @@ For best results, add this web app to your homescreen so that it may display in 
 ## TODOs:
 - Move Spotify, weather, and Homebridge update requests to server side to avoid maxing out api calls when multiple clients connect
 - Add support for multiple music players
-- Allow more customization of what is displayed on the screen
+- Allow more customization of what is displayed on the screen with a sort of box approach
 - Support multiple screen resolutions
-- Dynamically change what is on the screen as music starts and stops
+- Dynamically change what is on the screen as programmable events occur
+- Add a calculator widget, note taking widget, various calendar integrations, todo list integrations
+- Add support for more HomeKit accessories like thermostats
+- Rewrite the server-side code in TypeScript or JavaScript and integrate with Homebridge config
+- Publish to NPM as a Homebridge plugin
 
 For feature requests or bugs please create an issue!
 
