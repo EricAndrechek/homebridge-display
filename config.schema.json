@@ -15,7 +15,7 @@
                     "required": true
                 },
                 "private": {
-                    "title": "Password Protection Enabled",
+                    "title": "Password Protection Enabled (currently not set up to do anything)",
                     "type": "boolean",
                     "default": false,
                     "required": true
@@ -24,6 +24,12 @@
                     "title": "Homebridge-Display Port",
                     "type": "integer",
                     "default": 6969,
+                    "required": true
+                },
+                "customTitle": {
+                    "title": "Custom Webpage Title",
+                    "type": "string",
+                    "default": "Home2.0",
                     "required": true
                 }
             }

@@ -1,4 +1,11 @@
 # Welcome to Homebridge-Display, the unofficial iPad display for Homebridge
+
+[![NPM](https://nodei.co/npm/homebridge-display.png?compact=true)](https://www.npmjs.com/package/homebridge-display)
+
+[![NPM Downloads](https://img.shields.io/npm/dt/homebridge-display)](https://www.npmjs.com/package/homebridge-display)
+[![npm (tag)](https://img.shields.io/npm/v/homebridge-display/latest)](https://www.npmjs.com/package/homebridge-display/v/latest)
+[![npm (tag)](https://img.shields.io/npm/v/homebridge-display/test)](https://www.npmjs.com/package/homebridge-display/v/test)
+[![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/EricAndrechek/homebridge-display/latest)](https://github.com/EricAndrechek/homebridge-display/releases/latest)
 Homebridge is amazing, but don't you wish there was a way to view it in a prettier, less developer focused dashboard?
 
 ![Preview of Homebridge-Display in action](demo.jpeg)
@@ -27,10 +34,18 @@ For best results, add this web app to your homescreen so that it may display in 
 - Allow more customization of what is displayed on the screen with a sort of box approach
 - Support multiple screen resolutions
 - Dynamically change what is on the screen as programmable events occur
-- Add a calculator widget, note taking widget, various calendar integrations, todo list integrations
 - Add support for more HomeKit accessories like thermostats
 - Rewrite the server-side code in TypeScript or JavaScript and integrate with Homebridge config
 - Publish to NPM as a Homebridge plugin
+
+### Widgets to add:
+- Calculator
+- Note taking integration
+- Calendar integrations
+- Todo list integrations
+- Radar map
+- Apple FindMy info/map
+
 
 For feature requests or bugs please create an issue!
 

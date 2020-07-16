@@ -1,5 +1,7 @@
 const http = require('http');
+const url = require('url');
 const fs = require('fs').promises;
+const spot = require('./spotify')
 
 module.exports = (homebridge) => {
     homebridge.registerPlatform('homebridge-display', 'homebridge-display', HomebridgeDisplay)
@@ -10,14 +12,71 @@ class HomebridgeDisplay {
         this.log = log;
         this.config = config;
         api.on('didFinishLaunching', () => {
-            this.createServer();
+
+            let error_trigger = false; // if this is set to true the webserver is not started
+
+            let boxes = [] // list of boxes with their appropriate html content
+
+            fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box1 + ".html")
+            .then(contents => {
+                boxes[0] = contents
+            })
+            fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box2 + ".html")
+            .then(contents => {
+                boxes[1] = contents
+            })
+            fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box3 + ".html")
+            .then(contents => {
+                boxes[2] = contents
+            })
+            fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box4 + ".html")
+            .then(contents => {
+                boxes[3] = contents
+            })
+            fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box5 + ".html")
+            .then(contents => {
+                boxes[4] = contents
+            })
+            fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box6 + ".html")
+            .then(contents => {
+                boxes[5] = contents
+            })
+
+            box = [] // list of objects to create for each box
+
+            for (let i = 0; i < boxes.length; i++) { // check for each box type and if its needed config settings are set up
+                if (boxes[i] === 'spotify') {
+                    let spot_settings = this.config.Spotify || false;
+                    if (spot_settings !== false) {
+                        let cid = spot_settings.cid || undefined;
+                        let cs = spot_settings.cs || undefined;
+                        let refresh = spot_settings.refresh || null;
+                        let rurl = spot_settings.rurl || undefined;
+                        if (cid === undefined || cs === undefined || rurl === undefined) {
+                            this.log.error('Spotify is not done being set up, got to homebridge-display\'s settings to add it.');
+                            error_trigger = true;
+                        } else {
+                            let auth_url = 'https://accounts.spotify.com/authorize?response_type=code&client_id=' + cid + '&scope=user-read-private%20user-read-playback-state%20user-modify-playback-state%20user-library-modify%20user-library-read&redirect_uri=' + encodeURIComponent(rurl);
+                            box[i] = new spot(cid, cs, refresh, auth_url, rurl, this.log, this.config, this.api);
+                        }
+                    } else {
+                        this.log.error('Spotify not set up, go to homebridge-display\'s settings to add it.')
+                        error_trigger = true;
+                    }
+                }
+            }
+            let background = this.config.Config.background;
+            let password_protection = this.config.Config.private;
+            this.createServer(boxes, background, password_protection);
         });
     }
-    createServer() {
+    createServer(boxes, background, password_protection) {
         const log = this.log;
         const server = http.createServer((req, res) => {
             log.debug('Received HTTP Path - ' + req.url);
-            if (req.url === "/static/background-image.jpg") {
+            let path = url.parse(req.url, true).pathname;
+            let args = url.parse(req.url, true).query;
+            if (path === "/static/background-image.jpg") {
                 fs.readFile(__dirname + "/static/background-image.jpg")
                 .then(contents => {
                     res.statusCode = 200;
@@ -29,7 +88,7 @@ class HomebridgeDisplay {
                     res.end(err);
                     return;
                 });
-            } else if (req.url === "/static/main.css") {
+            } else if (path === "/static/main.css") {
                 fs.readFile(__dirname + "/static/main.css")
                 .then(contents => {
                     res.statusCode = 200;
@@ -41,7 +100,7 @@ class HomebridgeDisplay {
                     res.end(err);
                     return;
                 });
-            } else if (req.url === "/static/black-home.png") {
+            } else if (path === "/static/black-home.png") {
                 fs.readFile(__dirname + "/static/black-home.png")
                 .then(contents => {
                     res.statusCode = 200;
@@ -53,7 +112,7 @@ class HomebridgeDisplay {
                     res.end(err);
                     return;
                 });
-            } else if (req.url === "/static/placeholder.png") {
+            } else if (path === "/static/placeholder.png") {
                 fs.readFile(__dirname + "/static/placeholder.png")
                 .then(contents => {
                     res.statusCode = 200;
@@ -65,7 +124,7 @@ class HomebridgeDisplay {
                     res.end(err);
                     return;
                 });
-            } else if (req.url === "/static/weather-icons.min.css") {
+            } else if (path === "/static/weather-icons.min.css") {
                 fs.readFile(__dirname + "/static/weather-icons.min.css")
                 .then(contents => {
                     res.statusCode = 200;
@@ -77,7 +136,7 @@ class HomebridgeDisplay {
                     res.end(err);
                     return;
                 });
-            } else if (req.url === "/static/home-black-ios.png") {
+            } else if (path === "/static/home-black-ios.png") {
                 fs.readFile(__dirname + "/static/home-black-ios.png")
                 .then(contents => {
                     res.statusCode = 200;
@@ -89,7 +148,7 @@ class HomebridgeDisplay {
                     res.end(err);
                     return;
                 });
-            } else if (req.url === "/static/font/weathericons-regular-webfont.eot") {
+            } else if (path === "/static/font/weathericons-regular-webfont.eot") {
                 fs.readFile(__dirname + "/static/font/weathericons-regular-webfont.eot")
                 .then(contents => {
                     res.statusCode = 200;
@@ -101,7 +160,7 @@ class HomebridgeDisplay {
                     res.end(err);
                     return;
                 });
-            } else if (req.url === "/static/font/weathericons-regular-webfont.svg") {
+            } else if (path === "/static/font/weathericons-regular-webfont.svg") {
                 fs.readFile(__dirname + "/static/font/weathericons-regular-webfont.svg")
                 .then(contents => {
                     res.statusCode = 200;
@@ -113,7 +172,7 @@ class HomebridgeDisplay {
                     res.end(err);
                     return;
                 });
-            } else if (req.url === "/static/font/weathericons-regular-webfont.ttf") {
+            } else if (path === "/static/font/weathericons-regular-webfont.ttf") {
                 fs.readFile(__dirname + "/static/font/weathericons-regular-webfont.ttf")
                 .then(contents => {
                     res.statusCode = 200;
@@ -125,7 +184,7 @@ class HomebridgeDisplay {
                     res.end(err);
                     return;
                 });
-            } else if (req.url === "/static/font/weathericons-regular-webfont.woff") {
+            } else if (path === "/static/font/weathericons-regular-webfont.woff") {
                 fs.readFile(__dirname + "/static/font/weathericons-regular-webfont.woff")
                 .then(contents => {
                     res.statusCode = 200;
@@ -137,7 +196,7 @@ class HomebridgeDisplay {
                     res.end(err);
                     return;
                 });
-            } else if (req.url === "/static/font/weathericons-regular-webfont.woff2") {
+            } else if (path === "/static/font/weathericons-regular-webfont.woff2") {
                 fs.readFile(__dirname + "/static/font/weathericons-regular-webfont.woff2")
                 .then(contents => {
                     res.statusCode = 200;
@@ -150,7 +209,7 @@ class HomebridgeDisplay {
                     return;
                 });
             }
-            else if (req.url === "/home" || req.url === "/index.html" || req.url === "/" || req.url === "") {
+            else if (path === "/home" || path === "/index.html" || path === "/" || path === "") {
                 fs.readFile(__dirname + "/index.html")
                 .then(contents => {
                     res.statusCode = 200;
@@ -162,10 +221,17 @@ class HomebridgeDisplay {
                     res.end(err);
                     return;
                 });
-            } else if (req.url === "/callback") {
-                res.statusCode = 200;
-                res.setHeader("Content-Type", "text/html");
-                res.end(req.rul);
+            } else if (path === "/callback") {
+                let code = args.code || undefined;
+                if (code === undefined) {
+                    res.statusCode = 200;
+                    res.setHeader("Content-Type", "text/html");
+                    res.end(args.error);
+                } else {
+                    spot.callback(code)
+                    res.writeHead(302, {'Location': '/'});
+                    res.end();
+                }
             } else {
                 res.writeHead(404);
                 res.end('404 not found')
@@ -173,59 +239,61 @@ class HomebridgeDisplay {
         });
         const io = require('socket.io').listen(server)
         io.sockets.on('connection', function (socket) {
-            socket.on('update', function () {
-                log.debug("requested update");
+            socket.on('update', function () { // Spotify update route
+                //
             });
             socket.on('lyrics', function (data) {
-                log.debug("requested lyrics " + data);
+                //
             });
             socket.on('switch', function (data) {
-                log.debug("requested switch " + data);
+                let switch_name = data[0]
+                let state = data[1]
+                log.debug('Setting ' + switch_name + ' to ' + state);
             });
             socket.on('news', function (dta) {
-                log.debug("requested news");
+                //
             });
             socket.on('iot', function () {
-                log.debug("requested iot");
+                //
             });
             socket.on('debugger', function (data) {
-                log.debug("sent debug" + data);
+                log.debug("[CLIENT ERROR] - " + data);
             });
             socket.on('weather', function () {
-                log.debug("requested weather");
+                //
             });
             socket.on('transfer', function (data) {
-                log.debug("requested transfer " + data);
+                log.debug("[SPOTIFY] - Transferring playback to " + data);
             });
             socket.on('like', function (data) {
-                log.debug("sent like" + data);
+                log.debug("[SPOTIFY] - Liked song");
             });
             socket.on('unlike', function (data) {
-                log.debug("sent unlike" + data);
+                log.debug("[SPOTIFY] - Unliked song");
             });
             socket.on('next', function () {
-                log.debug("requested next");
+                log.debug("[SPOTIFY] - Next song");
             });
             socket.on('pause', function () {
-                log.debug("requested pause");
+                log.debug("[SPOTIFY] - Pause");
             });
             socket.on('back', function () {
-                log.debug("requested back");
+                log.debug("[SPOTIFY] - Previous song");
             });
             socket.on('resume', function () {
-                log.debug("requested resume");
+                log.debug("[SPOTIFY] - Resume");
             });
             socket.on('seek', function (data) {
-                log.debug("requested seek to " + data);
+                log.debug("[SPOTIFY] - Skipping to " + data + "ms");
             });
             socket.on('volume', function (data) {
-                log.debug("requested volume to " + data);
+                log.debug("[SPOTIFY] - Volume set to " + data + "%");
             });
             socket.on('shuffle', function (data) {
-                log.debug("requested shuffle " + data);
+                log.debug("[SPOTIFY] - Shuffle set to " + data);
             });
             socket.on('repeat', function (data) {
-                log.debug("requested repeat" + data);
+                log.debug("[SPOTIFY] - Repeat set to " + data);
             });
         });
         server.on('error', (err) => {
