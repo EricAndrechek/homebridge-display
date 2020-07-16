@@ -6,6 +6,7 @@
 [![npm (tag)](https://img.shields.io/npm/v/homebridge-display/latest)](https://www.npmjs.com/package/homebridge-display/v/latest)
 [![npm (tag)](https://img.shields.io/npm/v/homebridge-display/test)](https://www.npmjs.com/package/homebridge-display/v/test)
 [![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/EricAndrechek/homebridge-display/latest)](https://github.com/EricAndrechek/homebridge-display/releases/latest)
+
 Homebridge is amazing, but don't you wish there was a way to view it in a prettier, less developer focused dashboard?
 
 ![Preview of Homebridge-Display in action](demo.jpeg)

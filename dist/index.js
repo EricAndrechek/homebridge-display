@@ -42,7 +42,7 @@ class HomebridgeDisplay {
                 boxes[5] = contents
             })
 
-            box = [] // list of objects to create for each box
+            let box = [] // list of objects to create for each box
 
             for (let i = 0; i < boxes.length; i++) { // check for each box type and if its needed config settings are set up
                 if (boxes[i] === 'spotify') {
