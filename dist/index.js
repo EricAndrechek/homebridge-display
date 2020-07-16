@@ -15,37 +15,44 @@ class HomebridgeDisplay {
 
             let error_trigger = false; // if this is set to true the webserver is not started
 
-            let boxes = [] // list of boxes with their appropriate html content
+            let boxtype = [];
+            let boxes = []; // list of boxes with their appropriate html content
 
             fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box1 + ".html")
             .then(contents => {
-                boxes[0] = contents
+                boxes[0] = contents;
+                boxtype[0] = this.config.Boxes.Box1;
             })
             fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box2 + ".html")
             .then(contents => {
-                boxes[1] = contents
+                boxes[1] = contents;
+                boxtype[1] = this.config.Boxes.Box2;
             })
             fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box3 + ".html")
             .then(contents => {
-                boxes[2] = contents
+                boxes[2] = contents;
+                boxtype[2] = this.config.Boxes.Box3;
             })
             fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box4 + ".html")
             .then(contents => {
-                boxes[3] = contents
+                boxes[3] = contents;
+                boxtype[3] = this.config.Boxes.Box4;
             })
             fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box5 + ".html")
             .then(contents => {
-                boxes[4] = contents
+                boxes[4] = contents;
+                boxtype[4] = this.config.Boxes.Box5;
             })
             fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box6 + ".html")
             .then(contents => {
-                boxes[5] = contents
+                boxes[5] = contents;
+                boxtype[5] = this.config.Boxes.Box6;
             })
 
-            let box = [] // list of objects to create for each box
+            this.box = [] // list of objects to create for each box
 
-            for (let i = 0; i < boxes.length; i++) { // check for each box type and if its needed config settings are set up
-                if (boxes[i] === 'spotify') {
+            for (let i = 0; i < boxtype.length; i++) { // check for each box type and if its needed config settings are set up
+                if (boxtype[i] === 'spotify') {
                     let spot_settings = this.config.Spotify || false;
                     if (spot_settings !== false) {
                         let cid = spot_settings.cid || undefined;
@@ -57,7 +64,8 @@ class HomebridgeDisplay {
                             error_trigger = true;
                         } else {
                             let auth_url = 'https://accounts.spotify.com/authorize?response_type=code&client_id=' + cid + '&scope=user-read-private%20user-read-playback-state%20user-modify-playback-state%20user-library-modify%20user-library-read&redirect_uri=' + encodeURIComponent(rurl);
-                            box[i] = new spot(cid, cs, refresh, auth_url, rurl, this.log, this.config, this.api);
+                            this.spot_obj = new spot(cid, cs, refresh, auth_url, rurl, this.log, this.config, this.api);
+                            this.box[i] = this.spot_obj;
                         }
                     } else {
                         this.log.error('Spotify not set up, go to homebridge-display\'s settings to add it.')
@@ -228,7 +236,7 @@ class HomebridgeDisplay {
                     res.setHeader("Content-Type", "text/html");
                     res.end(args.error);
                 } else {
-                    spot.callback(code)
+                    this.spot_obj.callback(code)
                     res.writeHead(302, {'Location': '/'});
                     res.end();
                 }
