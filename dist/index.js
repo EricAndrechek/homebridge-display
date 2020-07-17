@@ -42,16 +42,10 @@ class HomebridgeDisplay {
                                 .then(contents => {
                                     boxes[5] = contents;
                                     boxtype[5] = this.config.Boxes.Box6;
-                                    
-                                    this.log.debug(boxes);
-                                    this.log.debug(boxes.length);
-                                    this.log.debug(boxtype);
-                                    this.log.debug(boxtype.length);
 
                                     this.box = [] // list of objects to create for each box
 
                                     for (let i = 0; i < boxtype.length; i++) { // check for each box type and if its needed config settings are set up
-                                        this.log.debug(boxtype[i]);
                                         if (boxtype[i] === 'spotify') {
                                             let spot_settings = this.config.Spotify || false;
                                             if (spot_settings !== false) {

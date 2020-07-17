@@ -1,3 +1,5 @@
+const request = require('request')
+
 class spotify {
     constructor(cid, secret, refresh_token, auth_url, rurl, log, config, api) {
         this.log = log;
