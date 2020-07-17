@@ -20,36 +20,40 @@ class HomebridgeDisplay {
 
             fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box1 + ".html")
             .then(contents => {
-                boxes.push(contents);
-                boxtype.push(this.config.Boxes.Box1);
+                boxes[0] = contents;
+                boxtype[0] = this.config.Boxes.Box1;
             })
             fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box2 + ".html")
             .then(contents => {
-                boxes.push(contents);
-                boxtype.push(this.config.Boxes.Box2);
+                boxes[1] = contents;
+                boxtype[1] = this.config.Boxes.Box2;
             })
             fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box3 + ".html")
             .then(contents => {
-                boxes.push(contents);
-                boxtype.push(this.config.Boxes.Box3);
+                boxes[2] = contents;
+                boxtype[2] = this.config.Boxes.Box3;
             })
             fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box4 + ".html")
             .then(contents => {
-                boxes.push(contents);
-                boxtype.push(this.config.Boxes.Box4);
+                boxes[3] = contents;
+                boxtype[3] = this.config.Boxes.Box4;
             })
             fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box5 + ".html")
             .then(contents => {
-                boxes.push(contents);
-                boxtype.push(this.config.Boxes.Box5);
+                boxes[4] = contents;
+                boxtype[4] = this.config.Boxes.Box5;
             })
             fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box6 + ".html")
             .then(contents => {
-                boxes.push(contents);
-                boxtype.push(this.config.Boxes.Box6);
+                boxes[5] = contents;
+                boxtype[5] = this.config.Boxes.Box6;
             })
 
+            this.log.debug(boxes);
+            this.log.debug(boxes.length);
             this.log.debug(boxtype);
+            this.log.debug(boxtype.length);
+
             this.box = [] // list of objects to create for each box
 
             for (let i = 0; i < boxtype.length; i++) { // check for each box type and if its needed config settings are set up
@@ -67,7 +71,7 @@ class HomebridgeDisplay {
                         } else {
                             let auth_url = 'https://accounts.spotify.com/authorize?response_type=code&client_id=' + cid + '&scope=user-read-private%20user-read-playback-state%20user-modify-playback-state%20user-library-modify%20user-library-read&redirect_uri=' + encodeURIComponent(rurl);
                             this.spot_obj = new spot(cid, cs, refresh, auth_url, rurl, this.log, this.config, this.api);
-                            this.box[i].push(this.spot_obj);
+                            this.box[i] = this.spot_obj;
                         }
                     } else {
                         this.log.error('Spotify not set up, go to homebridge-display\'s settings to add it.')
