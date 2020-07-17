@@ -24,6 +24,7 @@
   "main": "dist/index.js",
   "author": "Eric Andrechek",
   "dependencies": {
+    "request": "^2.88.2",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
