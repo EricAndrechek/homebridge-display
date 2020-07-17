@@ -1,7 +1,7 @@
 {
   "displayName": "Homebridge-Display",
   "name": "homebridge-display",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "A beautiful display to control accessories and more from your browser.",
   "license": "Apache-2.0",
   "homepage": "https://github.com/EricAndrechek/Homebridge-Display",
