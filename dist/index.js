@@ -47,18 +47,8 @@ class HomebridgeDisplay {
                                     this.box = [] // list of objects to create for each box
 
                                     let storage_path = this.api.user.storagePath() + 'homebridge-display.json';
-                                    fs.stat(storage_path, function(err, stat) {
-                                        if (err == null) {
-                                            // file exists
-                                        } else if (err.code === 'ENOENT') {
-                                            fs.writeFile(storage_path, '', function (err) {
-                                                if (err) {
-                                                    this.log.debug(err);
-                                                }
-                                            });
-                                        } else {
-                                            this.log.debug(err);
-                                        }
+                                    fs.writeFile(storage_path, '', { flag: 'wx' }, function (err) {
+                                        if (err) this.log.debug(err);
                                     });
                                     fs.readFile(storage_path).then(contents => {
                                         let plugin_storage = JSON.parse(contents);
