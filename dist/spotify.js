@@ -41,7 +41,7 @@ class spotify {
         });
     }
     callback(code) {
-        let dataString = 'grant_type=authorization_code&code=' + this.refresh_token + '&redirect_uri=' + this.rurl;
+        let dataString = 'grant_type=authorization_code&code=' + code + '&redirect_uri=' + this.rurl;
         let headers = {
             'Authorization': 'Basic ' + new Buffer(this.cid + ':' + this.secret).toString('base64'),
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -57,7 +57,6 @@ class spotify {
             if (err) {
                 this.log.debug('[SPOTIFY] - ' + err);
             } else {
-                this.log.debug(res);
                 this.log.debug(body);
                 this.access_token = body.access_token;
                 this.refresh_token = body.refresh_token;
