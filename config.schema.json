@@ -148,12 +148,6 @@
                     "default": "",
                     "required": false
                 },
-                "refresh": {
-                    "title": "Refresh Token (Do not put anything here)",
-                    "type": "string",
-                    "placeholder": "Do not touch this, a refresh token will be generated when you first login with Spotify",
-                    "required": false
-                },
                 "rurl": {
                     "title": "Callback URL for Spotify Login",
                     "type": "string",

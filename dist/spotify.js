@@ -11,7 +11,7 @@ class spotify {
         this.cid = cid;
         this.secret = secret;
         if (refresh_token === null) {
-            this.log.debug('You have not yet given homebridge-display access to your Spotify account. To do so go to: ' + this.auth_url + '\nthen restart the server.');
+            this.log.error('You have not yet given homebridge-display access to your Spotify account. To do so go to: ' + this.auth_url + '\nthen restart the server.');
         } else {
             this.refresh()
         }
@@ -56,12 +56,16 @@ class spotify {
         request(options, (err, res, body) => {
             if (err) {
                 this.log.debug('[SPOTIFY] - ' + err);
+            } else if (JSON.parse(body).error !== undefined) {
+                this.log.debug('[SPOTIFY] - ' + body.error);
             } else {
-                this.log.debug(body);
-                this.access_token = body.access_token;
-                this.refresh_token = body.refresh_token;
-                this.config.Spotify.refresh = this.refresh_token;
-                this.log.debug('[SPOTIFY] - Access token generated: ' + body.access_token)
+                this.access_token = JSON.parse(body).access_token;
+                this.refresh_token = JSON.parse(body).refresh_token;
+                let storage_path = path.resolve(this.api.user.storagePath(), 'homebridge-display.json');
+                let plugin_data = JSON.parse(fs.readFileSync(storage_path));
+                plugin_data["refresh"] = this.refresh_token;
+                fs.writeFileSync(storage_path, JSON.stringify(plugin_data));
+                this.log.debug('[SPOTIFY] - Access token generated: ' + this.access_token)
             }
         });
     }
