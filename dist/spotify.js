@@ -62,8 +62,13 @@ class spotify {
             } else {
                 this.access_token = JSON.parse(body).access_token;
                 this.refresh_token = JSON.parse(body).refresh_token;
+                let plugin_data = {};
                 let storage_path = this.api.user.storagePath() + 'homebridge-display.json';
-                let plugin_data = JSON.parse(fs.readFileSync(storage_path));
+                try {
+                    plugin_data = JSON.parse(fs.readFileSync(storage_path));
+                } catch (err) {
+                    // the file just likely doesn't exist yet
+                }
                 plugin_data["refresh"] = this.refresh_token;
                 fs.writeFileSync(storage_path, JSON.stringify(plugin_data));
                 this.log.debug('[SPOTIFY] - Access token generated: ' + this.access_token)

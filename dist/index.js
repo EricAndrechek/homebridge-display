@@ -47,39 +47,43 @@ class HomebridgeDisplay {
                                     this.box = [] // list of objects to create for each box
 
                                     let storage_path = this.api.user.storagePath() + 'homebridge-display.json';
-                                    fs.writeFile(storage_path, '', { flag: 'wx' }, function (err) {
-                                        if (err) this.log.debug(err);
-                                    });
-                                    fs.readFile(storage_path).then(contents => {
-                                        let plugin_storage = JSON.parse(contents);
-                                        for (let i = 0; i < boxtype.length; i++) { // check for each box type and if its needed config settings are set up
-                                            if (boxtype[i] === 'spotify') {
-                                                let spot_settings = this.config.Spotify || false;
-                                                if (spot_settings !== false) {
-                                                    let cid = spot_settings.cid || undefined;
-                                                    let cs = spot_settings.cs || undefined;
-                                                    let refresh = plugin_storage.refresh || null;
-                                                    let rurl = spot_settings.rurl || undefined;
-                                                    if (cid === undefined || cs === undefined || rurl === undefined) {
-                                                        this.log.debug('Spotify is not done being set up, got to homebridge-display\'s settings to add it.');
-                                                        error_trigger = true;
-                                                    } else {
-                                                        let auth_url = 'https://accounts.spotify.com/authorize?response_type=code&client_id=' + cid + '&scope=user-read-private%20user-read-playback-state%20user-modify-playback-state%20user-library-modify%20user-library-read&redirect_uri=' + encodeURIComponent(rurl);
-                                                        this.spot_obj = new spot(cid, cs, refresh, auth_url, rurl, this.log, this.config, this.api);
-                                                        this.box[i] = this.spot_obj;
-                                                    }
-                                                } else {
-                                                    this.log.debug('Spotify not set up, go to homebridge-display\'s settings to add it.')
+                                    
+                                    let contents, plugin_storage;
+                                    try {
+                                        contents = fs.readFileSync(storage_path);
+                                        plugin_storage = JSON.parse(contents);
+                                    } catch (err) {
+                                        this.log.debug(err);
+                                        plugin_storage = {};
+                                    }
+
+                                    for (let i = 0; i < boxtype.length; i++) { // check for each box type and if its needed config settings are set up
+                                        if (boxtype[i] === 'spotify') {
+                                            let spot_settings = this.config.Spotify || false;
+                                            if (spot_settings !== false) {
+                                                let cid = spot_settings.cid || undefined;
+                                                let cs = spot_settings.cs || undefined;
+                                                let refresh = plugin_storage.refresh || null;
+                                                let rurl = spot_settings.rurl || undefined;
+                                                if (cid === undefined || cs === undefined || rurl === undefined) {
+                                                    this.log.debug('Spotify is not done being set up, got to homebridge-display\'s settings to add it.');
                                                     error_trigger = true;
+                                                } else {
+                                                    let auth_url = 'https://accounts.spotify.com/authorize?response_type=code&client_id=' + cid + '&scope=user-read-private%20user-read-playback-state%20user-modify-playback-state%20user-library-modify%20user-library-read&redirect_uri=' + encodeURIComponent(rurl);
+                                                    this.spot_obj = new spot(cid, cs, refresh, auth_url, rurl, this.log, this.config, this.api);
+                                                    this.box[i] = this.spot_obj;
                                                 }
+                                            } else {
+                                                this.log.debug('Spotify not set up, go to homebridge-display\'s settings to add it.')
+                                                error_trigger = true;
                                             }
                                         }
-                                        let background = this.config.Config.background;
-                                        let password_protection = this.config.Config.private;
-                                        if (error_trigger === false) {
-                                            this.createServer(boxes, background, password_protection);
-                                        }
-                                    })
+                                    }
+                                    let background = this.config.Config.background;
+                                    let password_protection = this.config.Config.private;
+                                    if (error_trigger === false) {
+                                        this.createServer(boxes, background, password_protection);
+                                    }
                                 })
                             })
                         })
