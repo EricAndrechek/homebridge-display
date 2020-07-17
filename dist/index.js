@@ -54,7 +54,7 @@ class HomebridgeDisplay {
                                                 let refresh = spot_settings.refresh || null;
                                                 let rurl = spot_settings.rurl || undefined;
                                                 if (cid === undefined || cs === undefined || rurl === undefined) {
-                                                    this.log.error('Spotify is not done being set up, got to homebridge-display\'s settings to add it.');
+                                                    this.log.debug('Spotify is not done being set up, got to homebridge-display\'s settings to add it.');
                                                     error_trigger = true;
                                                 } else {
                                                     let auth_url = 'https://accounts.spotify.com/authorize?response_type=code&client_id=' + cid + '&scope=user-read-private%20user-read-playback-state%20user-modify-playback-state%20user-library-modify%20user-library-read&redirect_uri=' + encodeURIComponent(rurl);
@@ -62,7 +62,7 @@ class HomebridgeDisplay {
                                                     this.box[i] = this.spot_obj;
                                                 }
                                             } else {
-                                                this.log.error('Spotify not set up, go to homebridge-display\'s settings to add it.')
+                                                this.log.debug('Spotify not set up, go to homebridge-display\'s settings to add it.')
                                                 error_trigger = true;
                                             }
                                         }
@@ -307,7 +307,7 @@ class HomebridgeDisplay {
             });
         });
         server.on('error', (err) => {
-            log.warning(err);
+            log.debug(err);
         });
         server.listen(parseInt(this.config.Config.port), () => {
             log('Starting Homebridge-Display server on port ', parseInt(this.config.Config.port));

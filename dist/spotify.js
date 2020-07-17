@@ -11,7 +11,7 @@ class spotify {
         this.cid = cid;
         this.secret = secret;
         if (refresh_token === null) {
-            this.log.error('You have not yet given homebridge-display access to your Spotify account. To do so go to: ' + this.auth_url + '\nthen restart the server.');
+            this.log.debug('You have not yet given homebridge-display access to your Spotify account. To do so go to: ' + this.auth_url + '\nthen restart the server.');
         } else {
             this.refresh()
         }
@@ -33,7 +33,7 @@ class spotify {
         
         request(options, (err, res, body) => {
             if (err) {
-                this.log.error('[SPOTIFY] - ' + err);
+                this.log.debug('[SPOTIFY] - ' + err);
             } else {
                 this.access_token = body.access_token;
                 this.log.debug('[SPOTIFY] - Access token generated: ' + body.access_token)
@@ -55,8 +55,10 @@ class spotify {
         
         request(options, (err, res, body) => {
             if (err) {
-                this.log.error('[SPOTIFY] - ' + err);
+                this.log.debug('[SPOTIFY] - ' + err);
             } else {
+                this.log.debug(res);
+                this.log.debug(body);
                 this.access_token = body.access_token;
                 this.refresh_token = body.refresh_token;
                 this.config.Spotify.refresh = this.refresh_token;
