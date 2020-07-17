@@ -1,6 +1,6 @@
 const http = require('http');
 const url = require('url');
-const fs = require('fs');
+const fs = require('fs').promises;
 const spot = require('./spotify')
 
 module.exports = (homebridge) => {
@@ -47,17 +47,19 @@ class HomebridgeDisplay {
                                     this.box = [] // list of objects to create for each box
 
                                     let storage_path = this.api.user.storagePath() + 'homebridge-display.json';
-                                    try {
-                                        if (!fs.existsSync(storage_path)) {
+                                    fs.stat(storage_path, function(err, stat) {
+                                        if (err == null) {
+                                            // file exists
+                                        } else if (err.code === 'ENOENT') {
                                             fs.writeFile(storage_path, '', function (err) {
                                                 if (err) {
                                                     this.log.debug(err);
                                                 }
                                             });
+                                        } else {
+                                            this.log.debug(err);
                                         }
-                                    } catch (err) {
-                                        this.log.error(err);
-                                    }
+                                    });
                                     fs.readFile(storage_path).then(contents => {
                                         let plugin_storage = JSON.parse(contents);
                                         for (let i = 0; i < boxtype.length; i++) { // check for each box type and if its needed config settings are set up

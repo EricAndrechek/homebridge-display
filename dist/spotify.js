@@ -1,5 +1,5 @@
 const request = require('request');
-const fs = require('fs');
+const fs = require('fs').promises;
 
 class spotify {
     constructor(cid, secret, refresh_token, auth_url, rurl, log, config, api) {
