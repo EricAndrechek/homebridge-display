@@ -1,4 +1,5 @@
-const request = require('request')
+const request = require('request');
+const fs = require('fs');
 
 class spotify {
     constructor(cid, secret, refresh_token, auth_url, rurl, log, config, api) {
@@ -61,7 +62,7 @@ class spotify {
             } else {
                 this.access_token = JSON.parse(body).access_token;
                 this.refresh_token = JSON.parse(body).refresh_token;
-                let storage_path = path.resolve(this.api.user.storagePath(), 'homebridge-display.json');
+                let storage_path = this.api.user.storagePath() + 'homebridge-display.json';
                 let plugin_data = JSON.parse(fs.readFileSync(storage_path));
                 plugin_data["refresh"] = this.refresh_token;
                 fs.writeFileSync(storage_path, JSON.stringify(plugin_data));

@@ -1,6 +1,6 @@
 const http = require('http');
 const url = require('url');
-const fs = require('fs').promises;
+const fs = require('fs');
 const spot = require('./spotify')
 
 module.exports = (homebridge) => {
@@ -46,7 +46,7 @@ class HomebridgeDisplay {
 
                                     this.box = [] // list of objects to create for each box
 
-                                    let storage_path = path.resolve(this.api.user.storagePath(), 'homebridge-display.json');
+                                    let storage_path = this.api.user.storagePath() + 'homebridge-display.json';
                                     try {
                                         if (!fs.existsSync(storage_path)) {
                                             fs.writeFile(storage_path, '', function (err) {
