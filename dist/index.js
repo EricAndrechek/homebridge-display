@@ -1,6 +1,6 @@
 const http = require('http');
 const url = require('url');
-const fs = require('fs').promises;
+const fs = require('fs');
 const spot = require('./spotify')
 
 module.exports = (homebridge) => {
@@ -19,27 +19,27 @@ class HomebridgeDisplay {
             let boxtype = [];
             let boxes = []; // list of boxes with their appropriate html content
 
-            fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box1 + ".html")
+            fs.readFile.promises(__dirname + "/templates/" + this.config.Boxes.Box1 + ".html")
             .then(contents => {
                 boxes[0] = contents;
                 boxtype[0] = this.config.Boxes.Box1;
-                fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box2 + ".html")
+                fs.readFile.promises(__dirname + "/templates/" + this.config.Boxes.Box2 + ".html")
                 .then(contents => {
                     boxes[1] = contents;
                     boxtype[1] = this.config.Boxes.Box2;
-                    fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box3 + ".html")
+                    fs.readFile.promises(__dirname + "/templates/" + this.config.Boxes.Box3 + ".html")
                     .then(contents => {
                         boxes[2] = contents;
                         boxtype[2] = this.config.Boxes.Box3;
-                        fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box4 + ".html")
+                        fs.readFile.promises(__dirname + "/templates/" + this.config.Boxes.Box4 + ".html")
                         .then(contents => {
                             boxes[3] = contents;
                             boxtype[3] = this.config.Boxes.Box4;
-                            fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box5 + ".html")
+                            fs.readFile.promises(__dirname + "/templates/" + this.config.Boxes.Box5 + ".html")
                             .then(contents => {
                                 boxes[4] = contents;
                                 boxtype[4] = this.config.Boxes.Box5;
-                                fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box6 + ".html")
+                                fs.readFile.promises(__dirname + "/templates/" + this.config.Boxes.Box6 + ".html")
                                 .then(contents => {
                                     boxes[5] = contents;
                                     boxtype[5] = this.config.Boxes.Box6;
@@ -99,7 +99,7 @@ class HomebridgeDisplay {
             let path = url.parse(req.url, true).pathname;
             let args = url.parse(req.url, true).query;
             if (path === "/static/background-image.jpg") {
-                fs.readFile(__dirname + "/static/background-image.jpg")
+                fs.readFile.promises(__dirname + "/static/background-image.jpg")
                 .then(contents => {
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "image/jpeg");
@@ -111,7 +111,7 @@ class HomebridgeDisplay {
                     return;
                 });
             } else if (path === "/static/main.css") {
-                fs.readFile(__dirname + "/static/main.css")
+                fs.readFile.promises(__dirname + "/static/main.css")
                 .then(contents => {
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "text/css");
@@ -123,7 +123,7 @@ class HomebridgeDisplay {
                     return;
                 });
             } else if (path === "/static/black-home.png") {
-                fs.readFile(__dirname + "/static/black-home.png")
+                fs.readFile.promises(__dirname + "/static/black-home.png")
                 .then(contents => {
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "image/png");
@@ -135,7 +135,7 @@ class HomebridgeDisplay {
                     return;
                 });
             } else if (path === "/static/placeholder.png") {
-                fs.readFile(__dirname + "/static/placeholder.png")
+                fs.readFile.promises(__dirname + "/static/placeholder.png")
                 .then(contents => {
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "image/png");
@@ -147,7 +147,7 @@ class HomebridgeDisplay {
                     return;
                 });
             } else if (path === "/static/weather-icons.min.css") {
-                fs.readFile(__dirname + "/static/weather-icons.min.css")
+                fs.readFile.promises(__dirname + "/static/weather-icons.min.css")
                 .then(contents => {
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "text/css");
@@ -159,7 +159,7 @@ class HomebridgeDisplay {
                     return;
                 });
             } else if (path === "/static/home-black-ios.png") {
-                fs.readFile(__dirname + "/static/home-black-ios.png")
+                fs.readFile.promises(__dirname + "/static/home-black-ios.png")
                 .then(contents => {
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "image/png");
@@ -171,7 +171,7 @@ class HomebridgeDisplay {
                     return;
                 });
             } else if (path === "/static/font/weathericons-regular-webfont.eot") {
-                fs.readFile(__dirname + "/static/font/weathericons-regular-webfont.eot")
+                fs.readFile.promises(__dirname + "/static/font/weathericons-regular-webfont.eot")
                 .then(contents => {
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "application/vnd.ms-fontobject");
@@ -183,7 +183,7 @@ class HomebridgeDisplay {
                     return;
                 });
             } else if (path === "/static/font/weathericons-regular-webfont.svg") {
-                fs.readFile(__dirname + "/static/font/weathericons-regular-webfont.svg")
+                fs.readFile.promises(__dirname + "/static/font/weathericons-regular-webfont.svg")
                 .then(contents => {
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "image/svg+xml");
@@ -195,7 +195,7 @@ class HomebridgeDisplay {
                     return;
                 });
             } else if (path === "/static/font/weathericons-regular-webfont.ttf") {
-                fs.readFile(__dirname + "/static/font/weathericons-regular-webfont.ttf")
+                fs.readFile.promises(__dirname + "/static/font/weathericons-regular-webfont.ttf")
                 .then(contents => {
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "font/ttf");
@@ -207,7 +207,7 @@ class HomebridgeDisplay {
                     return;
                 });
             } else if (path === "/static/font/weathericons-regular-webfont.woff") {
-                fs.readFile(__dirname + "/static/font/weathericons-regular-webfont.woff")
+                fs.readFile.promises(__dirname + "/static/font/weathericons-regular-webfont.woff")
                 .then(contents => {
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "font/woff");
@@ -219,7 +219,7 @@ class HomebridgeDisplay {
                     return;
                 });
             } else if (path === "/static/font/weathericons-regular-webfont.woff2") {
-                fs.readFile(__dirname + "/static/font/weathericons-regular-webfont.woff2")
+                fs.readFile.promises(__dirname + "/static/font/weathericons-regular-webfont.woff2")
                 .then(contents => {
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "font/woff2");
@@ -232,7 +232,7 @@ class HomebridgeDisplay {
                 });
             }
             else if (path === "/home" || path === "/index.html" || path === "/" || path === "") {
-                fs.readFile(__dirname + "/index.html")
+                fs.readFile.promises(__dirname + "/index.html")
                 .then(contents => {
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "text/html");
