@@ -48,10 +48,10 @@ class HomebridgeDisplay {
 
                                     let storage_path = this.api.user.storagePath() + 'homebridge-display.json';
                                     
-                                    let contents, plugin_storage;
+                                    let data, plugin_storage;
                                     try {
-                                        contents = fs.readFileSync(storage_path);
-                                        plugin_storage = JSON.parse(contents);
+                                        data = fs.readFileSync(storage_path);
+                                        plugin_storage = JSON.parse(data);
                                     } catch (err) {
                                         this.log.debug(err);
                                         plugin_storage = {};
