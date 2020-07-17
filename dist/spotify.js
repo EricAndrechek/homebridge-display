@@ -31,16 +31,14 @@ class spotify {
             body: dataString
         };
         
-        function callback(error, response, body) {
-            if (!error && response.statusCode == 200) {
+        request(options, (err, res, body) => {
+            if (err) {
+                this.log.error('[SPOTIFY] - ' + err);
+            } else {
                 this.access_token = body.access_token;
                 this.log.debug('[SPOTIFY] - Access token generated: ' + body.access_token)
-            } else {
-                this.log.error('[SPOTIFY] - ' + error);
             }
-        }
-        
-        request(options, callback);
+        });
     }
     callback(code) {
         let dataString = 'grant_type=authorization_code&code=' + this.refresh_token + '&redirect_uri=' + this.rurl;
@@ -54,18 +52,17 @@ class spotify {
             headers: headers,
             body: dataString
         };
-        function callback(error, response, body) {
-            if (!error && response.statusCode == 200) {
+        
+        request(options, (err, res, body) => {
+            if (err) {
+                this.log.error('[SPOTIFY] - ' + err);
+            } else {
                 this.access_token = body.access_token;
                 this.refresh_token = body.refresh_token;
                 this.config.Spotify.refresh = this.refresh_token;
                 this.log.debug('[SPOTIFY] - Access token generated: ' + body.access_token)
-            } else {
-                this.log.error('[SPOTIFY] - ' + error);
             }
-        }
-        
-        request(options, callback);
+        });
     }
 }
 
