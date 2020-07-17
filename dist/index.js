@@ -22,66 +22,68 @@ class HomebridgeDisplay {
             .then(contents => {
                 boxes[0] = contents;
                 boxtype[0] = this.config.Boxes.Box1;
-            })
-            fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box2 + ".html")
-            .then(contents => {
-                boxes[1] = contents;
-                boxtype[1] = this.config.Boxes.Box2;
-            })
-            fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box3 + ".html")
-            .then(contents => {
-                boxes[2] = contents;
-                boxtype[2] = this.config.Boxes.Box3;
-            })
-            fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box4 + ".html")
-            .then(contents => {
-                boxes[3] = contents;
-                boxtype[3] = this.config.Boxes.Box4;
-            })
-            fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box5 + ".html")
-            .then(contents => {
-                boxes[4] = contents;
-                boxtype[4] = this.config.Boxes.Box5;
-            })
-            fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box6 + ".html")
-            .then(contents => {
-                boxes[5] = contents;
-                boxtype[5] = this.config.Boxes.Box6;
-            })
+                fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box2 + ".html")
+                .then(contents => {
+                    boxes[1] = contents;
+                    boxtype[1] = this.config.Boxes.Box2;
+                    fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box3 + ".html")
+                    .then(contents => {
+                        boxes[2] = contents;
+                        boxtype[2] = this.config.Boxes.Box3;
+                        fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box4 + ".html")
+                        .then(contents => {
+                            boxes[3] = contents;
+                            boxtype[3] = this.config.Boxes.Box4;
+                            fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box5 + ".html")
+                            .then(contents => {
+                                boxes[4] = contents;
+                                boxtype[4] = this.config.Boxes.Box5;
+                                fs.readFile(__dirname + "/templates/" + this.config.Boxes.Box6 + ".html")
+                                .then(contents => {
+                                    boxes[5] = contents;
+                                    boxtype[5] = this.config.Boxes.Box6;
+                                    
+                                    this.log.debug(boxes);
+                                    this.log.debug(boxes.length);
+                                    this.log.debug(boxtype);
+                                    this.log.debug(boxtype.length);
 
-            this.log.debug(boxes);
-            this.log.debug(boxes.length);
-            this.log.debug(boxtype);
-            this.log.debug(boxtype.length);
+                                    this.box = [] // list of objects to create for each box
 
-            this.box = [] // list of objects to create for each box
-
-            for (let i = 0; i < boxtype.length; i++) { // check for each box type and if its needed config settings are set up
-                this.log.debug(boxtype[i]);
-                if (boxtype[i] === 'spotify') {
-                    let spot_settings = this.config.Spotify || false;
-                    if (spot_settings !== false) {
-                        let cid = spot_settings.cid || undefined;
-                        let cs = spot_settings.cs || undefined;
-                        let refresh = spot_settings.refresh || null;
-                        let rurl = spot_settings.rurl || undefined;
-                        if (cid === undefined || cs === undefined || rurl === undefined) {
-                            this.log.error('Spotify is not done being set up, got to homebridge-display\'s settings to add it.');
-                            error_trigger = true;
-                        } else {
-                            let auth_url = 'https://accounts.spotify.com/authorize?response_type=code&client_id=' + cid + '&scope=user-read-private%20user-read-playback-state%20user-modify-playback-state%20user-library-modify%20user-library-read&redirect_uri=' + encodeURIComponent(rurl);
-                            this.spot_obj = new spot(cid, cs, refresh, auth_url, rurl, this.log, this.config, this.api);
-                            this.box[i] = this.spot_obj;
-                        }
-                    } else {
-                        this.log.error('Spotify not set up, go to homebridge-display\'s settings to add it.')
-                        error_trigger = true;
-                    }
-                }
-            }
-            let background = this.config.Config.background;
-            let password_protection = this.config.Config.private;
-            this.createServer(boxes, background, password_protection);
+                                    for (let i = 0; i < boxtype.length; i++) { // check for each box type and if its needed config settings are set up
+                                        this.log.debug(boxtype[i]);
+                                        if (boxtype[i] === 'spotify') {
+                                            let spot_settings = this.config.Spotify || false;
+                                            if (spot_settings !== false) {
+                                                let cid = spot_settings.cid || undefined;
+                                                let cs = spot_settings.cs || undefined;
+                                                let refresh = spot_settings.refresh || null;
+                                                let rurl = spot_settings.rurl || undefined;
+                                                if (cid === undefined || cs === undefined || rurl === undefined) {
+                                                    this.log.error('Spotify is not done being set up, got to homebridge-display\'s settings to add it.');
+                                                    error_trigger = true;
+                                                } else {
+                                                    let auth_url = 'https://accounts.spotify.com/authorize?response_type=code&client_id=' + cid + '&scope=user-read-private%20user-read-playback-state%20user-modify-playback-state%20user-library-modify%20user-library-read&redirect_uri=' + encodeURIComponent(rurl);
+                                                    this.spot_obj = new spot(cid, cs, refresh, auth_url, rurl, this.log, this.config, this.api);
+                                                    this.box[i] = this.spot_obj;
+                                                }
+                                            } else {
+                                                this.log.error('Spotify not set up, go to homebridge-display\'s settings to add it.')
+                                                error_trigger = true;
+                                            }
+                                        }
+                                    }
+                                    let background = this.config.Config.background;
+                                    let password_protection = this.config.Config.private;
+                                    if (error_trigger === false) {
+                                        this.createServer(boxes, background, password_protection);
+                                    }
+                                })
+                            })
+                        })
+                    })
+                })
+            })
         });
     }
     createServer(boxes, background, password_protection) {
