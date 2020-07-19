@@ -39,8 +39,8 @@ class spotify {
             } else if (JSON.parse(body).error !== undefined) {
                 this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error);
             } else {
-                this.access_token = body.access_token;
-                this.log.debug('[SPOTIFY] - Access token generated: ' + body.access_token)
+                this.access_token = JSON.parse(body).access_token;
+                this.log.debug('[SPOTIFY] - Access token generated: ' + JSON.parse(body).access_token)
             }
         });
     }

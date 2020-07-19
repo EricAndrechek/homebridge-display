@@ -41,11 +41,11 @@ class HomebridgeDisplay {
             this.box = [] // list of objects to create for each box
 
             let storage_path = this.api.user.storagePath() + '/homebridge-display.json';
-
+            let plugin_storage;
             try {
-                let plugin_storage = JSON.parse(fs.readFileSync(storage_path));
+                plugin_storage = JSON.parse(fs.readFileSync(storage_path));
             } catch (err) {
-                let plugin_storage = {};
+                plugin_storage = {};
             }
 
             for (let i = 0; i < boxtype.length; i++) { // check for each box type and if its needed config settings are set up
