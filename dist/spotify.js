@@ -130,8 +130,12 @@ class spotify {
         request(options, (err, res, body) => {
             if (err) {
                 this.log.debug('[SPOTIFY] - ' + err);
-            } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - ' + JSON.parse(body));
+            } else {
+                try {
+                    if (JSON.parse(body).error !== undefined) {
+                        this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
+                    }
+                } catch {}
             }
         });
     }
@@ -147,8 +151,12 @@ class spotify {
         request(options, (err, res, body) => {
             if (err) {
                 this.log.debug('[SPOTIFY] - ' + err);
-            } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - ' + JSON.parse(body));
+            } else {
+                try {
+                    if (JSON.parse(body).error !== undefined) {
+                        this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
+                    }
+                } catch {}
             }
         });
     }
@@ -164,8 +172,12 @@ class spotify {
         request(options, (err, res, body) => {
             if (err) {
                 this.log.debug('[SPOTIFY] - ' + err);
-            } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - ' + JSON.parse(body));
+            } else {
+                try {
+                    if (JSON.parse(body).error !== undefined) {
+                        this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
+                    }
+                } catch {}
             }
         });
     }
@@ -181,8 +193,12 @@ class spotify {
         request(options, (err, res, body) => {
             if (err) {
                 this.log.debug('[SPOTIFY] - ' + err);
-            } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - ' + JSON.parse(body));
+            } else {
+                try {
+                    if (JSON.parse(body).error !== undefined) {
+                        this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
+                    }
+                } catch {}
             }
         });
     }
@@ -255,13 +271,19 @@ class spotify {
                                 headers: headers
                             };
                             request(options, (err, res, body) => {
-                                if (err) {
-                                    log.debug('[SPOTIFY] - ' + err);
-                                } else if (JSON.parse(body).error !== undefined) {
-                                    log.debug('[SPOTIFY] - ' + JSON.parse(body));
-                                } else {
-                                    update_json['liked'] = JSON.parse(body)[0];
-                                }
+                                request(options, (err, res, body) => {
+                                    if (err) {
+                                        this.log.debug('[SPOTIFY] - ' + err);
+                                    } else {
+                                        try {
+                                            if (JSON.parse(body).error !== undefined) {
+                                                this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
+                                            } else {
+                                                update_json['liked'] = JSON.parse(body)[0];
+                                            }
+                                        } catch {}
+                                    }
+                                });
                             });
                         } catch (err) {
                             // ignore
