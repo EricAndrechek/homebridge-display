@@ -80,10 +80,12 @@ class spotify {
     }
     get(endpoint) {
         let headers = {
-            'Authorization': 'Bearer ' + this.access_token
+            'Authorization': 'Bearer ' + this.access_token,
+            'User-Agent': 'request'
         };
         let options = {
             url: 'https://api.spotify.com/v1/me/player' + endpoint,
+            json: true,
             method: 'GET',
             headers: headers
         };
@@ -92,11 +94,11 @@ class spotify {
             if (err) {
                 this.log.debug('[SPOTIFY] - GET err: ' + err);
                 return;
-            } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - GET error: ' + JSON.parse(body).error.message);
+            } else if (body.error !== undefined) {
+                this.log.debug('[SPOTIFY] - GET error: ' + body.error.message);
                 return;
             } else {
-                return JSON.parse(body);
+                return body;
             }
         });
     }
