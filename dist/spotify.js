@@ -90,12 +90,13 @@ class spotify {
             headers: headers
         };
         request(options, (err, res, body) => {
-            this.log.debug(body);
-            if (err) {
+            if (err !== null && err !== undefined) {
                 this.log.debug('[SPOTIFY] - GET err: ' + err);
                 return;
-            } else if (body.error !== undefined) {
+            } else if (body !== undefined && body.error !== undefined) {
                 this.log.debug('[SPOTIFY] - GET error: ' + body.error.message);
+                return;
+            } else if (body === undefined) {
                 return;
             } else {
                 return body;
