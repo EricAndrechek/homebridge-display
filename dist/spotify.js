@@ -78,7 +78,7 @@ class spotify {
             }
         });
     }
-    get(endpoint) {
+    get(endpoint, call) {
         let headers = {
             'Authorization': 'Bearer ' + this.access_token,
             'User-Agent': 'request',
@@ -91,24 +91,27 @@ class spotify {
         };
         request(options, (err, res, body) => {
             if (err !== null && err !== undefined) {
-                this.log.debug('[SPOTIFY] - GET err: ' + err);
-                return;
+                this.log.debug('[SPOTIFY] - ' + err);
+                return call(null);
             } else {
                 if (body !== undefined) {
                     let data;
                     try {
                         data = JSON.parse(body);
                     } catch {
-                        return body;
+                        return call(body);
                     }
                     if (data.error !== undefined) {
-                        this.log.debug('[SPOTIFY] - GET error: ' + data.error.message);
-                        return;
+                        this.log.debug('[SPOTIFY] - ' + data.error.message);
+                        if (data.error.message === "The access token expired") {
+                            this.refresh();
+                        }
+                        return call(null);
                     } else {
-                        return data;
+                        return call(data);
                     }
                 } else {
-                    return;
+                    return call(null);
                 }
             }
         });
@@ -184,6 +187,7 @@ class spotify {
         });
     }
     update() {
+        const log = this.log;
         let canupdate = false;
         try {
             if (this.refresh_token) {
@@ -193,88 +197,93 @@ class spotify {
             // keep canupdate to false as there is no refresh token
         }
         if (canupdate) {
-            let user_playback = this.get('');
-            this.log.debug(user_playback);
-            let update_json = {};
+            this.get('', function(result) {
+                let user_playback = result;
+                let update_json = {};
 
-            try {
-                update_json['is_playing'] = user_playback.is_playing;
-            } catch (err) {
-                this.log.debug(err);
-                update_json['is_playing'] = false;
-            }
-            if (update_json.is_playing) {
                 try {
-                    update_json['device'] = user_playback['device']['name'];
-                    update_json['device_type'] = user_playback['device']['type'];
-                    update_json['device_id'] = user_playback['device']['id'];
-                    update_json['volume'] = user_playback['device']['volume_percent'];
-                    update_json['shuffle_state'] = user_playback['shuffle_state'];
-                    update_json['repeat_state'] = user_playback['repeat_state'];
+                    update_json['is_playing'] = user_playback.is_playing;
                 } catch (err) {
-                    if (user_playback != {'error': {'status': 429, 'message': 'API rate limit exceeded'}}) {
-                        this.log.debug(user_playback);
-                    }
-                    return {"error": 'cannot update, check logs'};
+                    log.debug(err);
+                    update_json['is_playing'] = false;
                 }
-
-                let currently_playing = this.get('/currently-playing');
-                try {
-                    update_json['progress_ms'] = currently_playing['progress_ms'];
-                    update_json['img_url'] = currently_playing['item']['album']['images'][0]['url'];
-                    let artist_names = []
-                    for (const artist of currently_playing['item']['artists']) {
-                        artist_names.push(artist['name']);
-                    }
-                    update_json['artists'] = artist_names.join();
-                    update_json['duration_ms'] = currently_playing['item']['duration_ms'];
-                    update_json['title'] = currently_playing['item']['name'];
-                    update_json['song_id'] = currently_playing['item']['id'];
-                } catch (err) {
-                    if (currently_playing != {'error': {'status': 429, 'message': 'API rate limit exceeded'}}) {
-                        this.log.debug(currently_playing);
-                    }
-                    return {"error": 'cannot update, check logs'};
-                }
-
-                try {
-                    let headers = {
-                        'Authorization': 'Bearer ' + this.access_token
-                    };
-                    let options = {
-                        url: 'https://api.spotify.com/v1/me/tracks/contains?ids=' + update_json.song_id,
-                        method: 'GET',
-                        headers: headers
-                    };
-                    request(options, (err, res, body) => {
-                        if (err) {
-                            this.log.debug('[SPOTIFY] - ' + err);
-                        } else if (JSON.parse(body).error !== undefined) {
-                            this.log.debug('[SPOTIFY] - ' + JSON.parse(body));
-                        } else {
-                            update_json['liked'] = JSON.parse(body)[0];
+                if (update_json.is_playing) {
+                    try {
+                        update_json['device'] = user_playback['device']['name'];
+                        update_json['device_type'] = user_playback['device']['type'];
+                        update_json['device_id'] = user_playback['device']['id'];
+                        update_json['volume'] = user_playback['device']['volume_percent'];
+                        update_json['shuffle_state'] = user_playback['shuffle_state'];
+                        update_json['repeat_state'] = user_playback['repeat_state'];
+                    } catch (err) {
+                        if (user_playback != {'error': {'status': 429, 'message': 'API rate limit exceeded'}}) {
+                            log.debug(user_playback);
                         }
-                    });
-                } catch (err) {
-                    // ignore
-                }
+                        return {"error": 'cannot update, check logs'};
+                    }
 
-                let devices = self.get('/devices');
-                update_json['avaliable_devices'] = {};
-                try {
-                    for (const device of devices['devices']) {
-                        update_json['avaliable_devices'][device['name']] = device['id'];
-                    }
-                } catch (err) {
-                    if (devices != {'error': {'status': 429, 'message': 'API rate limit exceeded'}}) {
-                        this.log.debug(devices);
-                    }
-                    return {"error": 'cannot update, check logs'};
+                    this.get('/currently-playing', function(result) {
+                        let currently_playing = result;
+                        try {
+                            update_json['progress_ms'] = currently_playing['progress_ms'];
+                            update_json['img_url'] = currently_playing['item']['album']['images'][0]['url'];
+                            let artist_names = []
+                            for (const artist of currently_playing['item']['artists']) {
+                                artist_names.push(artist['name']);
+                            }
+                            update_json['artists'] = artist_names.join();
+                            update_json['duration_ms'] = currently_playing['item']['duration_ms'];
+                            update_json['title'] = currently_playing['item']['name'];
+                            update_json['song_id'] = currently_playing['item']['id'];
+                        } catch (err) {
+                            if (currently_playing != {'error': {'status': 429, 'message': 'API rate limit exceeded'}}) {
+                                log.debug(currently_playing);
+                            }
+                            return {"error": 'cannot update, check logs'};
+                        }
+    
+                        try {
+                            let headers = {
+                                'Authorization': 'Bearer ' + this.access_token
+                            };
+                            let options = {
+                                url: 'https://api.spotify.com/v1/me/tracks/contains?ids=' + update_json.song_id,
+                                method: 'GET',
+                                headers: headers
+                            };
+                            request(options, (err, res, body) => {
+                                if (err) {
+                                    log.debug('[SPOTIFY] - ' + err);
+                                } else if (JSON.parse(body).error !== undefined) {
+                                    this.log.debug('[SPOTIFY] - ' + JSON.parse(body));
+                                } else {
+                                    update_json['liked'] = JSON.parse(body)[0];
+                                }
+                            });
+                        } catch (err) {
+                            // ignore
+                        }
+    
+                        self.get('/devices', function(result) {
+                            let devices = result;
+                            update_json['avaliable_devices'] = {};
+                            try {
+                                for (const device of devices['devices']) {
+                                    update_json['avaliable_devices'][device['name']] = device['id'];
+                                }
+                            } catch (err) {
+                                if (devices != {'error': {'status': 429, 'message': 'API rate limit exceeded'}}) {
+                                    log.debug(devices);
+                                }
+                                return {"error": 'cannot update, check logs'};
+                            }
+                            return update_json;
+                        });
+                    });
+                } else {
+                    return update_json;
                 }
-                return update_json;
-            } else {
-                return update_json;
-            }
+            });
         } else {
             return {"error": 'cannot update, check logs'};
         }
