@@ -63,7 +63,7 @@ class spotify {
                 this.access_token = JSON.parse(body).access_token;
                 this.refresh_token = JSON.parse(body).refresh_token;
                 let plugin_data = {};
-                let storage_path = this.api.user.storagePath() + 'homebridge-display.json';
+                let storage_path = this.api.user.storagePath() + '/homebridge-display.json';
                 try {
                     plugin_data = JSON.parse(fs.readFileSync(storage_path));
                 } catch (err) {

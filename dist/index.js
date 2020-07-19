@@ -39,14 +39,13 @@ class HomebridgeDisplay {
 
             this.box = [] // list of objects to create for each box
 
-            let storage_path = this.api.user.storagePath() + 'homebridge-display.json';
+            let storage_path = this.api.user.storagePath() + '/homebridge-display.json';
             
             let data, plugin_storage;
             try {
                 data = fs.readFileSync(storage_path);
                 plugin_storage = JSON.parse(data);
             } catch (err) {
-                this.log.debug(err);
                 plugin_storage = {};
             }
 
@@ -86,150 +85,150 @@ class HomebridgeDisplay {
             let path = url.parse(req.url, true).pathname;
             let args = url.parse(req.url, true).query;
             if (path === "/static/background-image.jpg") {
-                fs.readFile.promises(__dirname + "/static/background-image.jpg")
-                .then(contents => {
+                try {
+                    let contents = fs.readFileSync(__dirname + "/static/background-image.jpg");
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "image/jpeg");
                     res.end(contents);
-                })
-                .catch(err => {
+                }
+                catch (err) {
                     res.writeHead(500);
                     res.end(err);
                     return;
-                });
+                }
             } else if (path === "/static/main.css") {
-                fs.readFile.promises(__dirname + "/static/main.css")
-                .then(contents => {
+                try {
+                    let contents = fs.readFileSync(__dirname + "/static/main.css");
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "text/css");
                     res.end(contents);
-                })
-                .catch(err => {
+                }
+                catch (err) {
                     res.writeHead(500);
                     res.end(err);
                     return;
-                });
+                }
             } else if (path === "/static/black-home.png") {
-                fs.readFile.promises(__dirname + "/static/black-home.png")
-                .then(contents => {
+                try {
+                    let contents = fs.readFileSync(__dirname + "/static/black-home.png");
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "image/png");
                     res.end(contents);
-                })
-                .catch(err => {
+                }
+                catch (err) {
                     res.writeHead(500);
                     res.end(err);
                     return;
-                });
+                }
             } else if (path === "/static/placeholder.png") {
-                fs.readFile.promises(__dirname + "/static/placeholder.png")
-                .then(contents => {
+                try {
+                    let contents = fs.readFileSync(__dirname + "/static/placeholder.png");
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "image/png");
                     res.end(contents);
-                })
-                .catch(err => {
+                }
+                catch (err) {
                     res.writeHead(500);
                     res.end(err);
                     return;
-                });
+                }
             } else if (path === "/static/weather-icons.min.css") {
-                fs.readFile.promises(__dirname + "/static/weather-icons.min.css")
-                .then(contents => {
+                try {
+                    let contents = fs.readFileSync(__dirname + "/static/weather-icons.min.css");
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "text/css");
                     res.end(contents);
-                })
-                .catch(err => {
+                }
+                catch (err) {
                     res.writeHead(500);
                     res.end(err);
                     return;
-                });
+                }
             } else if (path === "/static/home-black-ios.png") {
-                fs.readFile.promises(__dirname + "/static/home-black-ios.png")
-                .then(contents => {
+                try {
+                    let contents = fs.readFileSync(__dirname + "/static/home-black-ios.png");
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "image/png");
                     res.end(contents);
-                })
-                .catch(err => {
+                }
+                catch (err) {
                     res.writeHead(500);
                     res.end(err);
                     return;
-                });
+                }
             } else if (path === "/static/font/weathericons-regular-webfont.eot") {
-                fs.readFile.promises(__dirname + "/static/font/weathericons-regular-webfont.eot")
-                .then(contents => {
+                try {
+                    let contents = fs.readFile.readFileSync(__dirname + "/static/font/weathericons-regular-webfont.eot");
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "application/vnd.ms-fontobject");
                     res.end(contents);
-                })
-                .catch(err => {
+                }
+                catch (err) {
                     res.writeHead(500);
                     res.end(err);
                     return;
-                });
+                }
             } else if (path === "/static/font/weathericons-regular-webfont.svg") {
-                fs.readFile.promises(__dirname + "/static/font/weathericons-regular-webfont.svg")
-                .then(contents => {
+                try {
+                    let contents = fs.readFileSync(__dirname + "/static/font/weathericons-regular-webfont.svg");
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "image/svg+xml");
                     res.end(contents);
-                })
-                .catch(err => {
+                }
+                catch (err) {
                     res.writeHead(500);
                     res.end(err);
                     return;
-                });
+                }
             } else if (path === "/static/font/weathericons-regular-webfont.ttf") {
-                fs.readFile.promises(__dirname + "/static/font/weathericons-regular-webfont.ttf")
-                .then(contents => {
+                try {
+                    let contents = fs.readFileSync(__dirname + "/static/font/weathericons-regular-webfont.ttf");
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "font/ttf");
                     res.end(contents);
-                })
-                .catch(err => {
+                }
+                catch (err) {
                     res.writeHead(500);
                     res.end(err);
                     return;
-                });
+                }
             } else if (path === "/static/font/weathericons-regular-webfont.woff") {
-                fs.readFile.promises(__dirname + "/static/font/weathericons-regular-webfont.woff")
-                .then(contents => {
+                try {
+                    let contents = fs.readFileSync(__dirname + "/static/font/weathericons-regular-webfont.woff");
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "font/woff");
                     res.end(contents);
-                })
-                .catch(err => {
+                }
+                catch (err) {
                     res.writeHead(500);
                     res.end(err);
                     return;
-                });
+                }
             } else if (path === "/static/font/weathericons-regular-webfont.woff2") {
-                fs.readFile.promises(__dirname + "/static/font/weathericons-regular-webfont.woff2")
-                .then(contents => {
+                try {
+                    let contents = fs.readFileSync(__dirname + "/static/font/weathericons-regular-webfont.woff2");
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "font/woff2");
                     res.end(contents);
-                })
-                .catch(err => {
+                }
+                catch (err) {
                     res.writeHead(500);
                     res.end(err);
                     return;
-                });
+                }
             }
             else if (path === "/home" || path === "/index.html" || path === "/" || path === "") {
-                fs.readFile.promises(__dirname + "/index.html")
-                .then(contents => {
+                try {
+                    let contents = fs.readFileSync(__dirname + "/index.html");
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "text/html");
                     res.end(contents);
-                })
-                .catch(err => {
+                }
+                catch (err) {
                     res.writeHead(500);
                     res.end(err);
                     return;
-                });
+                }
             } else if (path === "/callback") {
                 let code = args.code || undefined;
                 if (code === undefined) {
