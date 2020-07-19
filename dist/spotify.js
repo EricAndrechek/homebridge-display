@@ -93,6 +93,7 @@ class spotify {
                 return;
             } else if (JSON.parse(body).error !== undefined) {
                 this.log.debug('[SPOTIFY] - GET error: ' + JSON.parse(body).error);
+                this.log.debug('[SPOTIFY] - GET traceback: ' + res+ body + err);
                 return;
             } else {
                 return JSON.parse(body);
