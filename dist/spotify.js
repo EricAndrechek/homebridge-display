@@ -80,7 +80,7 @@ class spotify {
     }
     get(endpoint) {
         let headers = {
-            'Authorization': 'Basic ' + this.access_token
+            'Authorization': 'Bearer ' + this.access_token
         };
         let options = {
             url: 'https://api.spotify.com/v1/me/player' + endpoint,
@@ -92,8 +92,7 @@ class spotify {
                 this.log.debug('[SPOTIFY] - GET err: ' + err);
                 return;
             } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - GET error: ' + JSON.parse(body).error);
-                this.log.debug('[SPOTIFY] - GET traceback: ' + res+ body + err);
+                this.log.debug('[SPOTIFY] - GET error: ' + JSON.parse(body).error.message);
                 return;
             } else {
                 return JSON.parse(body);
@@ -102,7 +101,7 @@ class spotify {
     }
     put(endpoint, json_body) {
         let headers = {
-            'Authorization': 'Basic ' + this.access_token,
+            'Authorization': 'Bearer ' + this.access_token,
             'Content-Type': 'application/json'
         };
         let options = {
@@ -115,13 +114,13 @@ class spotify {
             if (err) {
                 this.log.debug('[SPOTIFY] - ' + err);
             } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error);
+                this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
             }
         });
     }
     post(endpoint) {
         let headers = {
-            'Authorization': 'Basic ' + this.access_token
+            'Authorization': 'Bearer ' + this.access_token
         };
         let options = {
             url: 'https://api.spotify.com/v1/me/player' + endpoint,
@@ -132,13 +131,13 @@ class spotify {
             if (err) {
                 this.log.debug('[SPOTIFY] - ' + err);
             } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error);
+                this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
             }
         });
     }
     like(song_id) {
         let headers = {
-            'Authorization': 'Basic ' + this.access_token
+            'Authorization': 'Bearer ' + this.access_token
         };
         let options = {
             url: 'https://api.spotify.com/v1/me/tracks?ids=' + song_id,
@@ -149,13 +148,13 @@ class spotify {
             if (err) {
                 this.log.debug('[SPOTIFY] - ' + err);
             } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error);
+                this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
             }
         });
     }
     unlike(song_id) {
         let headers = {
-            'Authorization': 'Basic ' + this.access_token
+            'Authorization': 'Bearer ' + this.access_token
         };
         let options = {
             url: 'https://api.spotify.com/v1/me/tracks?ids=' + song_id,
@@ -166,7 +165,7 @@ class spotify {
             if (err) {
                 this.log.debug('[SPOTIFY] - ' + err);
             } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error);
+                this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
             }
         });
     }
@@ -225,7 +224,7 @@ class spotify {
 
                 try {
                     let headers = {
-                        'Authorization': 'Basic ' + this.access_token
+                        'Authorization': 'Bearer ' + this.access_token
                     };
                     let options = {
                         url: 'https://api.spotify.com/v1/me/tracks/contains?ids=' + update_json.song_id,
@@ -236,7 +235,7 @@ class spotify {
                         if (err) {
                             this.log.debug('[SPOTIFY] - ' + err);
                         } else if (JSON.parse(body).error !== undefined) {
-                            this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error);
+                            this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
                         } else {
                             update_json['liked'] = JSON.parse(body)[0];
                         }
