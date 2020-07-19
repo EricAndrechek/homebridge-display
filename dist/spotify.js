@@ -1,5 +1,5 @@
 const request = require('request');
-const fs = require('fs').promises;
+const fs = require('fs');
 
 class spotify {
     constructor(cid, secret, refresh_token, auth_url, rurl, log, config, api) {
@@ -67,7 +67,7 @@ class spotify {
                 try {
                     plugin_data = JSON.parse(fs.readFileSync(storage_path));
                 } catch (err) {
-                    // the file just likely doesn't exist yet
+                    // the file just likely doesn't exist yet but we may need to catch this error so it doesn't override
                 }
                 plugin_data["refresh"] = this.refresh_token;
                 fs.writeFileSync(storage_path, JSON.stringify(plugin_data));
