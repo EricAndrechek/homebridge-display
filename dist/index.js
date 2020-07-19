@@ -41,13 +41,11 @@ class HomebridgeDisplay {
             this.box = [] // list of objects to create for each box
 
             let storage_path = this.api.user.storagePath() + '/homebridge-display.json';
-            
-            let data, plugin_storage;
+
             try {
-                data = fs.readFileSync(storage_path);
-                plugin_storage = JSON.parse(data);
+                let plugin_storage = JSON.parse(fs.readFileSync(storage_path));
             } catch (err) {
-                plugin_storage = {};
+                let plugin_storage = {};
             }
 
             for (let i = 0; i < boxtype.length; i++) { // check for each box type and if its needed config settings are set up
@@ -56,7 +54,7 @@ class HomebridgeDisplay {
                     if (spot_settings !== false) {
                         let cid = spot_settings.cid || undefined;
                         let cs = spot_settings.cs || undefined;
-                        let refresh = plugin_storage.refresh || null;
+                        let refresh = plugin_storage.refresh || undefined;
                         let rurl = spot_settings.rurl || undefined;
                         if (cid === undefined || cs === undefined || rurl === undefined) {
                             this.log.debug('Spotify is not done being set up, got to homebridge-display\'s settings to add it.');
