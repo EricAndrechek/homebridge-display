@@ -81,11 +81,11 @@ class spotify {
     get(endpoint) {
         let headers = {
             'Authorization': 'Bearer ' + this.access_token,
-            'User-Agent': 'request'
+            'User-Agent': 'request',
+            'Content-Type': 'application/json'
         };
         let options = {
             url: 'https://api.spotify.com/v1/me/player' + endpoint,
-            json: true,
             method: 'GET',
             headers: headers
         };
@@ -93,13 +93,23 @@ class spotify {
             if (err !== null && err !== undefined) {
                 this.log.debug('[SPOTIFY] - GET err: ' + err);
                 return;
-            } else if (body !== undefined && body.error !== undefined) {
-                this.log.debug('[SPOTIFY] - GET error: ' + body.error.message);
-                return;
-            } else if (body === undefined) {
-                return;
             } else {
-                return body;
+                if (body !== undefined) {
+                    let data;
+                    try {
+                        data = JSON.parse(body);
+                    } catch {
+                        return body;
+                    }
+                    if (data.error !== undefined) {
+                        this.log.debug('[SPOTIFY] - GET error: ' + data.error.message);
+                        return;
+                    } else {
+                        return data;
+                    }
+                } else {
+                    return;
+                }
             }
         });
     }
@@ -184,11 +194,13 @@ class spotify {
         }
         if (canupdate) {
             let user_playback = this.get('');
+            this.log.debug(user_playback);
             let update_json = {};
 
             try {
                 update_json['is_playing'] = user_playback.is_playing;
             } catch (err) {
+                this.log.debug(err);
                 update_json['is_playing'] = false;
             }
             if (update_json.is_playing) {
