@@ -92,7 +92,7 @@ class spotify {
                 this.log.debug('[SPOTIFY] - GET err: ' + err);
                 return;
             } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - GET error: ' + JSON.parse(body).error.message);
+                this.log.debug('[SPOTIFY] - GET error: ' + JSON.parse(body));
                 return;
             } else {
                 return JSON.parse(body);
@@ -114,7 +114,7 @@ class spotify {
             if (err) {
                 this.log.debug('[SPOTIFY] - ' + err);
             } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
+                this.log.debug('[SPOTIFY] - ' + JSON.parse(body));
             }
         });
     }
@@ -131,7 +131,7 @@ class spotify {
             if (err) {
                 this.log.debug('[SPOTIFY] - ' + err);
             } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
+                this.log.debug('[SPOTIFY] - ' + JSON.parse(body));
             }
         });
     }
@@ -148,7 +148,7 @@ class spotify {
             if (err) {
                 this.log.debug('[SPOTIFY] - ' + err);
             } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
+                this.log.debug('[SPOTIFY] - ' + JSON.parse(body));
             }
         });
     }
@@ -165,7 +165,7 @@ class spotify {
             if (err) {
                 this.log.debug('[SPOTIFY] - ' + err);
             } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
+                this.log.debug('[SPOTIFY] - ' + JSON.parse(body));
             }
         });
     }
@@ -235,7 +235,7 @@ class spotify {
                         if (err) {
                             this.log.debug('[SPOTIFY] - ' + err);
                         } else if (JSON.parse(body).error !== undefined) {
-                            this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
+                            this.log.debug('[SPOTIFY] - ' + JSON.parse(body));
                         } else {
                             update_json['liked'] = JSON.parse(body)[0];
                         }
