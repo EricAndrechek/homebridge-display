@@ -2,6 +2,7 @@ const http = require('http');
 const url = require('url');
 const fs = require('fs');
 const spot = require('./spotify')
+const request = require('request');
 
 module.exports = (homebridge) => {
     homebridge.registerPlatform('homebridge-display', 'homebridge-display', HomebridgeDisplay)
@@ -248,10 +249,21 @@ class HomebridgeDisplay {
         const io = require('socket.io').listen(server)
         io.sockets.on('connection', function (socket) {
             socket.on('update', function () { // Spotify update route
-                //
+                socket.emit('update', this.spot_obj.update());
             });
             socket.on('lyrics', function (data) {
-                //
+                let options = {
+                    url: data,
+                    method: 'GET'
+                };
+                request(options, (err, res, body) => {
+                    if (err) {
+                        this.log.debug('[LYRICS] - ' + err);
+                        socket.emit("lyrics", {});
+                    } else {
+                        socket.emit("lyrics", body);
+                    }
+                });
             });
             socket.on('switch', function (data) {
                 let switch_name = data[0]
@@ -271,36 +283,47 @@ class HomebridgeDisplay {
                 //
             });
             socket.on('transfer', function (data) {
+                this.spot_obj.put('', {"device_ids": [data]});
                 log.debug("[SPOTIFY] - Transferring playback to " + data);
             });
             socket.on('like', function (data) {
+                this.spot_obj.like(data);
                 log.debug("[SPOTIFY] - Liked song");
             });
             socket.on('unlike', function (data) {
+                this.spot_obj.unlike(data);
                 log.debug("[SPOTIFY] - Unliked song");
             });
             socket.on('next', function () {
+                this.spot_obj.post('/next');
                 log.debug("[SPOTIFY] - Next song");
             });
             socket.on('pause', function () {
+                this.spot_obj.put('/pause', null);
                 log.debug("[SPOTIFY] - Pause");
             });
             socket.on('back', function () {
+                this.spot_obj.post('/previous');
                 log.debug("[SPOTIFY] - Previous song");
             });
             socket.on('resume', function () {
+                this.spot_obj.put('/play', null);
                 log.debug("[SPOTIFY] - Resume");
             });
             socket.on('seek', function (data) {
+                this.spot_obj.put('/seek?position_ms=' + data, null);
                 log.debug("[SPOTIFY] - Skipping to " + data + "ms");
             });
             socket.on('volume', function (data) {
+                this.spot_obj.put('/volume?volume_percent=' + data, null);
                 log.debug("[SPOTIFY] - Volume set to " + data + "%");
             });
             socket.on('shuffle', function (data) {
+                this.spot_obj.put('/shuffle?state=' + data, null);
                 log.debug("[SPOTIFY] - Shuffle set to " + data);
             });
             socket.on('repeat', function (data) {
+                this.spot_obj.put('/repeat?state=' + data, null);
                 log.debug("[SPOTIFY] - Repeat set to " + data);
             });
         });
