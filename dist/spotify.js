@@ -88,11 +88,12 @@ class spotify {
             headers: headers
         };
         request(options, (err, res, body) => {
+            this.log.debug(body);
             if (err) {
                 this.log.debug('[SPOTIFY] - GET err: ' + err);
                 return;
             } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - GET error: ' + JSON.parse(body));
+                this.log.debug('[SPOTIFY] - GET error: ' + JSON.parse(body).error.message);
                 return;
             } else {
                 return JSON.parse(body);
@@ -180,7 +181,6 @@ class spotify {
         }
         if (canupdate) {
             let user_playback = this.get('');
-            this.log.debug(user_playback);
             let update_json = {};
 
             try {
