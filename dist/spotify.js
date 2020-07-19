@@ -223,7 +223,6 @@ class spotify {
                 try {
                     update_json['is_playing'] = user_playback.is_playing;
                 } catch (err) {
-                    log.debug(err);
                     update_json['is_playing'] = false;
                 }
                 if (update_json.is_playing) {
@@ -235,10 +234,10 @@ class spotify {
                         update_json['shuffle_state'] = user_playback['shuffle_state'];
                         update_json['repeat_state'] = user_playback['repeat_state'];
                     } catch (err) {
-                        if (user_playback != {'error': {'status': 429, 'message': 'API rate limit exceeded'}}) {
+                        if (user_playback !== 'API rate limit exceeded') {
                             log.debug(user_playback);
                         }
-                        return call({"error": 'cannot update, check logs'});
+                        return call({"error": user_playback});
                     }
 
                     get(access_token, log, '/currently-playing', function(result) {
@@ -250,15 +249,15 @@ class spotify {
                             for (const artist of currently_playing['item']['artists']) {
                                 artist_names.push(artist['name']);
                             }
-                            update_json['artists'] = artist_names.join();
+                            update_json['artists'] = artist_names.join(', ');
                             update_json['duration_ms'] = currently_playing['item']['duration_ms'];
                             update_json['title'] = currently_playing['item']['name'];
                             update_json['song_id'] = currently_playing['item']['id'];
                         } catch (err) {
-                            if (currently_playing != {'error': {'status': 429, 'message': 'API rate limit exceeded'}}) {
+                            if (currently_playing !== 'API rate limit exceeded') {
                                 log.debug(currently_playing);
                             }
-                            return call({"error": 'cannot update, check logs'});
+                            return call({"error": currently_playing});
                         }
     
                         try {
@@ -297,10 +296,10 @@ class spotify {
                                     update_json['avaliable_devices'][device['name']] = device['id'];
                                 }
                             } catch (err) {
-                                if (devices != {'error': {'status': 429, 'message': 'API rate limit exceeded'}}) {
+                                if (devices !== 'API rate limit exceeded') {
                                     log.debug(devices);
                                 }
-                                return call({"error": 'cannot update, check logs'});
+                                return call({"error": devices});
                             }
                             return call(update_json);
                         });
