@@ -253,9 +253,11 @@ class HomebridgeDisplay {
         const io = require('socket.io').listen(server)
         io.sockets.on('connection', function (socket) {
             socket.on('update', function () { // Spotify update route
-                let spot_data = spot_obj.update();
-                log.debug('[SPOTIFY] - ' + spot_data);
-                socket.emit('update', JSON.stringify(spot_data));
+                spot_obj.update(function(result) {
+                    let spot_data = result;
+                    log.debug('[SPOTIFY] - ' + spot_data);
+                    socket.emit('update', JSON.stringify(spot_data));
+                });
             });
             socket.on('lyrics', function (data) {
                 let options = {

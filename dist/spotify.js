@@ -78,9 +78,9 @@ class spotify {
             }
         });
     }
-    get(endpoint, call) {
+    get(access_token, log, endpoint, call) {
         let headers = {
-            'Authorization': 'Bearer ' + this.access_token,
+            'Authorization': 'Bearer ' + access_token,
             'User-Agent': 'request',
             'Content-Type': 'application/json'
         };
@@ -91,7 +91,7 @@ class spotify {
         };
         request(options, (err, res, body) => {
             if (err !== null && err !== undefined) {
-                this.log.debug('[SPOTIFY] - ' + err);
+                log.debug('[SPOTIFY] - ' + err);
                 return call(null);
             } else {
                 if (body !== undefined) {
@@ -102,9 +102,9 @@ class spotify {
                         return call(body);
                     }
                     if (data.error !== undefined) {
-                        this.log.debug('[SPOTIFY] - ' + data.error.message);
+                        log.debug('[SPOTIFY] - ' + data.error.message);
                         if (data.error.message === "The access token expired") {
-                            this.refresh();
+                            refresh();
                         }
                         return call(null);
                     } else {
@@ -186,18 +186,21 @@ class spotify {
             }
         });
     }
-    update() {
+    update(call) {
         const log = this.log;
+        const get = this.get;
+        const refresh_token = this.refresh_token;
+        const access_token = this.access_token;
         let canupdate = false;
         try {
-            if (this.refresh_token) {
+            if (refresh_token) {
                 canupdate = true;
             }
         } catch (err) {
             // keep canupdate to false as there is no refresh token
         }
         if (canupdate) {
-            this.get('', function(result) {
+            get(access_token, log, '', function(result) {
                 let user_playback = result;
                 let update_json = {};
 
@@ -219,10 +222,10 @@ class spotify {
                         if (user_playback != {'error': {'status': 429, 'message': 'API rate limit exceeded'}}) {
                             log.debug(user_playback);
                         }
-                        return {"error": 'cannot update, check logs'};
+                        return call({"error": 'cannot update, check logs'});
                     }
 
-                    this.get('/currently-playing', function(result) {
+                    get(access_token, log, '/currently-playing', function(result) {
                         let currently_playing = result;
                         try {
                             update_json['progress_ms'] = currently_playing['progress_ms'];
@@ -239,12 +242,12 @@ class spotify {
                             if (currently_playing != {'error': {'status': 429, 'message': 'API rate limit exceeded'}}) {
                                 log.debug(currently_playing);
                             }
-                            return {"error": 'cannot update, check logs'};
+                            return call({"error": 'cannot update, check logs'});
                         }
     
                         try {
                             let headers = {
-                                'Authorization': 'Bearer ' + this.access_token
+                                'Authorization': 'Bearer ' + access_token
                             };
                             let options = {
                                 url: 'https://api.spotify.com/v1/me/tracks/contains?ids=' + update_json.song_id,
@@ -255,7 +258,7 @@ class spotify {
                                 if (err) {
                                     log.debug('[SPOTIFY] - ' + err);
                                 } else if (JSON.parse(body).error !== undefined) {
-                                    this.log.debug('[SPOTIFY] - ' + JSON.parse(body));
+                                    log.debug('[SPOTIFY] - ' + JSON.parse(body));
                                 } else {
                                     update_json['liked'] = JSON.parse(body)[0];
                                 }
@@ -264,7 +267,7 @@ class spotify {
                             // ignore
                         }
     
-                        self.get('/devices', function(result) {
+                        get(access_token, log, '/devices', function(result) {
                             let devices = result;
                             update_json['avaliable_devices'] = {};
                             try {
@@ -275,17 +278,17 @@ class spotify {
                                 if (devices != {'error': {'status': 429, 'message': 'API rate limit exceeded'}}) {
                                     log.debug(devices);
                                 }
-                                return {"error": 'cannot update, check logs'};
+                                return call({"error": 'cannot update, check logs'});
                             }
-                            return update_json;
+                            return call(update_json);
                         });
                     });
                 } else {
-                    return update_json;
+                    return call(update_json);
                 }
             });
         } else {
-            return {"error": 'cannot update, check logs'};
+            return call({"error": 'cannot update, check logs'});
         }
     }
 }
