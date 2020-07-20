@@ -272,15 +272,17 @@ class spotify {
                             request(options, (err, res, body) => {
                                 request(options, (err, res, body) => {
                                     if (err) {
-                                        this.log.debug('[SPOTIFY] - ' + err);
+                                        log.debug('[SPOTIFY] - ' + err);
                                     } else {
                                         try {
                                             if (JSON.parse(body).error !== undefined) {
-                                                this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
+                                                log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
                                             } else {
                                                 update_json['liked'] = JSON.parse(body)[0];
                                             }
-                                        } catch {}
+                                        } catch (err) {
+                                            log.debug('[SPOTIFY] - ' + err);
+                                        }
                                     }
                                 });
                             });

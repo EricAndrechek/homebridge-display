@@ -58,7 +58,7 @@ class HomebridgeDisplay {
                         let refresh = plugin_storage.refresh || undefined;
                         let rurl = spot_settings.rurl || undefined;
                         if (cid === undefined || cs === undefined || rurl === undefined) {
-                            this.log.debug('Spotify is not done being set up, got to homebridge-display\'s settings to add it.');
+                            this.log.error('Spotify is not done being set up, got to homebridge-display\'s settings to add it.');
                             error_trigger = true;
                         } else {
                             let auth_url = 'https://accounts.spotify.com/authorize?response_type=code&client_id=' + cid + '&scope=user-read-private%20user-read-playback-state%20user-modify-playback-state%20user-library-modify%20user-library-read&redirect_uri=' + encodeURIComponent(rurl);
@@ -66,7 +66,7 @@ class HomebridgeDisplay {
                             this.box[i] = this.spot_obj;
                         }
                     } else {
-                        this.log.debug('Spotify not set up, go to homebridge-display\'s settings to add it.')
+                        this.log.error('Spotify not set up, go to homebridge-display\'s settings to add it.')
                         error_trigger = true;
                     }
                 } else if (boxtype[i] === 'weather') {
@@ -75,15 +75,15 @@ class HomebridgeDisplay {
                         let api_key = wet_settings.api_key || undefined;
                         let lat = wet_settings.lat || undefined;
                         let lon = wet_settings.lon || undefined;
-                        if (api_key === undefined || lat === undefined || long === undefined) {
-                            this.log.debug('Weather is not done being set up, got to homebridge-display\'s settings to add it.');
+                        if (api_key === undefined || lat === undefined || lon === undefined) {
+                            this.log.error('Weather is not done being set up, got to homebridge-display\'s settings to add it.');
                             error_trigger = true;
                         } else {
                             this.wet_obj = new wet(api_key, lat, lon, this.log, this.config, this.api);
                             this.box[i] = this.wet_obj;
                         }
                     } else {
-                        this.log.debug('Weather not set up, go to homebridge-display\'s settings to add it.')
+                        this.log.error('Weather not set up, go to homebridge-display\'s settings to add it.')
                         error_trigger = true;
                     }
                 }

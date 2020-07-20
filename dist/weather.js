@@ -90,17 +90,17 @@ class weather {
     hours(epoch) {
         let d = new Date(0);
         d.setUTCSeconds(epoch);
-        return d.getHours();
+        return '' + d.getHours();
     }
     minutes(epoch) {
         let d = new Date(0);
         d.setUTCSeconds(epoch);
-        return d.getMinutes();
+        return '' + d.getMinutes();
     }
     days(epoch) {
         let d = new Date(0);
         d.setUTCSeconds(epoch);
-        return d.getDate();
+        return '' + d.getDate();
     }
     fulltime(epoch) {
         let d = new Date(0);
