@@ -25,6 +25,7 @@
   "author": "Eric Andrechek",
   "dependencies": {
     "request": "^2.88.2",
+    "rss-parser": "^3.8.0",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
