@@ -1,8 +1,9 @@
 const http = require('http');
 const url = require('url');
 const fs = require('fs');
-const spot = require('./spotify')
-const wet = require('./weather')
+const spot = require('./spotify');
+const wet = require('./weather');
+const news = require('./newsfeed');
 const request = require('request');
 
 module.exports = (homebridge) => {
@@ -86,6 +87,21 @@ class HomebridgeDisplay {
                         this.log.error('Weather not set up, go to homebridge-display\'s settings to add it.')
                         error_trigger = true;
                     }
+                } else if (boxtype[i] === 'news') {
+                    let news_settings = this.config.Newsfeed || false;
+                    if (news_settings !== false) {
+                        let urls = news_settings.feed || undefined;
+                        if (urls === undefined) {
+                            this.log.error('Newsfeed is not done being set up, got to homebridge-display\'s settings to add it.');
+                            error_trigger = true;
+                        } else {
+                            this.news_obj = new news(urls, this.log, this.config, this.api);
+                            this.box[i] = this.news_obj;
+                        }
+                    } else {
+                        this.log.error('Newsfeed not set up, go to homebridge-display\'s settings to add it.')
+                        error_trigger = true;
+                    }
                 }
             }
             let background = this.config.Config.background;
@@ -99,11 +115,14 @@ class HomebridgeDisplay {
         const log = this.log;
         let spot_obj;
         let wet_obj;
+        let news_obj;
         for (let i = 0; i < boxtype.length; i++) {
             if (boxtype[i] === 'spotify') {
                 spot_obj = this.box[i];
             } else if (boxtype[i] === 'weather') {
                 wet_obj = this.box[i];
+            } else if (bpxtype[i] === 'news') {
+                news_obj = this.box[i];
             }
         }
         const server = http.createServer((req, res) => {
@@ -300,7 +319,7 @@ class HomebridgeDisplay {
                 log.debug('Setting ' + switch_name + ' to ' + state);
             });
             socket.on('news', function (dta) {
-                //
+                socket.emit('news', news_obj.update());
             });
             socket.on('iot', function () {
                 //

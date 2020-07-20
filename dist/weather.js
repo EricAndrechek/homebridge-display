@@ -9,7 +9,7 @@ class weather {
         this.config = config;
         this.api = api;
     }
-    update() {
+    update(call) {
         let options = {
             url: 'https://api.openweathermap.org/data/2.5/onecall?lat=' + this.lat + '&lon=' + this.lon + '&units=imperial&appid=' + this.api_key,
             method: 'GET'
@@ -74,7 +74,7 @@ class weather {
                             }
                         }
                     }
-                    return update;
+                    return call(update);
 
                 } else {
                     return null;
