@@ -279,6 +279,21 @@ class spotify {
                                                 log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
                                             } else {
                                                 update_json['liked'] = JSON.parse(body)[0];
+                                                get(access_token, log, '/devices', function(result) {
+                                                    let devices = result;
+                                                    update_json['avaliable_devices'] = {};
+                                                    try {
+                                                        for (const device of devices['devices']) {
+                                                            update_json['avaliable_devices'][device['name']] = device['id'];
+                                                            return call(update_json);
+                                                        }
+                                                    } catch (err) {
+                                                        if (devices !== 'API rate limit exceeded') {
+                                                            log.debug(devices);
+                                                        }
+                                                        return call({"error": devices});
+                                                    }
+                                                });
                                             }
                                         } catch (err) {
                                             log.debug('[SPOTIFY] - ' + err);
@@ -289,22 +304,6 @@ class spotify {
                         } catch (err) {
                             // ignore
                         }
-    
-                        get(access_token, log, '/devices', function(result) {
-                            let devices = result;
-                            update_json['avaliable_devices'] = {};
-                            try {
-                                for (const device of devices['devices']) {
-                                    update_json['avaliable_devices'][device['name']] = device['id'];
-                                }
-                            } catch (err) {
-                                if (devices !== 'API rate limit exceeded') {
-                                    log.debug(devices);
-                                }
-                                return call({"error": devices});
-                            }
-                            return call(update_json);
-                        });
                     });
                 } else {
                     return call(update_json);

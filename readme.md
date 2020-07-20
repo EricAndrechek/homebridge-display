@@ -57,7 +57,6 @@ For best results, **add this web app to your homescreen so that it may display i
 - Add support for more HomeKit accessories like thermostats
 
 ### Widgets to add:
-- Calculator
 - Note taking integration
 - Calendar integrations
 - Todo list integrations

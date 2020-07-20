@@ -311,7 +311,7 @@ class HomebridgeDisplay {
             socket.on('weather', function () {
                 wet_obj.update(function(result) {
                     let wet_update = JSON.stringify(result);
-                    log.debug(wet_update);
+                    // log.debug(wet_update);
                     socket.emit('weather', wet_update);
                 })
             });
