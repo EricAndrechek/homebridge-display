@@ -2,6 +2,7 @@ const http = require('http');
 const url = require('url');
 const fs = require('fs');
 const spot = require('./spotify')
+const wet = require('./weather')
 const request = require('request');
 
 module.exports = (homebridge) => {
@@ -68,6 +69,23 @@ class HomebridgeDisplay {
                         this.log.debug('Spotify not set up, go to homebridge-display\'s settings to add it.')
                         error_trigger = true;
                     }
+                } else if (boxtype[i] === 'weather') {
+                    let wet_settings = this.config.Weather || false;
+                    if (wet_settings !== false) {
+                        let api_key = wet_settings.api_key || undefined;
+                        let lat = wet_settings.lat || undefined;
+                        let lon = wet_settings.lon || undefined;
+                        if (api_key === undefined || lat === undefined || long === undefined) {
+                            this.log.debug('Weather is not done being set up, got to homebridge-display\'s settings to add it.');
+                            error_trigger = true;
+                        } else {
+                            this.wet_obj = new wet(api_key, lat, lon, this.log, this.config, this.api);
+                            this.box[i] = this.wet_obj;
+                        }
+                    } else {
+                        this.log.debug('Weather not set up, go to homebridge-display\'s settings to add it.')
+                        error_trigger = true;
+                    }
                 }
             }
             let background = this.config.Config.background;
@@ -80,9 +98,12 @@ class HomebridgeDisplay {
     createServer(boxes, boxtype, background, password_protection) {
         const log = this.log;
         let spot_obj;
+        let wet_obj;
         for (let i = 0; i < boxtype.length; i++) {
             if (boxtype[i] === 'spotify') {
                 spot_obj = this.box[i];
+            } else if (boxtype[i] === 'weather') {
+                wet_obj = this.box[i];
             }
         }
         const server = http.createServer((req, res) => {
@@ -288,7 +309,11 @@ class HomebridgeDisplay {
                 log.debug("[CLIENT ERROR] - " + data);
             });
             socket.on('weather', function () {
-                //
+                wet_obj.update(function(result) {
+                    let wet_update = JSON.stringify(result);
+                    log.debug(wet_update);
+                    socket.emit('weather', wet_update);
+                })
             });
             socket.on('transfer', function (data) {
                 spot_obj.put('', {"device_ids": [data]});
