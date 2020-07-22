@@ -78,7 +78,7 @@ class spotify {
             }
         });
     }
-    get(access_token, log, endpoint, call) {
+    get(access_token, log, refresh, endpoint, call) {
         let headers = {
             'Authorization': 'Bearer ' + access_token,
             'User-Agent': 'request',
@@ -204,6 +204,7 @@ class spotify {
     }
     update(call) {
         const log = this.log;
+        const refresh = this.refresh;
         const get = this.get;
         const refresh_token = this.refresh_token;
         const access_token = this.access_token;
@@ -216,7 +217,7 @@ class spotify {
             // keep canupdate to false as there is no refresh token
         }
         if (canupdate) {
-            get(access_token, log, '', function(result) {
+            get(access_token, log, refresh, '', function(result) {
                 let user_playback = result;
                 let update_json = {};
 
@@ -235,12 +236,21 @@ class spotify {
                         update_json['repeat_state'] = user_playback['repeat_state'];
                     } catch (err) {
                         if (user_playback !== 'API rate limit exceeded') {
-                            log.debug(user_playback);
+                            try {
+                                if (user_playback.currently_playing_type === 'episode') {
+                                    // do nothing, we know that it is a podcast playing, which is not supported right now
+                                } else {
+                                    log.debug('[SPOTIFY] - ' + JSON.stringify(user_playback));
+                                }
+                            } catch {
+                                log.debug('[SPOTIFY] - ' + JSON.stringify(user_playback));
+                            }
+                            
                         }
                         return call({"error": user_playback});
                     }
 
-                    get(access_token, log, '/currently-playing', function(result) {
+                    get(access_token, log, refresh, '/currently-playing', function(result) {
                         let currently_playing = result;
                         try {
                             update_json['progress_ms'] = currently_playing['progress_ms'];
@@ -255,7 +265,15 @@ class spotify {
                             update_json['song_id'] = currently_playing['item']['id'];
                         } catch (err) {
                             if (currently_playing !== 'API rate limit exceeded') {
-                                log.debug(currently_playing);
+                                try {
+                                    if (currently_playing.currently_playing_type === 'episode') {
+                                        // do nothing, we know that it is a podcast playing, which is not supported right now
+                                    } else {
+                                        log.debug('[SPOTIFY] - ' + JSON.stringify(currently_playing));
+                                    }
+                                } catch {
+                                    log.debug('[SPOTIFY] - ' + JSON.stringify(currently_playing));
+                                }
                             }
                             return call({"error": currently_playing});
                         }
@@ -279,7 +297,7 @@ class spotify {
                                                 log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
                                             } else {
                                                 update_json['liked'] = JSON.parse(body)[0];
-                                                get(access_token, log, '/devices', function(result) {
+                                                get(access_token, log, refresh, '/devices', function(result) {
                                                     let devices = result;
                                                     update_json['avaliable_devices'] = {};
                                                     try {
@@ -289,7 +307,7 @@ class spotify {
                                                         }
                                                     } catch (err) {
                                                         if (devices !== 'API rate limit exceeded') {
-                                                            log.debug(devices);
+                                                            log.debug('[SPOTIFY] - ' + JSON.stringify(devices));
                                                         }
                                                         return call({"error": devices});
                                                     }

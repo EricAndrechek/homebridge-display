@@ -31,6 +31,11 @@
                     "type": "string",
                     "default": "Home2.0",
                     "required": true
+                },
+                "customCSS": {
+                    "title": "Paste your own CSS to override CSS on the page to tweak things you don't like",
+                    "type": "string",
+                    "required": false
                 }
             }
         },
@@ -168,6 +173,12 @@
                         "type": "string"
                     },
                     "required": false
+                },
+                "delay": {
+                    "type": "integer",
+                    "title": "Amount of time (in seconds) one story is shown for",
+                    "required": false,
+                    "default": 60
                 }
             }
         },
@@ -184,13 +195,13 @@
                 "lat": {
                     "title": "Latitude",
                     "type": "number",
-                    "placeholder": "42.5986",
+                    "placeholder": 42.5986,
                     "required": false
                 },
                 "lon": {
                     "title": "Latitude",
                     "type": "number",
-                    "placeholder": "-84.5986",
+                    "placeholder": -84.5986,
                     "required": false
                 }
             }

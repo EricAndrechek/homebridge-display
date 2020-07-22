@@ -8,15 +8,15 @@ class newsfeed {
         this.config = config;
         this.api = api;
     }
-    update() {
+    async update(call) {
         let updated = [];
         for (const url of this.feeds) {
             let feed = await parser.parseURL(url);
             feed.items.forEach(item => {
-                updated.push({'title': item.title, 'link': item.link, 'description': item.description.split('<')[0]});
+                updated.push({'title': item.title, 'link': item.link, 'description': item.content.split('<')[0]});
             });
         }
-        return updated;
+        return call(updated);
     }
 }
 

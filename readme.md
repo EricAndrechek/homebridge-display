@@ -1,6 +1,6 @@
 # Welcome to Homebridge-Display, the pretty display for Homebridge
 
-[![NPM](https://nodei.co/npm/homebridge-display.png?compact=true)](https://www.npmjs.com/package/homebridge-display)
+[![NPM](https://nodei.co/npm/homebridge-display.png?compact=true)](https://nodei.co/npm/homebridge-display/)
 
 [![NPM Downloads](https://img.shields.io/npm/dt/homebridge-display)](https://www.npmjs.com/package/homebridge-display)
 [![npm (tag)](https://img.shields.io/npm/v/homebridge-display/latest)](https://www.npmjs.com/package/homebridge-display/v/latest)
@@ -49,24 +49,49 @@ Currently, this only displays properly on an iPad with screen resolution of  102
 For best results, **add this web app to your homescreen so that it may display in fullscreen**.
 
 ## TODOs:
-- Move Spotify, weather, and Homebridge update requests to server side to avoid maxing out api calls when multiple clients connect
-- Add support for multiple music players
-- Allow more customization of what is displayed on the screen with a sort of box approach
-- Support multiple screen resolutions
-- Dynamically change what is on the screen as programmable events occur
-- Add support for more HomeKit accessories like thermostats
+- [ ] Move widget update requests to server side to avoid maxing out api calls when multiple clients connect
+- [ ] Allow more customization of what is displayed on the screen with a sort of box approach
+- [ ] Support multiple screen resolutions
+- [ ] Dynamically change what is on the screen as programmable events occur
+- [ ] Add support for more HomeKit accessories like thermostats
+- [ ] Add instructions/help as to how the UI and controls work
+- [ ] Debug "N" token in JSON parsing on frontend from Spotify update (occurs when content first begins streaming)
+- [ ] Basic XSS prevention
+- [ ] Reroute all requests and internet through the server
+- [ ] Custom CSS
+- [ ] Login protection to view UI
+- [ ] Custom homescreen webapp icon
+- [ ] Fix swipe and touch control on computer version of UI
+- [ ] Fix weather hourly parsing issues
+- [ ] Way to send links clicked or more info about something to phone or computer via Twilio or email
+- [ ] Moving picture frame background (google photos or other album links to play in a slide show)
+- [ ] Better way to universally ensure text is visible over the background image
+- [ ] Allow support to run standalone without homebridge
+- [ ] UUID generation and checking to verify the client is running on the same Homebridge instance as the server, that way if configs are updated to not support Spotify but an outdated client still tries to request Spotify data (which would normally throw an error) it will prevent the request in the first place and prompt the user for a hard refresh if a normal refresh doesn't update the cache
+- [ ] Automatically refresh Spotify access_token when it expires
+
+###### As I complete these TODOs I delete them from this list ***unless I am not 100% they are completed and fixed***, in which case I give them a check mark and leave them here until I know they are resolved.
 
 ### Widgets to add:
+- Apple Music display and control
+- Sonos display and control
 - Note taking integration
 - Calendar integrations
 - Todo list integrations
 - Radar map
 - Apple FindMy info/map
 - Internet speed logging dashboard
-- RTSP camera embedding
+- RTSP/IP camera embedding
 - Stocks and Cryptos
 - Homebridge Stats (CPU and RAM usage)
 - Custom API support
+- Strava workout info or feed
+- Apple Health data / Apple Watch activities and goals
+- Chromecast/Airplay type streaming receiver (ie send YouTube videos to it)
+- Mirror (just display what the camera sees)
+- Show new emails, discord messages, etc (any messaging platform with an API)
+- Moving picture frame widget (google photos or other album links to play in a slide show)
+- Music visualization (potentially integrate with lyrics widget)
 
 ### Currently Supported Widgets:
 - Spotify (display and control playback) - **Only works with Premium accounts and [requires you to create an API key](###Spotify)**

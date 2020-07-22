@@ -1,9 +1,6 @@
 const http = require('http');
 const url = require('url');
 const fs = require('fs');
-const spot = require('./spotify');
-const wet = require('./weather');
-const news = require('./newsfeed');
 const request = require('request');
 
 module.exports = (homebridge) => {
@@ -50,8 +47,17 @@ class HomebridgeDisplay {
                 plugin_storage = {};
             }
 
+            let config_path = this.api.user.configPath();
+            let config_data;
+            try {
+                config_data = JSON.parse(fs.readFileSync(config_path));
+            } catch (err) {
+                config_data = false;
+            }
+
             for (let i = 0; i < boxtype.length; i++) { // check for each box type and if its needed config settings are set up
                 if (boxtype[i] === 'spotify') {
+                    const spot = require('./spotify');
                     let spot_settings = this.config.Spotify || false;
                     if (spot_settings !== false) {
                         let cid = spot_settings.cid || undefined;
@@ -71,6 +77,7 @@ class HomebridgeDisplay {
                         error_trigger = true;
                     }
                 } else if (boxtype[i] === 'weather') {
+                    const wet = require('./weather');
                     let wet_settings = this.config.Weather || false;
                     if (wet_settings !== false) {
                         let api_key = wet_settings.api_key || undefined;
@@ -88,6 +95,7 @@ class HomebridgeDisplay {
                         error_trigger = true;
                     }
                 } else if (boxtype[i] === 'news') {
+                    const news = require('./newsfeed');
                     let news_settings = this.config.Newsfeed || false;
                     if (news_settings !== false) {
                         let urls = news_settings.feed || undefined;
@@ -100,6 +108,23 @@ class HomebridgeDisplay {
                         }
                     } else {
                         this.log.error('Newsfeed not set up, go to homebridge-display\'s settings to add it.')
+                        error_trigger = true;
+                    }
+                } else if (boxtype[i] === 'iot') {
+                    const iot = require('./iot');
+                    let iot_settings = config_data;
+                    if (iot_settings !== false) {
+                        let pin = iot_settings.bridge.pin || undefined;
+                        let port = iot_settings.bridge.port || undefined;
+                        if (pin === undefined || port === undefined) {
+                            this.log.error('Accessory Control is not working, view the debug logs to determine why.');
+                            error_trigger = true;
+                        } else {
+                            this.iot_obj = new iot(pin, port, this.log, this.config, this.api);
+                            this.box[i] = this.iot_obj;
+                        }
+                    } else {
+                        this.log.error('Accessory Control is not working, view the debug logs to determine why.')
                         error_trigger = true;
                     }
                 }
@@ -116,13 +141,16 @@ class HomebridgeDisplay {
         let spot_obj;
         let wet_obj;
         let news_obj;
+        let iot_obj;
         for (let i = 0; i < boxtype.length; i++) {
             if (boxtype[i] === 'spotify') {
                 spot_obj = this.box[i];
             } else if (boxtype[i] === 'weather') {
                 wet_obj = this.box[i];
-            } else if (bpxtype[i] === 'news') {
+            } else if (boxtype[i] === 'news') {
                 news_obj = this.box[i];
+            } else if (boxtype[i] === 'iot') {
+                iot_obj = this.box[i];
             }
         }
         const server = http.createServer((req, res) => {
@@ -307,22 +335,34 @@ class HomebridgeDisplay {
                 request(options, (err, res, body) => {
                     if (err) {
                         this.log.debug('[LYRICS] - ' + err);
-                        socket.emit("lyrics", {});
+                        socket.emit("lyrics", {"error": err});
                     } else {
-                        socket.emit("lyrics", body);
+                        if (body !== 'No lyrics available') {
+                            socket.emit("lyrics", body);
+                        } else {
+                            socket.emit("lyrics", {"error": "No lyrics available"});
+                        }
                     }
                 });
             });
             socket.on('switch', function (data) {
                 let switch_name = data[0]
                 let state = data[1]
+                iot_obj.change_state(switch_name, state);
                 log.debug('Setting ' + switch_name + ' to ' + state);
             });
-            socket.on('news', function (dta) {
-                socket.emit('news', news_obj.update());
+            socket.on('news', function () {
+                news_obj.update(function(result) {
+                    // log.debug('[NEWS] - ' + JSON.stringify(result));
+                    socket.emit('news', JSON.stringify(result));
+                });
             });
             socket.on('iot', function () {
-                //
+                iot_obj.get_status(function(result) {
+                    let iot_data = JSON.stringify(result);
+                    // log.debug('[ACCESSORY CONTROL - ' + iot_data);
+                    socket.emit('iot', iot_data);
+                });
             });
             socket.on('debugger', function (data) {
                 log.debug("[CLIENT ERROR] - " + data);
@@ -383,7 +423,7 @@ class HomebridgeDisplay {
             log.debug(err);
         });
         server.listen(parseInt(this.config.Config.port), () => {
-            log('Starting Homebridge-Display server on port ', parseInt(this.config.Config.port));
+            log('Starting Homebridge-Display server on port', parseInt(this.config.Config.port));
         });
     }
 }

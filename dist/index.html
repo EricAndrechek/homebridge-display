@@ -362,7 +362,9 @@
                     let elapsed = current_time - lastupdate;
                     if (elapsed > 300000) { // if no update in 5 minutes
                         $('#spotify').html('No music is currently playing');
-                        $('#spotify_uri').attr('src', '/static/placeholder.png')
+                        if ($('#spotify_uri').attr('src') !== '/static/placeholder.png') {
+                            $('#spotify_uri').attr('src', '/static/placeholder.png');
+                        }
                         clearInterval(titlescroll)
                         titlescroll = false;
                         clearInterval(artistscroll)
