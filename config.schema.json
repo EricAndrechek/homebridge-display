@@ -11,7 +11,13 @@
                 "background": {
                     "title": "Background Image URL",
                     "type": "string",
-                    "default": "https://github.com/EricAndrechek/homebridge-display/raw/master/static/background-image.jpg",
+                    "default": "https://i.postimg.cc/MpjZQcnn/background-image.jpg",
+                    "required": true
+                },
+                "app_id": {
+                    "title": "App Icon Image URL",
+                    "type": "string",
+                    "default": "https://i.postimg.cc/jjCsX4gH/home-black-ios.png",
                     "required": true
                 },
                 "private": {

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+        
+        <title><%- title %></title>
+
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon" href="<%- app_icon %>">
+        <meta name="apple-mobile-web-app-title" content="Home2.0">
+
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="shortcut icon" type="image/x-icon" href="<%- app_icon %>">
+
+        <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+    </head>
+    <body>
+        <span class="first-row">
+            <div class="box"><%- box1 %></div>
+            <div class="box"><%- box2 %></div>
+            <div class="box"><%- box3 %></div>
+        </span>
+        <span class="second-row">
+            <div class="box"><%- box4 %></div>
+            <div class="box"><%- box5 %></div>
+            <div class="box"><%- box6 %></div>
+        </span>
+        <script>
+            window.onresize = function () {
+                $(document.body).width(window.innerWidth).height(window.innerHeight);
+            }
+
+            $(function () {
+                window.onresize();
+            });
+
+            var socket = io();
+
+            function sendToServer(msg, url, linenumber) {
+                socket.emit('debugger', "Client error on line number " + linenumber + ' - ' + msg)
+            }
+
+            window.onerror = sendToServer;
+            window.console = sendToServer;
+
+            <%- box1s %>
+            <%- box2s %>
+            <%- box3s %>
+            <%- box4s %>
+            <%- box5s %>
+            <%- box6s %>
+        </script>
+        <style>
+            html {
+                position: fixed;
+                width: 100%;
+                min-height: 100vh;
+                overflow: hidden;
+                margin: 0;
+                padding: 0;
+                -webkit-user-select: none;
+                -webkit-tap-highlight-color: transparent;
+                -webkit-touch-callout: none;
+                -webkit-text-size-adjust: none;
+                background-image: url("<%- bg_image %>");
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                -webkit-background-size: cover;
+                font-family: Arial, Helvetica, sans-serif;
+                display: flex;
+                flex-direction: column;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                position: relative;
+            }
+
+            .first-row {
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 50%;
+                overflow: hidden;
+                display: flex;
+                flex-direction: row;
+            }
+
+            .second-row {
+                width: 100%;
+                height: 50%;
+                overflow: hidden;
+                display: flex;
+                flex-direction: row;
+            }
+
+            .box {
+                width: calc(100% / 3);
+                height: 100%;
+                overflow: hidden;
+                position: relative;
+            }
+
+            <%- box1c %>
+            <%- box2c %>
+            <%- box3c %>
+            <%- box4c %>
+            <%- box5c %>
+            <%- box6c %>
+
+            <%- css_mod %>
+        </style>
+    </body>
+</html>

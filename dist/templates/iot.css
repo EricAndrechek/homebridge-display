@@ -1,0 +1,64 @@
+#iot {
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    width: 100%;
+    height: calc((100vw/3 - 15px) / 3);
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.row div {
+    width: calc((100% - 15px) / 3);
+    height: calc((100vw/3 - 15px) / 3);
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-weight: bold;
+    overflow-wrap: break-word;
+    overflow: hidden;
+}
+
+.false {
+    background-color: #a0a0a0;
+    color: #696969;
+}
+
+.false .material-icons {
+    padding-top: 10px;
+    font-size: 30px;
+    color: #696969;
+}
+
+.true .material-icons {
+    padding-top: 10px;
+    font-size: 30px;
+    color: #bdbd00;
+}
+
+.true {
+    background-color: white;
+    color: black;
+}
+
+.name {
+    padding: 0 10px 0 10px;
+    overflow: hidden;
+    -webkit-column-width: calc((100vw/3 - 15px) / 3 - 20px);
+    -moz-column-width: calc((100vw/3 - 15px) / 3 - 20px);
+    column-width: calc((100vw/3 - 15px) / 3 - 20px);
+}
+
+.state {
+    padding-bottom: 10px;
+    color: #696969;
+    display: block;
+}

@@ -1,0 +1,21 @@
+#news {
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#news-title {
+    color: white;
+    font-size: 25px;
+    text-align: left;
+    text-justify: inter-word;
+    margin-bottom: 5px;
+}
+
+#news-description {
+    color: #b6b6b6;
+    font-size: 20px;
+    text-align: left;
+    text-justify: inter-word;
+}

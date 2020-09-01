@@ -62,7 +62,11 @@ function formatted(epoch) {
 function hours(epoch) {
     let d = new Date(0);
     d.setUTCSeconds(epoch);
-    return d.getHours();
+    let hour_num = d.getHours();
+    if (hour_num < 10) {
+        hour_num = "0" + hour_num;
+    }
+    return hour_num;
 }
 function minutes(epoch) {
     let d = new Date(0);
@@ -75,9 +79,11 @@ function days(epoch) {
     return d.getDate();
 }
 function fulltime(epoch) {
-    let d = new Date(0);
-    d.setUTCSeconds(epoch);
-    return d.getHours() + ':' + d.getMinutes();
+    let min = minutes(epoch);
+    if (min < 10) {
+        min = "0" + min;
+    }
+    return hours(epoch) + ':' + min;
 }
 function weekday(epoch) {
     let d = new Date(0);
@@ -101,10 +107,14 @@ function weekday(epoch) {
 }
 
 function minutely(resp, update, call) {
-    for (const [index, element] of resp['minutely'].entries()) {
-        update['minutes'][index] = element['precipitation'];
+    try {
+        for (const [index, element] of resp['minutely'].entries()) {
+            update['minutes'][index] = element['precipitation'];
+        }
+        return call(update);
+    } catch {
+        return call(update);
     }
-    return call(update);
 }
 
 function hourly(resp, update, call) {
@@ -131,24 +141,19 @@ function daily(resp, update, call) {
 function hourSort(resp, update, log, call) {
     let riseadded = false;
     let setadded = false;
-    let sunrise_hour = hours(resp['current']['sunrise']);
-    let sunset_hour = hours(resp['current']['sunset']);
-    log.debug('[WEATHER] - sunrise_hour: ' + sunrise_hour);
-    log.debug('[WEATHER] - sunset_hour: ' + sunset_hour);
-    log.debug('[WEATHER] - hourly length?: ' + _.keys(update['hourly']).length);
+    let sunrise_hour = parseInt(hours(resp['current']['sunrise']));
+    let sunset_hour = parseInt(hours(resp['current']['sunset']));
     for (let time = 0; time < _.keys(update['hourly']).length; time++) {
-        if (time !== 0) {
+        if (time !== 0 && update['hourly'][time] !== undefined) {
             let hour = update['hourly'][time];
             let hour_prior = update['hourly'][(time - 1)];
-            log.debug('[WEATHER] - hour: ' + hour);
-            log.debug('[WEATHER] - hour_prior: ' + hour_prior);
-            if (sunrise_hour < hour['name'] && !riseadded && sunrise_hour >= hour_prior['name']) {
+            if (sunrise_hour < parseInt(hour['name']) && !riseadded && sunrise_hour >= parseInt(hour_prior['name'])) {
                 riseadded = true;
                 spot = time - 0.5;
                 update['hourly'][spot] = {'name': fulltime(resp['current']['sunrise']), 'temp': 'Sunrise', 'id': 1};
                 update['sunrise'] = spot;
             }
-            if (sunset_hour < hour['name'] && !setadded && time !== 0 && sunset_hour >= hour_prior['name']) {
+            if (sunset_hour < parseInt(hour['name']) && !setadded && time !== 0 && sunset_hour >= parseInt(hour_prior['name'])) {
                 setadded = true;
                 spot = time - 0.5;
                 update['hourly'][spot] = {'name': fulltime(resp['current']['sunset']), 'temp': 'Sunset', 'id': 2};

@@ -1,0 +1,155 @@
+#weather {
+    margin: 5px;
+}
+
+.header {
+    width: 100%;
+    height: 50px;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    overflow: hidden;
+    vertical-align: bottom;
+    padding-bottom: 5px;
+}
+
+#temp {
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: 50px;
+}
+
+#temp sup {
+    font-size: 30px;
+}
+
+#feels {
+    margin-top: auto;
+    font-size: 50px;
+}
+
+#feels sup {
+    font-size: 30px;
+}
+
+#current_weather {
+    margin-top: auto;
+    font-size: 45px;
+}
+
+.wandh {
+    width: 100%;
+    height: 30px;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    overflow: hidden;
+    vertical-align: bottom;
+    font-size: 30px;
+    margin-bottom: 5px;
+}
+
+.wandh .right {
+    margin-right: 5px;
+}
+
+#precip_graph {
+    display: none !important; /*This is necessary to fit the entire weather card in in things like an iPad*/
+    margin-top: -35px;
+    width: 100%;
+    height: 85px;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+.maxmin {
+    margin-bottom: 3px;
+    margin-top: auto;
+    height: 50px;
+    width: 35px;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    font-size: 10px;
+    overflow: hidden;
+}
+
+#graph_max {
+    height: 25px;
+    margin-bottom: auto;
+}
+
+#graph_max {
+    height: 25px;
+    margin-top: auto;
+}
+
+#precipitation_parent {
+    width: 100%;
+    height: 100px;
+}
+
+#precipitation_parent .apexcharts-toolbar {
+    display: none;
+}
+
+#precipitation_parent .apexcharts-legend {
+    display: none;
+}
+
+#hours48 {
+    height: 80px;
+    overflow: scroll;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    -webkit-overflow-scrolling: touch;
+}
+
+.hour1 {
+    height: 80px;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    font-size: 20px;
+    color: white;
+}
+
+#hours48::-webkit-scrollbar {
+    display: none;
+}
+
+.hour1 sup {
+    font-size: 10px;
+}
+
+#weekdays {
+    right: 5px;
+    height: 175px;
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.day {
+    width: 110px;
+}
+
+.weekday {
+    width: 100%;
+    height: 20px;
+    margin-bottom: 5px;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    color: white;
+    justify-content: space-between;
+}

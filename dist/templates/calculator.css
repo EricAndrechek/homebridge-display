@@ -1,0 +1,78 @@
+#calc {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: calc((100% - 20px) / 4) calc((100% - 20px) / 4) calc((100% - 20px) / 4) calc((100% - 20px) / 4);
+    grid-template-rows: calc((100vh / 2 - 20px) / 6) calc((100vh / 2 - 20px) / 6) calc((100vh / 2 - 20px) / 6) calc((100vh / 2 - 20px) / 6) calc((100vh / 2 - 20px) / 6) calc((100vh / 2 - 20px) / 6);
+    grid-template-areas: 
+    "header header header header" 
+    "main main main main" 
+    "main main main main" 
+    "main main main main" 
+    "main main main main" 
+    "main main main main";
+}
+
+.item-header {
+    grid-area: header;
+    color: white;
+}
+
+#globalAnswer {
+    font-size: 1px;
+}
+
+#currentValue {
+    grid-column-start: 1;
+    grid-column-end: span 4;
+    text-align: right;
+    font-size: 30px;
+}
+
+.btn {
+    font-size: 26px;
+    line-height: calc((100vh / 2 - 20px) / 24);
+    background-color: dimgray;
+    border: none;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin: 4px 2px;
+    border-radius: 50px;
+}
+
+.btn.orange {
+    background-color: orange;
+}
+
+.btn.orange:focus {
+    background-color: white;
+    color: gold
+}
+
+.btn.silver {
+    background-color: silver;
+    color: black;
+}
+
+.btn.silver:focus {
+    background-color: white;
+    color: black
+}
+
+.btn.equals {
+    background-color: orange;
+}
+
+.btn.equals:focus {
+    background-color: white;
+    color: gold
+}
+
+.btn.zero {
+    text-align: left;
+    padding-left: 32px;
+    grid-row: 6;
+    grid-column-start: 1;
+    grid-column-end: span 2;
+    border-radius: 50px;
+}

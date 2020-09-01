@@ -8,6 +8,7 @@ class spotify {
         this.api = api;
         this.auth_url = auth_url;
         this.rurl = rurl;
+        this.port = rurl.split('/callback')[0]
         this.refresh_token = refresh_token;
         this.cid = cid;
         this.secret = secret;
@@ -78,7 +79,7 @@ class spotify {
             }
         });
     }
-    get(access_token, log, refresh, endpoint, call) {
+    get(access_token, log, port, endpoint, call) {
         let headers = {
             'Authorization': 'Bearer ' + access_token,
             'User-Agent': 'request',
@@ -104,7 +105,7 @@ class spotify {
                     if (data.error !== undefined) {
                         log.debug('[SPOTIFY] - ' + data.error.message);
                         if (data.error.message === "The access token expired") {
-                            refresh();
+                            refresh_token(port, log);
                         }
                         return call(null);
                     } else {
@@ -204,10 +205,10 @@ class spotify {
     }
     update(call) {
         const log = this.log;
-        const refresh = this.refresh;
         const get = this.get;
         const refresh_token = this.refresh_token;
         const access_token = this.access_token;
+        const port = this.port;
         let canupdate = false;
         try {
             if (refresh_token) {
@@ -217,7 +218,7 @@ class spotify {
             // keep canupdate to false as there is no refresh token
         }
         if (canupdate) {
-            get(access_token, log, refresh, '', function(result) {
+            get(access_token, log, port, '', function(result) {
                 let user_playback = result;
                 let update_json = {};
 
@@ -250,7 +251,7 @@ class spotify {
                         return call({"error": user_playback});
                     }
 
-                    get(access_token, log, refresh, '/currently-playing', function(result) {
+                    get(access_token, log, port, '/currently-playing', function(result) {
                         let currently_playing = result;
                         try {
                             update_json['progress_ms'] = currently_playing['progress_ms'];
@@ -297,7 +298,7 @@ class spotify {
                                                 log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
                                             } else {
                                                 update_json['liked'] = JSON.parse(body)[0];
-                                                get(access_token, log, refresh, '/devices', function(result) {
+                                                get(access_token, log, port, '/devices', function(result) {
                                                     let devices = result;
                                                     update_json['avaliable_devices'] = {};
                                                     try {
@@ -331,6 +332,20 @@ class spotify {
             return call({"error": 'cannot update, check logs'});
         }
     }
+}
+
+function refresh_token(port, log) {
+    let options = {
+        url: port + '/refresh-spotify-token',
+        method: 'GET'
+    };
+    request(options, (err, res, body) => {
+        if (err) {
+            log.debug('[SPOTIFY] - ' + err);
+        } else {
+            log.debug('[SPOTIFY] - ' + body);
+        }
+    });
 }
 
 module.exports = spotify

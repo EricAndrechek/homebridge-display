@@ -2,6 +2,7 @@ const http = require('http');
 const url = require('url');
 const fs = require('fs');
 const request = require('request');
+const ejs = require('ejs');
 
 module.exports = (homebridge) => {
     homebridge.registerPlatform('homebridge-display', 'homebridge-display', HomebridgeDisplay)
@@ -18,23 +19,37 @@ class HomebridgeDisplay {
 
             let boxtype = [];
             let boxes = []; // list of boxes with their appropriate html content
+            let script_boxes = []; // list of boxes with their appropriate js content
+            let style_boxes = []; // list of boxes with their appropriate css content
 
             boxes[0] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box1 + ".html");
+            script_boxes[0] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box1 + ".js");
+            style_boxes[0] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box1 + ".css");
             boxtype[0] = this.config.Boxes.Box1;
 
             boxes[1] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box2 + ".html");
+            script_boxes[1] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box2 + ".js");
+            style_boxes[1] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box2 + ".css");
             boxtype[1] = this.config.Boxes.Box2;
 
             boxes[2] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box3 + ".html");
+            script_boxes[2] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box3 + ".js");
+            style_boxes[2] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box3 + ".css");
             boxtype[2] = this.config.Boxes.Box3;
 
             boxes[3] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box4 + ".html");
+            script_boxes[3] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box4 + ".js");
+            style_boxes[3] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box4 + ".css");
             boxtype[3] = this.config.Boxes.Box4;
 
             boxes[4] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box5 + ".html");
+            script_boxes[4] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box5 + ".js");
+            style_boxes[4] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box5 + ".css");
             boxtype[4] = this.config.Boxes.Box5;
 
             boxes[5] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box6 + ".html");
+            script_boxes[5] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box6 + ".js");
+            style_boxes[5] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box6 + ".css");
             boxtype[5] = this.config.Boxes.Box6;
 
             this.box = [] // list of objects to create for each box
@@ -127,21 +142,28 @@ class HomebridgeDisplay {
                         this.log.error('Accessory Control is not working, view the debug logs to determine why.')
                         error_trigger = true;
                     }
+                } else if (boxtype[i] === 'lyrics') {
+                    this.box[i] = true;
                 }
             }
             let background = this.config.Config.background;
             let password_protection = this.config.Config.private;
+            let page_title = this.config.Config.customTitle;
+            let modded_css = this.config.Config.customCSS;
+            let bg_img = this.config.Config.background;
+            let icon = this.config.Config.app_id;
             if (error_trigger === false) {
-                this.createServer(boxes, boxtype, background, password_protection);
+                this.createServer(boxes, script_boxes, style_boxes, boxtype, background, password_protection, page_title, modded_css, icon, bg_img);
             }
         });
     }
-    createServer(boxes, boxtype, background, password_protection) {
+    createServer(boxes, script_boxes, style_boxes, boxtype, background, password_protection, page_title, modded_css, icon, bgimg) {
         const log = this.log;
         let spot_obj;
         let wet_obj;
         let news_obj;
         let iot_obj;
+        let lyr_obj;
         for (let i = 0; i < boxtype.length; i++) {
             if (boxtype[i] === 'spotify') {
                 spot_obj = this.box[i];
@@ -151,6 +173,8 @@ class HomebridgeDisplay {
                 news_obj = this.box[i];
             } else if (boxtype[i] === 'iot') {
                 iot_obj = this.box[i];
+            } else if (boxtype[i] === 'lyrics') {
+                lyr_obj = this.box[i];
             }
         }
         const server = http.createServer((req, res) => {
@@ -162,18 +186,6 @@ class HomebridgeDisplay {
                     let contents = fs.readFileSync(__dirname + "/static/background-image.jpg");
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "image/jpeg");
-                    res.end(contents);
-                }
-                catch (err) {
-                    res.writeHead(500);
-                    res.end(err);
-                    return;
-                }
-            } else if (path === "/static/main.css") {
-                try {
-                    let contents = fs.readFileSync(__dirname + "/static/main.css");
-                    res.statusCode = 200;
-                    res.setHeader("Content-Type", "text/css");
                     res.end(contents);
                 }
                 catch (err) {
@@ -290,16 +302,42 @@ class HomebridgeDisplay {
                     return;
                 }
             }
-            else if (path === "/home" || path === "/index.html" || path === "/" || path === "") {
+            else if (path === "/home" || path === "/" || path === "") {
                 try {
-                    let contents = fs.readFileSync(__dirname + "/index.html");
-                    res.statusCode = 200;
-                    res.setHeader("Content-Type", "text/html");
-                    res.end(contents);
+                    let box1 = boxes[0];
+                    let box1s = script_boxes[0];
+                    let box1c = style_boxes[0];
+                    let box2 = boxes[1];
+                    let box2s = script_boxes[1];
+                    let box2c = style_boxes[1];
+                    let box3 = boxes[2];
+                    let box3s = script_boxes[2];
+                    let box3c = style_boxes[2];
+                    let box4 = boxes[3];
+                    let box4s = script_boxes[3];
+                    let box4c = style_boxes[3];
+                    let box5 = boxes[4];
+                    let box5s = script_boxes[4];
+                    let box5c = style_boxes[4];
+                    let box6 = boxes[5];
+                    let box6s = script_boxes[5];
+                    let box6c = style_boxes[5];
+                    ejs.renderFile(__dirname + "/template.html", {app_icon: icon, bg_image: bgimg, title: page_title, css_mod: modded_css, box1: box1, box2: box2, box3: box3, box4: box4, box5: box5, box6: box6, box1s: box1s, box2s: box2s, box3s: box3s, box4s: box4s, box5s: box5s, box6s: box6s, box1c: box1c, box2c: box2c, box3c: box3c, box4c: box4c, box5c: box5c, box6c: box6c}, function(err, result) {
+                        if (!err) {
+                            res.statusCode = 200;
+                            res.setHeader("Content-Type", "text/html");
+                            res.end(result);
+                        } else {
+                            res.statusCode = 500;
+                            res.end('An error occurred check the debug log for more info.');
+                            log.debug(err);
+                        }
+                    });
                 }
                 catch (err) {
                     res.writeHead(500);
-                    res.end(err);
+                    res.end("500 Error: see debug log or more details");
+                    log.debug(err)
                     return;
                 }
             } else if (path === "/callback") {
@@ -313,7 +351,14 @@ class HomebridgeDisplay {
                     res.writeHead(302, {'Location': '/'});
                     res.end();
                 }
-            } else {
+            } else if (path === "/refresh-spotify-token") {
+                if (spot_obj !== undefined) {
+                    spot_obj.refresh();
+                    res.statusCode = 200;
+                    res.setHeader("Content-Type", "text/html");
+                    res.end("Spotify access token has been refreshed");
+                }
+            }else {
                 res.writeHead(404);
                 res.end('404 not found')
             }
@@ -328,22 +373,24 @@ class HomebridgeDisplay {
                 });
             });
             socket.on('lyrics', function (data) {
-                let options = {
-                    url: data,
-                    method: 'GET'
-                };
-                request(options, (err, res, body) => {
-                    if (err) {
-                        this.log.debug('[LYRICS] - ' + err);
-                        socket.emit("lyrics", {"error": err});
-                    } else {
-                        if (body !== 'No lyrics available') {
-                            socket.emit("lyrics", body);
+                if (lyr_obj === true) {
+                    let options = {
+                        url: data,
+                        method: 'GET'
+                    };
+                    request(options, (err, res, body) => {
+                        if (err) {
+                            this.log.debug('[LYRICS] - ' + err);
+                            socket.emit("lyrics", JSON.stringify({"error": err}));
                         } else {
-                            socket.emit("lyrics", {"error": "No lyrics available"});
+                            if (body !== 'No lyrics available') {
+                                socket.emit("lyrics", body);
+                            } else {
+                                socket.emit("lyrics", JSON.stringify({"error": "No lyrics available"}));
+                            }
                         }
-                    }
-                });
+                    });
+                }
             });
             socket.on('switch', function (data) {
                 let switch_name = data[0]

@@ -1,0 +1,160 @@
+.spotify {
+    margin: 5px;
+}
+
+#spotify_uri {
+    height: calc(33vw / 2);
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.first_row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.title-text {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+#song_title {
+    line-height: 35px;
+    font-size: 30px;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+#artist {
+    line-height: 25px;
+    font-size: 20px;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+#heart-box {
+    text-align: right;
+    vertical-align: middle;
+}
+
+#heart-box .material-icons {
+    color: white;
+    font-size: 50px;
+    
+}
+
+#progress {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    width: 100%;
+    -webkit-appearance: none;
+    height: 15px;
+    border-radius: 15px;
+    background: #888888;
+    outline: none;
+}
+
+#progress::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 15px;
+    cursor: pointer;
+    background: #888888;
+    border-radius: 15px;
+}
+
+#progress::-moz-range-track {
+    width: 100%;
+    height: 15px;
+    cursor: pointer;
+    background: #888888;
+    border-radius: 15px;
+}
+
+#progress::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #1DB954;
+    cursor: pointer;
+}
+  
+#progress::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #1DB954;
+    cursor: pointer;
+}
+
+#progress:focus {
+    outline: none;
+}
+
+#mini_timestamps {
+    width: 100%;
+    height: 15px;
+    font-size: 15px;
+    line-height: 15px;
+    vertical-align: middle;
+    color: white;
+    margin-bottom: 10px;
+}
+
+#progress_ms {
+    margin-left: 5px;
+    float: left;
+}
+
+#duration_ms {
+    float: right;
+    margin-right: 5px;
+}
+
+#second_row {
+    color: white;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    vertical-align: middle;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+#second_row .material-icons {
+    font-size: 50px;
+}
+
+#last_row {
+    margin-top: 10px;
+    color: white;
+    width: 100%;
+    height: 25px;
+    display: flex;
+    flex-direction: row;
+    vertical-align: middle;
+    justify-content: space-between;
+    overflow: hidden;
+    font-size: 20px;
+}
+
+#device_selection {
+    background-color: transparent;
+    color: white;
+    height: 20px;
+    line-height: 20px;
+    font-size: 15px;
+    border: none;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}

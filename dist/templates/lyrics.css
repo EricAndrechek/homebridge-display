@@ -1,0 +1,27 @@
+.lyric-box {
+    height: 100%;
+    width: 100%;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+#lyrics {
+    font-size: 30px;
+    color: white;
+    text-align: center;
+}
+
+#last-lyrics {
+    font-size: 20px;
+    color: white;
+    text-align: center;
+}
+
+#next-lyrics {
+    font-size: 20px;
+    color: white;
+    text-align: center;
+}
