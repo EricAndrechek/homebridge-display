@@ -1,7 +1,7 @@
 {
   "displayName": "Homebridge-Display",
   "name": "homebridge-display",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "description": "A beautiful display to control accessories and more from your browser.",
   "license": "Apache-2.0",
   "homepage": "https://github.com/EricAndrechek/Homebridge-Display",
@@ -11,12 +11,12 @@
   },
   "funding": [
     {
-      "type" : "github",
-      "url" : "https://github.com/sponsors/EricAndrechek"
+      "type": "github",
+      "url": "https://github.com/sponsors/EricAndrechek"
     },
     {
-      "type" : "paypal",
-      "url" : "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=eric%40andrechek.com&currency_code=USD&source=url"
+      "type": "paypal",
+      "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=eric%40andrechek.com&currency_code=USD&source=url"
     }
   ],
   "bugs": {
