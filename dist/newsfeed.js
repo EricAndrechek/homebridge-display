@@ -1,4 +1,4 @@
-const Parser = require('rss-parser');
+const Parser = require("rss-parser");
 const parser = new Parser();
 
 class newsfeed {
@@ -13,11 +13,11 @@ class newsfeed {
         for (const url of this.feeds) {
             let feed = await parser.parseURL(url);
             feed.items.forEach(item => {
-                updated.push({'title': item.title, 'link': item.link, 'description': item.content.split('<')[0]});
+                updated.push({"title": item.title, "link": item.link, "description": item.content.split("<")[0]});
             });
         }
         return call(updated);
     }
 }
 
-module.exports = newsfeed
+module.exports = newsfeed;

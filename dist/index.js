@@ -1,19 +1,20 @@
-const http = require('http');
-const url = require('url');
-const fs = require('fs');
-const request = require('request');
-const ejs = require('ejs');
+const http = require("http");
+const url = require("url");
+const fs = require("fs");
+const request = require("request");
+const ejs = require("ejs");
+/*global __dirname:true*/
 
 module.exports = (homebridge) => {
-    homebridge.registerPlatform('homebridge-display', 'homebridge-display', HomebridgeDisplay)
-}
+    homebridge.registerPlatform("homebridge-display", "homebridge-display", HomebridgeDisplay);
+};
 
 class HomebridgeDisplay {
     constructor(log, config, api) {
         this.log = log;
         this.config = config;
         this.api = api;
-        api.on('didFinishLaunching', () => {
+        api.on("didFinishLaunching", () => {
 
             let error_trigger = false; // if this is set to true the webserver is not started
 
@@ -52,9 +53,9 @@ class HomebridgeDisplay {
             style_boxes[5] = fs.readFileSync(__dirname + "/templates/" + this.config.Boxes.Box6 + ".css");
             boxtype[5] = this.config.Boxes.Box6;
 
-            this.box = [] // list of objects to create for each box
+            this.box = []; // list of objects to create for each box
 
-            let storage_path = this.api.user.storagePath() + '/homebridge-display.json';
+            let storage_path = this.api.user.storagePath() + "/homebridge-display.json";
             let plugin_storage;
             try {
                 plugin_storage = JSON.parse(fs.readFileSync(storage_path));
@@ -71,8 +72,8 @@ class HomebridgeDisplay {
             }
 
             for (let i = 0; i < boxtype.length; i++) { // check for each box type and if its needed config settings are set up
-                if (boxtype[i] === 'spotify') {
-                    const spot = require('./spotify');
+                if (boxtype[i] === "spotify") {
+                    const spot = require("./spotify");
                     let spot_settings = this.config.Spotify || false;
                     if (spot_settings !== false) {
                         let cid = spot_settings.cid || undefined;
@@ -80,69 +81,69 @@ class HomebridgeDisplay {
                         let refresh = plugin_storage.refresh || undefined;
                         let rurl = spot_settings.rurl || undefined;
                         if (cid === undefined || cs === undefined || rurl === undefined) {
-                            this.log.error('Spotify is not done being set up, got to homebridge-display\'s settings to add it.');
+                            this.log.error("Spotify is not done being set up, got to homebridge-display's settings to add it.");
                             error_trigger = true;
                         } else {
-                            let auth_url = 'https://accounts.spotify.com/authorize?response_type=code&client_id=' + cid + '&scope=user-read-private%20user-read-playback-state%20user-modify-playback-state%20user-library-modify%20user-library-read&redirect_uri=' + encodeURIComponent(rurl);
+                            let auth_url = "https://accounts.spotify.com/authorize?response_type=code&client_id=" + cid + "&scope=user-read-private%20user-read-playback-state%20user-modify-playback-state%20user-library-modify%20user-library-read&redirect_uri=" + encodeURIComponent(rurl);
                             this.spot_obj = new spot(cid, cs, refresh, auth_url, rurl, this.log, this.config, this.api);
                             this.box[i] = this.spot_obj;
                         }
                     } else {
-                        this.log.error('Spotify not set up, go to homebridge-display\'s settings to add it.')
+                        this.log.error("Spotify not set up, go to homebridge-display's settings to add it.");
                         error_trigger = true;
                     }
-                } else if (boxtype[i] === 'weather') {
-                    const wet = require('./weather');
+                } else if (boxtype[i] === "weather") {
+                    const wet = require("./weather");
                     let wet_settings = this.config.Weather || false;
                     if (wet_settings !== false) {
                         let api_key = wet_settings.api_key || undefined;
                         let lat = wet_settings.lat || undefined;
                         let lon = wet_settings.lon || undefined;
                         if (api_key === undefined || lat === undefined || lon === undefined) {
-                            this.log.error('Weather is not done being set up, got to homebridge-display\'s settings to add it.');
+                            this.log.error("Weather is not done being set up, got to homebridge-display's settings to add it.");
                             error_trigger = true;
                         } else {
                             this.wet_obj = new wet(api_key, lat, lon, this.log, this.config, this.api);
                             this.box[i] = this.wet_obj;
                         }
                     } else {
-                        this.log.error('Weather not set up, go to homebridge-display\'s settings to add it.')
+                        this.log.error("Weather not set up, go to homebridge-display's settings to add it.");
                         error_trigger = true;
                     }
-                } else if (boxtype[i] === 'news') {
-                    const news = require('./newsfeed');
+                } else if (boxtype[i] === "news") {
+                    const news = require("./newsfeed");
                     let news_settings = this.config.Newsfeed || false;
                     if (news_settings !== false) {
                         let urls = news_settings.feed || undefined;
                         if (urls === undefined) {
-                            this.log.error('Newsfeed is not done being set up, got to homebridge-display\'s settings to add it.');
+                            this.log.error("Newsfeed is not done being set up, got to homebridge-display's settings to add it.");
                             error_trigger = true;
                         } else {
                             this.news_obj = new news(urls, this.log, this.config, this.api);
                             this.box[i] = this.news_obj;
                         }
                     } else {
-                        this.log.error('Newsfeed not set up, go to homebridge-display\'s settings to add it.')
+                        this.log.error("Newsfeed not set up, go to homebridge-display's settings to add it.");
                         error_trigger = true;
                     }
-                } else if (boxtype[i] === 'iot') {
-                    const iot = require('./iot');
+                } else if (boxtype[i] === "iot") {
+                    const iot = require("./iot");
                     let iot_settings = config_data;
                     if (iot_settings !== false) {
                         let pin = iot_settings.bridge.pin || undefined;
                         let port = iot_settings.bridge.port || undefined;
                         if (pin === undefined || port === undefined) {
-                            this.log.error('Accessory Control is not working, view the debug logs to determine why.');
+                            this.log.error("Accessory Control is not working, view the debug logs to determine why.");
                             error_trigger = true;
                         } else {
                             this.iot_obj = new iot(pin, port, this.log, this.config, this.api);
                             this.box[i] = this.iot_obj;
                         }
                     } else {
-                        this.log.error('Accessory Control is not working, view the debug logs to determine why.')
+                        this.log.error("Accessory Control is not working, view the debug logs to determine why.");
                         error_trigger = true;
                     }
-                } else if (boxtype[i] === 'lyrics') {
+                } else if (boxtype[i] === "lyrics") {
                     this.box[i] = true;
                 }
             }
@@ -165,20 +166,20 @@ class HomebridgeDisplay {
         let iot_obj;
         let lyr_obj;
         for (let i = 0; i < boxtype.length; i++) {
-            if (boxtype[i] === 'spotify') {
+            if (boxtype[i] === "spotify") {
                 spot_obj = this.box[i];
-            } else if (boxtype[i] === 'weather') {
+            } else if (boxtype[i] === "weather") {
                 wet_obj = this.box[i];
-            } else if (boxtype[i] === 'news') {
+            } else if (boxtype[i] === "news") {
                 news_obj = this.box[i];
-            } else if (boxtype[i] === 'iot') {
+            } else if (boxtype[i] === "iot") {
                 iot_obj = this.box[i];
-            } else if (boxtype[i] === 'lyrics') {
+            } else if (boxtype[i] === "lyrics") {
                 lyr_obj = this.box[i];
             }
         }
         const server = http.createServer((req, res) => {
-            log.debug('Received HTTP Path - ' + req.url);
+            log.debug("Received HTTP Path - " + req.url);
             let path = url.parse(req.url, true).pathname;
             let args = url.parse(req.url, true).query;
             if (path === "/static/background-image.jpg") {
@@ -329,7 +330,7 @@ class HomebridgeDisplay {
                             res.end(result);
                         } else {
                             res.statusCode = 500;
-                            res.end('An error occurred check the debug log for more info.');
+                            res.end("An error occurred check the debug log for more info.");
                             log.debug(err);
                         }
                     });
@@ -337,7 +338,7 @@ class HomebridgeDisplay {
                 catch (err) {
                     res.writeHead(500);
                     res.end("500 Error: see debug log or more details");
-                    log.debug(err)
+                    log.debug(err);
                     return;
                 }
             } else if (path === "/callback") {
@@ -347,8 +348,8 @@ class HomebridgeDisplay {
                     res.setHeader("Content-Type", "text/html");
                     res.end(args.error);
                 } else {
-                    spot_obj.callback(code)
-                    res.writeHead(302, {'Location': '/'});
+                    spot_obj.callback(code);
+                    res.writeHead(302, {"Location": "/"});
                     res.end();
                 }
             } else if (path === "/refresh-spotify-token") {
@@ -360,30 +361,30 @@ class HomebridgeDisplay {
                 }
             }else {
                 res.writeHead(404);
-                res.end('404 not found')
+                res.end("404 not found");
             }
         });
-        const io = require('socket.io').listen(server)
-        io.sockets.on('connection', function (socket) {
-            socket.on('update', function () { // Spotify update route
+        const io = require("socket.io").listen(server);
+        io.sockets.on("connection", function (socket) {
+            socket.on("update", function () { // Spotify update route
                 spot_obj.update(function(result) {
                     let spot_data = JSON.stringify(result);
                     // log.debug('[SPOTIFY] - ' + spot_data);
-                    socket.emit('update', spot_data);
+                    socket.emit("update", spot_data);
                 });
             });
-            socket.on('lyrics', function (data) {
+            socket.on("lyrics", function (data) {
                 if (lyr_obj === true) {
                     let options = {
                         url: data,
-                        method: 'GET'
+                        method: "GET"
                     };
                     request(options, (err, res, body) => {
                         if (err) {
-                            this.log.debug('[LYRICS] - ' + err);
+                            this.log.debug("[LYRICS] - " + err);
                             socket.emit("lyrics", JSON.stringify({"error": err}));
                         } else {
-                            if (body !== 'No lyrics available') {
+                            if (body !== "No lyrics available") {
                                 socket.emit("lyrics", body);
                             } else {
                                 socket.emit("lyrics", JSON.stringify({"error": "No lyrics available"}));
@@ -392,85 +393,85 @@ class HomebridgeDisplay {
                     });
                 }
             });
-            socket.on('switch', function (data) {
-                let switch_name = data[0]
-                let state = data[1]
+            socket.on("switch", function (data) {
+                let switch_name = data[0];
+                let state = data[1];
                 iot_obj.change_state(switch_name, state);
-                log.debug('Setting ' + switch_name + ' to ' + state);
+                log.debug("Setting " + switch_name + " to " + state);
             });
-            socket.on('news', function () {
+            socket.on("news", function () {
                 news_obj.update(function(result) {
                     // log.debug('[NEWS] - ' + JSON.stringify(result));
-                    socket.emit('news', JSON.stringify(result));
+                    socket.emit("news", JSON.stringify(result));
                 });
             });
-            socket.on('iot', function () {
+            socket.on("iot", function () {
                 iot_obj.get_status(function(result) {
                     let iot_data = JSON.stringify(result);
                     // log.debug('[ACCESSORY CONTROL - ' + iot_data);
-                    socket.emit('iot', iot_data);
+                    socket.emit("iot", iot_data);
                 });
             });
-            socket.on('debugger', function (data) {
+            socket.on("debugger", function (data) {
                 log.debug("[CLIENT ERROR] - " + data);
             });
-            socket.on('weather', function () {
+            socket.on("weather", function () {
                 wet_obj.update(function(result) {
                     let wet_update = JSON.stringify(result);
                     // log.debug(wet_update);
-                    socket.emit('weather', wet_update);
-                })
+                    socket.emit("weather", wet_update);
+                });
             });
-            socket.on('transfer', function (data) {
-                spot_obj.put('', {"device_ids": [data]});
+            socket.on("transfer", function (data) {
+                spot_obj.put("", {"device_ids": [data]});
                 log.debug("[SPOTIFY] - Transferring playback to " + data);
             });
-            socket.on('like', function (data) {
+            socket.on("like", function (data) {
                 spot_obj.like(data);
                 log.debug("[SPOTIFY] - Liked song");
             });
-            socket.on('unlike', function (data) {
+            socket.on("unlike", function (data) {
                 spot_obj.unlike(data);
                 log.debug("[SPOTIFY] - Unliked song");
             });
-            socket.on('next', function () {
-                spot_obj.post('/next');
+            socket.on("next", function () {
+                spot_obj.post("/next");
                 log.debug("[SPOTIFY] - Next song");
             });
-            socket.on('pause', function () {
-                spot_obj.put('/pause', null);
+            socket.on("pause", function () {
+                spot_obj.put("/pause", null);
                 log.debug("[SPOTIFY] - Pause");
             });
-            socket.on('back', function () {
-                spot_obj.post('/previous');
+            socket.on("back", function () {
+                spot_obj.post("/previous");
                 log.debug("[SPOTIFY] - Previous song");
             });
-            socket.on('resume', function () {
-                spot_obj.put('/play', null);
+            socket.on("resume", function () {
+                spot_obj.put("/play", null);
                 log.debug("[SPOTIFY] - Resume");
             });
-            socket.on('seek', function (data) {
-                spot_obj.put('/seek?position_ms=' + data, null);
+            socket.on("seek", function (data) {
+                spot_obj.put("/seek?position_ms=" + data, null);
                 log.debug("[SPOTIFY] - Skipping to " + data + "ms");
             });
-            socket.on('volume', function (data) {
-                spot_obj.put('/volume?volume_percent=' + data, null);
+            socket.on("volume", function (data) {
+                spot_obj.put("/volume?volume_percent=" + data, null);
                 log.debug("[SPOTIFY] - Volume set to " + data + "%");
             });
-            socket.on('shuffle', function (data) {
-                spot_obj.put('/shuffle?state=' + data, null);
+            socket.on("shuffle", function (data) {
+                spot_obj.put("/shuffle?state=" + data, null);
                 log.debug("[SPOTIFY] - Shuffle set to " + data);
             });
-            socket.on('repeat', function (data) {
-                spot_obj.put('/repeat?state=' + data, null);
+            socket.on("repeat", function (data) {
+                spot_obj.put("/repeat?state=" + data, null);
                 log.debug("[SPOTIFY] - Repeat set to " + data);
             });
         });
-        server.on('error', (err) => {
+        server.on("error", (err) => {
             log.debug(err);
         });
         server.listen(parseInt(this.config.Config.port), () => {
-            log('Starting Homebridge-Display server on port', parseInt(this.config.Config.port));
+            log("Starting Homebridge-Display server on port", parseInt(this.config.Config.port));
         });
     }
 }

@@ -1,5 +1,6 @@
-const request = require('request');
-const fs = require('fs');
+const request = require("request");
+const fs = require("fs");
+/*global Buffer:true*/
 
 class spotify {
     constructor(cid, secret, refresh_token, auth_url, rurl, log, config, api) {
@@ -8,66 +9,66 @@ class spotify {
         this.api = api;
         this.auth_url = auth_url;
         this.rurl = rurl;
-        this.port = rurl.split('/callback')[0]
+        this.port = rurl.split("/callback")[0];
         this.refresh_token = refresh_token;
         this.cid = cid;
         this.secret = secret;
         if (refresh_token === undefined) {
-            this.log.error('You have not yet given homebridge-display access to your Spotify account. To do so go to: ' + this.auth_url + '\nthen restart the server.');
+            this.log.error("You have not yet given homebridge-display access to your Spotify account. To do so go to: " + this.auth_url + "\nthen restart the server.");
         } else {
-            this.log.debug('Refreshing access token with refresh token \'' + this.refresh_token + '\'');
-            this.refresh()
+            this.log.debug("Refreshing access token with refresh token '" + this.refresh_token + "'");
+            this.refresh();
         }
     }
     refresh() {
         let headers = {
-            'Authorization': 'Basic ' + new Buffer(this.cid + ':' + this.secret).toString('base64'),
-            'Content-Type': 'application/x-www-form-urlencoded'
+            "Authorization": "Basic " + new Buffer(this.cid + ":" + this.secret).toString("base64"),
+            "Content-Type": "application/x-www-form-urlencoded"
         };
         
-        let dataString = 'grant_type=refresh_token&refresh_token=' + this.refresh_token;
+        let dataString = "grant_type=refresh_token&refresh_token=" + this.refresh_token;
         
         let options = {
-            url: 'https://accounts.spotify.com/api/token',
-            method: 'POST',
+            url: "https://accounts.spotify.com/api/token",
+            method: "POST",
             headers: headers,
             body: dataString
         };
         
         request(options, (err, res, body) => {
             if (err) {
-                this.log.debug('[SPOTIFY] - ' + err);
+                this.log.debug("[SPOTIFY] - " + err);
             } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error);
+                this.log.debug("[SPOTIFY] - " + JSON.parse(body).error);
             } else {
                 this.access_token = JSON.parse(body).access_token;
-                this.log.debug('[SPOTIFY] - Access token generated: ' + JSON.parse(body).access_token)
+                this.log.debug("[SPOTIFY] - Access token generated: " + JSON.parse(body).access_token);
             }
         });
     }
     callback(code) {
-        let dataString = 'grant_type=authorization_code&code=' + code + '&redirect_uri=' + this.rurl;
+        let dataString = "grant_type=authorization_code&code=" + code + "&redirect_uri=" + this.rurl;
         let headers = {
-            'Authorization': 'Basic ' + new Buffer(this.cid + ':' + this.secret).toString('base64'),
-            'Content-Type': 'application/x-www-form-urlencoded'
+            "Authorization": "Basic " + new Buffer(this.cid + ":" + this.secret).toString("base64"),
+            "Content-Type": "application/x-www-form-urlencoded"
         };
         let options = {
-            url: 'https://accounts.spotify.com/api/token',
-            method: 'POST',
+            url: "https://accounts.spotify.com/api/token",
+            method: "POST",
             headers: headers,
             body: dataString
         };
         
         request(options, (err, res, body) => {
             if (err) {
-                this.log.debug('[SPOTIFY] - ' + err);
+                this.log.debug("[SPOTIFY] - " + err);
             } else if (JSON.parse(body).error !== undefined) {
-                this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error);
+                this.log.debug("[SPOTIFY] - " + JSON.parse(body).error);
             } else {
                 this.access_token = JSON.parse(body).access_token;
                 this.refresh_token = JSON.parse(body).refresh_token;
                 let plugin_data = {};
-                let storage_path = this.api.user.storagePath() + '/homebridge-display.json';
+                let storage_path = this.api.user.storagePath() + "/homebridge-display.json";
                 try {
                     plugin_data = JSON.parse(fs.readFileSync(storage_path));
                 } catch (err) {
@@ -75,24 +76,24 @@ class spotify {
                 }
                 plugin_data["refresh"] = this.refresh_token;
                 fs.writeFileSync(storage_path, JSON.stringify(plugin_data));
-                this.log.debug('[SPOTIFY] - Access token generated: ' + this.access_token)
+                this.log.debug("[SPOTIFY] - Access token generated: " + this.access_token);
             }
         });
     }
     get(access_token, log, port, endpoint, call) {
         let headers = {
-            'Authorization': 'Bearer ' + access_token,
-            'User-Agent': 'request',
-            'Content-Type': 'application/json'
+            "Authorization": "Bearer " + access_token,
+            "User-Agent": "request",
+            "Content-Type": "application/json"
         };
         let options = {
-            url: 'https://api.spotify.com/v1/me/player' + endpoint,
-            method: 'GET',
+            url: "https://api.spotify.com/v1/me/player" + endpoint,
+            method: "GET",
             headers: headers
         };
         request(options, (err, res, body) => {
             if (err !== null && err !== undefined) {
-                log.debug('[SPOTIFY] - ' + err);
+                log.debug("[SPOTIFY] - " + err);
                 return call(null);
             } else {
                 if (body !== undefined) {
@@ -103,7 +104,7 @@ class spotify {
                         return call(body);
                     }
                     if (data.error !== undefined) {
-                        log.debug('[SPOTIFY] - ' + data.error.message);
+                        log.debug("[SPOTIFY] - " + data.error.message);
                         if (data.error.message === "The access token expired") {
                             refresh_token(port, log);
                         }
@@ -119,22 +120,22 @@ class spotify {
     }
     put(endpoint, json_body) {
         let headers = {
-            'Authorization': 'Bearer ' + this.access_token,
-            'Content-Type': 'application/json'
+            "Authorization": "Bearer " + this.access_token,
+            "Content-Type": "application/json"
         };
         let options = {
-            url: 'https://api.spotify.com/v1/me/player' + endpoint,
-            method: 'PUT',
+            url: "https://api.spotify.com/v1/me/player" + endpoint,
+            method: "PUT",
             headers: headers,
             body: json_body
         };
         request(options, (err, res, body) => {
             if (err) {
-                this.log.debug('[SPOTIFY] - ' + err);
+                this.log.debug("[SPOTIFY] - " + err);
             } else {
                 try {
                     if (JSON.parse(body).error !== undefined) {
-                        this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
+                        this.log.debug("[SPOTIFY] - " + JSON.parse(body).error.message);
                     }
                 } catch {}
             }
@@ -142,20 +143,20 @@ class spotify {
     }
     post(endpoint) {
         let headers = {
-            'Authorization': 'Bearer ' + this.access_token
+            "Authorization": "Bearer " + this.access_token
         };
         let options = {
-            url: 'https://api.spotify.com/v1/me/player' + endpoint,
-            method: 'POST',
+            url: "https://api.spotify.com/v1/me/player" + endpoint,
+            method: "POST",
             headers: headers
         };
         request(options, (err, res, body) => {
             if (err) {
-                this.log.debug('[SPOTIFY] - ' + err);
+                this.log.debug("[SPOTIFY] - " + err);
             } else {
                 try {
                     if (JSON.parse(body).error !== undefined) {
-                        this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
+                        this.log.debug("[SPOTIFY] - " + JSON.parse(body).error.message);
                     }
                 } catch {}
             }
@@ -163,20 +164,20 @@ class spotify {
     }
     like(song_id) {
         let headers = {
-            'Authorization': 'Bearer ' + this.access_token
+            "Authorization": "Bearer " + this.access_token
         };
         let options = {
-            url: 'https://api.spotify.com/v1/me/tracks?ids=' + song_id,
-            method: 'PUT',
+            url: "https://api.spotify.com/v1/me/tracks?ids=" + song_id,
+            method: "PUT",
             headers: headers
         };
         request(options, (err, res, body) => {
             if (err) {
-                this.log.debug('[SPOTIFY] - ' + err);
+                this.log.debug("[SPOTIFY] - " + err);
             } else {
                 try {
                     if (JSON.parse(body).error !== undefined) {
-                        this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
+                        this.log.debug("[SPOTIFY] - " + JSON.parse(body).error.message);
                     }
                 } catch {}
             }
@@ -184,20 +185,20 @@ class spotify {
     }
     unlike(song_id) {
         let headers = {
-            'Authorization': 'Bearer ' + this.access_token
+            "Authorization": "Bearer " + this.access_token
         };
         let options = {
-            url: 'https://api.spotify.com/v1/me/tracks?ids=' + song_id,
-            method: 'DELETE',
+            url: "https://api.spotify.com/v1/me/tracks?ids=" + song_id,
+            method: "DELETE",
             headers: headers
         };
         request(options, (err, res, body) => {
             if (err) {
-                this.log.debug('[SPOTIFY] - ' + err);
+                this.log.debug("[SPOTIFY] - " + err);
             } else {
                 try {
                     if (JSON.parse(body).error !== undefined) {
-                        this.log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
+                        this.log.debug("[SPOTIFY] - " + JSON.parse(body).error.message);
                     }
                 } catch {}
             }
@@ -218,62 +219,62 @@ class spotify {
             // keep canupdate to false as there is no refresh token
         }
         if (canupdate) {
-            get(access_token, log, port, '', function(result) {
+            get(access_token, log, port, "", function(result) {
                 let user_playback = result;
                 let update_json = {};
 
                 try {
-                    update_json['is_playing'] = user_playback.is_playing;
+                    update_json["is_playing"] = user_playback.is_playing;
                 } catch (err) {
-                    update_json['is_playing'] = false;
+                    update_json["is_playing"] = false;
                 }
                 if (update_json.is_playing) {
                     try {
-                        update_json['device'] = user_playback['device']['name'];
-                        update_json['device_type'] = user_playback['device']['type'];
-                        update_json['device_id'] = user_playback['device']['id'];
-                        update_json['volume'] = user_playback['device']['volume_percent'];
-                        update_json['shuffle_state'] = user_playback['shuffle_state'];
-                        update_json['repeat_state'] = user_playback['repeat_state'];
+                        update_json["device"] = user_playback["device"]["name"];
+                        update_json["device_type"] = user_playback["device"]["type"];
+                        update_json["device_id"] = user_playback["device"]["id"];
+                        update_json["volume"] = user_playback["device"]["volume_percent"];
+                        update_json["shuffle_state"] = user_playback["shuffle_state"];
+                        update_json["repeat_state"] = user_playback["repeat_state"];
                     } catch (err) {
-                        if (user_playback !== 'API rate limit exceeded') {
+                        if (user_playback !== "API rate limit exceeded") {
                             try {
-                                if (user_playback.currently_playing_type === 'episode') {
+                                if (user_playback.currently_playing_type === "episode") {
                                     // do nothing, we know that it is a podcast playing, which is not supported right now
                                 } else {
-                                    log.debug('[SPOTIFY] - ' + JSON.stringify(user_playback));
+                                    log.debug("[SPOTIFY] - " + JSON.stringify(user_playback));
                                 }
                             } catch {
-                                log.debug('[SPOTIFY] - ' + JSON.stringify(user_playback));
+                                log.debug("[SPOTIFY] - " + JSON.stringify(user_playback));
                             }
                             
                         }
                         return call({"error": user_playback});
                     }
 
-                    get(access_token, log, port, '/currently-playing', function(result) {
+                    get(access_token, log, port, "/currently-playing", function(result) {
                         let currently_playing = result;
                         try {
-                            update_json['progress_ms'] = currently_playing['progress_ms'];
-                            update_json['img_url'] = currently_playing['item']['album']['images'][0]['url'];
-                            let artist_names = []
-                            for (const artist of currently_playing['item']['artists']) {
-                                artist_names.push(artist['name']);
+                            update_json["progress_ms"] = currently_playing["progress_ms"];
+                            update_json["img_url"] = currently_playing["item"]["album"]["images"][0]["url"];
+                            let artist_names = [];
+                            for (const artist of currently_playing["item"]["artists"]) {
+                                artist_names.push(artist["name"]);
                             }
-                            update_json['artists'] = artist_names.join(', ');
-                            update_json['duration_ms'] = currently_playing['item']['duration_ms'];
-                            update_json['title'] = currently_playing['item']['name'];
-                            update_json['song_id'] = currently_playing['item']['id'];
+                            update_json["artists"] = artist_names.join(", ");
+                            update_json["duration_ms"] = currently_playing["item"]["duration_ms"];
+                            update_json["title"] = currently_playing["item"]["name"];
+                            update_json["song_id"] = currently_playing["item"]["id"];
                         } catch (err) {
-                            if (currently_playing !== 'API rate limit exceeded') {
+                            if (currently_playing !== "API rate limit exceeded") {
                                 try {
-                                    if (currently_playing.currently_playing_type === 'episode') {
+                                    if (currently_playing.currently_playing_type === "episode") {
                                         // do nothing, we know that it is a podcast playing, which is not supported right now
                                     } else {
-                                        log.debug('[SPOTIFY] - ' + JSON.stringify(currently_playing));
+                                        log.debug("[SPOTIFY] - " + JSON.stringify(currently_playing));
                                     }
                                 } catch {
-                                    log.debug('[SPOTIFY] - ' + JSON.stringify(currently_playing));
+                                    log.debug("[SPOTIFY] - " + JSON.stringify(currently_playing));
                                 }
                             }
                             return call({"error": currently_playing});
@@ -281,41 +282,41 @@ class spotify {
     
                         try {
                             let headers = {
-                                'Authorization': 'Bearer ' + access_token
+                                "Authorization": "Bearer " + access_token
                             };
                             let options = {
-                                url: 'https://api.spotify.com/v1/me/tracks/contains?ids=' + update_json.song_id,
-                                method: 'GET',
+                                url: "https://api.spotify.com/v1/me/tracks/contains?ids=" + update_json.song_id,
+                                method: "GET",
                                 headers: headers
                             };
                             request(options, (err, res, body) => {
                                 request(options, (err, res, body) => {
                                     if (err) {
-                                        log.debug('[SPOTIFY] - ' + err);
+                                        log.debug("[SPOTIFY] - " + err);
                                     } else {
                                         try {
                                             if (JSON.parse(body).error !== undefined) {
-                                                log.debug('[SPOTIFY] - ' + JSON.parse(body).error.message);
+                                                log.debug("[SPOTIFY] - " + JSON.parse(body).error.message);
                                             } else {
-                                                update_json['liked'] = JSON.parse(body)[0];
-                                                get(access_token, log, port, '/devices', function(result) {
+                                                update_json["liked"] = JSON.parse(body)[0];
+                                                get(access_token, log, port, "/devices", function(result) {
                                                     let devices = result;
-                                                    update_json['avaliable_devices'] = {};
+                                                    update_json["avaliable_devices"] = {};
                                                     try {
-                                                        for (const device of devices['devices']) {
-                                                            update_json['avaliable_devices'][device['name']] = device['id'];
+                                                        for (const device of devices["devices"]) {
+                                                            update_json["avaliable_devices"][device["name"]] = device["id"];
                                                             return call(update_json);
                                                         }
                                                     } catch (err) {
-                                                        if (devices !== 'API rate limit exceeded') {
-                                                            log.debug('[SPOTIFY] - ' + JSON.stringify(devices));
+                                                        if (devices !== "API rate limit exceeded") {
+                                                            log.debug("[SPOTIFY] - " + JSON.stringify(devices));
                                                         }
                                                         return call({"error": devices});
                                                     }
                                                 });
                                             }
                                         } catch (err) {
-                                            log.debug('[SPOTIFY] - ' + err);
+                                            log.debug("[SPOTIFY] - " + err);
                                         }
                                     }
                                 });
@@ -329,23 +330,23 @@ class spotify {
                 }
             });
         } else {
-            return call({"error": 'cannot update, check logs'});
+            return call({"error": "cannot update, check logs"});
         }
     }
 }
 
 function refresh_token(port, log) {
     let options = {
-        url: port + '/refresh-spotify-token',
-        method: 'GET'
+        url: port + "/refresh-spotify-token",
+        method: "GET"
     };
     request(options, (err, res, body) => {
         if (err) {
-            log.debug('[SPOTIFY] - ' + err);
+            log.debug("[SPOTIFY] - " + err);
         } else {
-            log.debug('[SPOTIFY] - ' + body);
+            log.debug("[SPOTIFY] - " + body);
         }
     });
 }
 
-module.exports = spotify
+module.exports = spotify;
