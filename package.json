@@ -27,15 +27,21 @@
     "homebridge": ">0.4.53"
   },
   "keywords": [
+    "homebridge",
     "homebridge-plugin",
     "ipad",
     "display"
   ],
   "main": "dist/index.js",
-  "author": "Eric Andrechek",
+  "author": {
+    "name": "Eric Andrechek",
+    "email": "eric@andrechek.com",
+    "url": "https://github.com/EricAndrechek/"
+  },
   "dependencies": {
     "ejs": "^3.1.3",
     "lodash": "^4.17.19",
+    "path": "^0.12.7",
     "request": "^2.88.2",
     "rss-parser": "^3.8.0",
     "socket.io": "^2.3.0"
@@ -52,6 +58,6 @@
     "typescript": "^4.0.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint './dist/*.js' --fix"
   }
 }
