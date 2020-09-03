@@ -2,7 +2,7 @@
     "pluginAlias": "homebridge-display",
     "pluginType": "platform",
     "singular": true,
-    "headerDisplay": "Instructions for setting up the config can be found on the [Github](https://github.com/EricAndrechek/homebridge-display#setup)",
+    "headerDisplay": "Instructions for setting up the config can be found on the [GitHub Wiki](https://github.com/EricAndrechek/homebridge-display/wiki/Installation)",
     "schema": {
         "Config": {
             "expandable": false,
