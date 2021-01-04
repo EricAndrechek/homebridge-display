@@ -55,13 +55,14 @@
                     "type": "string",
                     "default": "blank",
                     "oneOf": [
-                            { "title": "Spotify Control", "enum": ["spotify"] },
-                            { "title": "Calculator", "enum": ["calculator"] },
-                            { "title": "Weather", "enum": ["weather"] },
-                            { "title": "RSS News Feed", "enum": ["news"] },
-                            { "title": "Lyrics", "enum": ["lyrics"] },
-                            { "title": "Accessory Control", "enum": ["iot"] },
-                            { "title": "Blank", "enum": ["blank"] }
+                        { "title": "Spotify Control", "enum": ["spotify"] },
+                        { "title": "Sonos Control", "enum": ["sonos"] },
+                        { "title": "Calculator", "enum": ["calculator"] },
+                        { "title": "Weather", "enum": ["weather"] },
+                        { "title": "RSS News Feed", "enum": ["news"] },
+                        { "title": "Lyrics", "enum": ["lyrics"] },
+                        { "title": "Accessory Control", "enum": ["iot"] },
+                        { "title": "Blank", "enum": ["blank"] }
                     ],
                     "required": true
                 },
@@ -70,13 +71,14 @@
                     "type": "string",
                     "default": "blank",
                     "oneOf": [
-                            { "title": "Spotify Control", "enum": ["spotify"] },
-                            { "title": "Calculator", "enum": ["calculator"] },
-                            { "title": "Weather", "enum": ["weather"] },
-                            { "title": "RSS News Feed", "enum": ["news"] },
-                            { "title": "Lyrics", "enum": ["lyrics"] },
-                            { "title": "Accessory Control", "enum": ["iot"] },
-                            { "title": "Blank", "enum": ["blank"] }
+                        { "title": "Spotify Control", "enum": ["spotify"] },
+                        { "title": "Sonos Control", "enum": ["sonos"] },
+                        { "title": "Calculator", "enum": ["calculator"] },
+                        { "title": "Weather", "enum": ["weather"] },
+                        { "title": "RSS News Feed", "enum": ["news"] },
+                        { "title": "Lyrics", "enum": ["lyrics"] },
+                        { "title": "Accessory Control", "enum": ["iot"] },
+                        { "title": "Blank", "enum": ["blank"] }
                     ],
                     "required": true
                 },
@@ -85,13 +87,14 @@
                     "type": "string",
                     "default": "blank",
                     "oneOf": [
-                            { "title": "Spotify Control", "enum": ["spotify"] },
-                            { "title": "Calculator", "enum": ["calculator"] },
-                            { "title": "Weather", "enum": ["weather"] },
-                            { "title": "RSS News Feed", "enum": ["news"] },
-                            { "title": "Lyrics", "enum": ["lyrics"] },
-                            { "title": "Accessory Control", "enum": ["iot"] },
-                            { "title": "Blank", "enum": ["blank"] }
+                        { "title": "Spotify Control", "enum": ["spotify"] },
+                        { "title": "Sonos Control", "enum": ["sonos"] },
+                        { "title": "Calculator", "enum": ["calculator"] },
+                        { "title": "Weather", "enum": ["weather"] },
+                        { "title": "RSS News Feed", "enum": ["news"] },
+                        { "title": "Lyrics", "enum": ["lyrics"] },
+                        { "title": "Accessory Control", "enum": ["iot"] },
+                        { "title": "Blank", "enum": ["blank"] }
                     ],
                     "required": true
                 },
@@ -100,13 +103,14 @@
                     "type": "string",
                     "default": "blank",
                     "oneOf": [
-                            { "title": "Spotify Control", "enum": ["spotify"] },
-                            { "title": "Calculator", "enum": ["calculator"] },
-                            { "title": "Weather", "enum": ["weather"] },
-                            { "title": "RSS News Feed", "enum": ["news"] },
-                            { "title": "Lyrics", "enum": ["lyrics"] },
-                            { "title": "Accessory Control", "enum": ["iot"] },
-                            { "title": "Blank", "enum": ["blank"] }
+                        { "title": "Spotify Control", "enum": ["spotify"] },
+                        { "title": "Sonos Control", "enum": ["sonos"] },
+                        { "title": "Calculator", "enum": ["calculator"] },
+                        { "title": "Weather", "enum": ["weather"] },
+                        { "title": "RSS News Feed", "enum": ["news"] },
+                        { "title": "Lyrics", "enum": ["lyrics"] },
+                        { "title": "Accessory Control", "enum": ["iot"] },
+                        { "title": "Blank", "enum": ["blank"] }
                     ],
                     "required": true
                 },
@@ -115,13 +119,14 @@
                     "type": "string",
                     "default": "blank",
                     "oneOf": [
-                            { "title": "Spotify Control", "enum": ["spotify"] },
-                            { "title": "Calculator", "enum": ["calculator"] },
-                            { "title": "Weather", "enum": ["weather"] },
-                            { "title": "RSS News Feed", "enum": ["news"] },
-                            { "title": "Lyrics", "enum": ["lyrics"] },
-                            { "title": "Accessory Control", "enum": ["iot"] },
-                            { "title": "Blank", "enum": ["blank"] }
+                        { "title": "Spotify Control", "enum": ["spotify"] },
+                        { "title": "Sonos Control", "enum": ["sonos"] },
+                        { "title": "Calculator", "enum": ["calculator"] },
+                        { "title": "Weather", "enum": ["weather"] },
+                        { "title": "RSS News Feed", "enum": ["news"] },
+                        { "title": "Lyrics", "enum": ["lyrics"] },
+                        { "title": "Accessory Control", "enum": ["iot"] },
+                        { "title": "Blank", "enum": ["blank"] }
                     ],
                     "required": true
                 },
@@ -130,13 +135,14 @@
                     "type": "string",
                     "default": "blank",
                     "oneOf": [
-                            { "title": "Spotify Control", "enum": ["spotify"] },
-                            { "title": "Calculator", "enum": ["calculator"] },
-                            { "title": "Weather", "enum": ["weather"] },
-                            { "title": "RSS News Feed", "enum": ["news"] },
-                            { "title": "Lyrics", "enum": ["lyrics"] },
-                            { "title": "Accessory Control", "enum": ["iot"] },
-                            { "title": "Blank", "enum": ["blank"] }
+                        { "title": "Spotify Control", "enum": ["spotify"] },
+                        { "title": "Sonos Control", "enum": ["sonos"] },
+                        { "title": "Calculator", "enum": ["calculator"] },
+                        { "title": "Weather", "enum": ["weather"] },
+                        { "title": "RSS News Feed", "enum": ["news"] },
+                        { "title": "Lyrics", "enum": ["lyrics"] },
+                        { "title": "Accessory Control", "enum": ["iot"] },
+                        { "title": "Blank", "enum": ["blank"] }
                     ],
                     "required": true
                 }
@@ -163,6 +169,31 @@
                     "title": "Callback URL for Spotify Login",
                     "type": "string",
                     "placeholder": "http://homebridge.local:6969/callback",
+                    "required": false
+                }
+            }
+        },
+        "Sonos": {
+            "title": "Create a Sonos API Key to use the Sonos player functionality.",
+            "expandable": true,
+            "type": "object",
+            "properties": {
+                "cid": {
+                    "title": "Client ID",
+                    "type": "string",
+                    "default": "",
+                    "required": false
+                },
+                "cs": {
+                    "title": "Client Secret",
+                    "type": "string",
+                    "default": "",
+                    "required": false
+                },
+                "rurl": {
+                    "title": "Callback URL for Sonos Login",
+                    "type": "string",
+                    "placeholder": "http://homebridge.local:6969/setup",
                     "required": false
                 }
             }

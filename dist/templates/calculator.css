@@ -1,15 +1,22 @@
 #calc {
     display: grid;
     justify-content: center;
-    grid-template-columns: calc((100% - 20px) / 4) calc((100% - 20px) / 4) calc((100% - 20px) / 4) calc((100% - 20px) / 4);
-    grid-template-rows: calc((100vh / 2 - 20px) / 6) calc((100vh / 2 - 20px) / 6) calc((100vh / 2 - 20px) / 6) calc((100vh / 2 - 20px) / 6) calc((100vh / 2 - 20px) / 6) calc((100vh / 2 - 20px) / 6);
-    grid-template-areas: 
-    "header header header header" 
-    "main main main main" 
-    "main main main main" 
-    "main main main main" 
-    "main main main main" 
-    "main main main main";
+    grid-template-columns:
+        calc((100% - 20px) / 4) calc((100% - 20px) / 4) calc((100% - 20px) / 4)
+        calc((100% - 20px) / 4);
+    grid-template-rows:
+        calc((100vh / 2 - 20px) / 6) calc((100vh / 2 - 20px) / 6)
+        calc((100vh / 2 - 20px) / 6) calc((100vh / 2 - 20px) / 6) calc(
+            (100vh / 2 - 20px) / 6
+        )
+        calc((100vh / 2 - 20px) / 6);
+    grid-template-areas:
+        "header header header header"
+        "main main main main"
+        "main main main main"
+        "main main main main"
+        "main main main main"
+        "main main main main";
 }
 
 .item-header {
@@ -46,7 +53,7 @@
 
 .btn.orange:focus {
     background-color: white;
-    color: gold
+    color: gold;
 }
 
 .btn.silver {
@@ -56,7 +63,7 @@
 
 .btn.silver:focus {
     background-color: white;
-    color: black
+    color: black;
 }
 
 .btn.equals {
@@ -65,7 +72,7 @@
 
 .btn.equals:focus {
     background-color: white;
-    color: gold
+    color: gold;
 }
 
 .btn.zero {

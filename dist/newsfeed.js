@@ -12,8 +12,12 @@ class newsfeed {
         let updated = [];
         for (const url of this.feeds) {
             let feed = await parser.parseURL(url);
-            feed.items.forEach(item => {
-                updated.push({"title": item.title, "link": item.link, "description": item.content.split("<")[0]});
+            feed.items.forEach((item) => {
+                updated.push({
+                    title: item.title,
+                    link: item.link,
+                    description: item.content.split("<")[0],
+                });
             });
         }
         return call(updated);

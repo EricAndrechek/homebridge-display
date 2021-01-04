@@ -1,30 +1,37 @@
 <div class="spotify">
-    <img src="/static/placeholder.png" id="spotify_uri">
+    <img src="/static/placeholder.png" id="spotify_uri" />
     <div class="first_row">
         <div class="title-text">
             <span id="song_title"></span>
             <span id="artist"></span>
         </div>
         <div id="heart-box">
-            <span id="heart" class="material-icons ">favorite</span>
+            <span id="heart" class="material-icons">favorite</span>
         </div>
     </div>
-    <input id="progress" type="range" min="0" max="100" value="0" onchange="seekTime()">
+    <input
+        id="progress"
+        type="range"
+        min="0"
+        max="100"
+        value="0"
+        onchange="seekTime()"
+    />
     <div id="mini_timestamps">
         <span id="progress_ms">00:00</span>
         <span id="duration_ms">00:00</span>
     </div>
     <div id="second_row">
-        <span id="shuffle" class="material-icons ">shuffle</span>
-        <span id="back" class="material-icons ">skip_previous</span>
-        <span id="toggle" class="material-icons ">play_arrow</span>
-        <span id="next" class="material-icons ">skip_next</span>
-        <span id="repeat" class="material-icons ">repeat</span>
+        <span id="shuffle" class="material-icons">shuffle</span>
+        <span id="back" class="material-icons">skip_previous</span>
+        <span id="toggle" class="material-icons">play_arrow</span>
+        <span id="next" class="material-icons">skip_next</span>
+        <span id="repeat" class="material-icons">repeat</span>
     </div>
     <div id="last_row">
         <select id="device_selection">
             <option selected id="device_name">Not Playing</option>
         </select>
-        <span id="speaker" class="material-icons ">volume_up</span>
+        <span id="speaker" class="material-icons">volume_up</span>
     </div>
 </div>

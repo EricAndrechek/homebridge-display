@@ -2,7 +2,7 @@ const request = require("request");
 const fs = require("fs");
 /*global Buffer:true*/
 
-class spotify {
+class sonos {
     constructor(cid, secret, refresh_token, auth_url, rurl, log, config, api) {
         this.log = log;
         this.config = config;
@@ -15,7 +15,7 @@ class spotify {
         this.secret = secret;
         if (refresh_token === undefined) {
             this.log.error(
-                "You have not yet given homebridge-display access to your Spotify account. To do so go to: " +
+                "You have not yet given homebridge-display access to your Sonos account. To do so go to: " +
                     this.auth_url +
                     "\nthen restart the server."
             );

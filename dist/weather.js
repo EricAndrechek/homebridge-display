@@ -12,8 +12,14 @@ class weather {
     }
     update(call) {
         let options = {
-            url: "https://api.openweathermap.org/data/2.5/onecall?lat=" + this.lat + "&lon=" + this.lon + "&units=imperial&appid=" + this.api_key,
-            method: "GET"
+            url:
+                "https://api.openweathermap.org/data/2.5/onecall?lat=" +
+                this.lat +
+                "&lon=" +
+                this.lon +
+                "&units=imperial&appid=" +
+                this.api_key,
+            method: "GET",
         };
         const log = this.log;
         request(options, (err, res, body) => {
@@ -35,12 +41,12 @@ class weather {
                     update["wind"] = resp["current"]["wind_speed"];
                     update["id"] = resp["current"]["weather"][0]["id"];
                     update["minutes"] = {};
-                    minutely(resp, update, function(result) {
+                    minutely(resp, update, function (result) {
                         result["hourly"] = {};
-                        hourly(resp, result, function(result) {
+                        hourly(resp, result, function (result) {
                             result["days"] = {};
-                            daily(resp, result, function(result) {
-                                hourSort(resp, result, log, function(result) {
+                            daily(resp, result, function (result) {
+                                hourSort(resp, result, log, function (result) {
                                     return call(result);
                                 });
                             });
@@ -57,7 +63,20 @@ class weather {
 function formatted(epoch) {
     let d = new Date(0);
     d.setUTCSeconds(epoch);
-    return (d.getMonth() + 1) + "-" + d.getDate() + "-" + d.getFullYear() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+    return (
+        d.getMonth() +
+        1 +
+        "-" +
+        d.getDate() +
+        "-" +
+        d.getFullYear() +
+        " " +
+        d.getHours() +
+        ":" +
+        d.getMinutes() +
+        ":" +
+        d.getSeconds()
+    );
 }
 function hours(epoch) {
     let d = new Date(0);
@@ -89,20 +108,20 @@ function weekday(epoch) {
     let d = new Date(0);
     d.setUTCSeconds(epoch);
     switch (d.getDay()) {
-    case 0:
-        return "Sunday";
-    case 1:
-        return "Monday";
-    case 2:
-        return "Tuesday";
-    case 3:
-        return "Wednesday";
-    case 4:
-        return "Thursday";
-    case 5:
-        return "Friday";
-    case 6:
-        return "Saturday";
+        case 0:
+            return "Sunday";
+        case 1:
+            return "Monday";
+        case 2:
+            return "Tuesday";
+        case 3:
+            return "Wednesday";
+        case 4:
+            return "Thursday";
+        case 5:
+            return "Friday";
+        case 6:
+            return "Saturday";
     }
 }
 
@@ -146,18 +165,35 @@ function hourSort(resp, update, log, call) {
     for (let time = 0; time < _.keys(update["hourly"]).length; time++) {
         if (time !== 0 && update["hourly"][time] !== undefined) {
             let hour = update["hourly"][time];
-            let hour_prior = update["hourly"][(time - 1)];
+            let hour_prior = update["hourly"][time - 1];
             let spot;
-            if (sunrise_hour < parseInt(hour["name"]) && !riseadded && sunrise_hour >= parseInt(hour_prior["name"])) {
+            if (
+                sunrise_hour < parseInt(hour["name"]) &&
+                !riseadded &&
+                sunrise_hour >= parseInt(hour_prior["name"])
+            ) {
                 riseadded = true;
                 spot = time - 0.5;
-                update["hourly"][spot] = {"name": fulltime(resp["current"]["sunrise"]), "temp": "Sunrise", "id": 1};
+                update["hourly"][spot] = {
+                    name: fulltime(resp["current"]["sunrise"]),
+                    temp: "Sunrise",
+                    id: 1,
+                };
                 update["sunrise"] = spot;
             }
-            if (sunset_hour < parseInt(hour["name"]) && !setadded && time !== 0 && sunset_hour >= parseInt(hour_prior["name"])) {
+            if (
+                sunset_hour < parseInt(hour["name"]) &&
+                !setadded &&
+                time !== 0 &&
+                sunset_hour >= parseInt(hour_prior["name"])
+            ) {
                 setadded = true;
                 spot = time - 0.5;
-                update["hourly"][spot] = {"name": fulltime(resp["current"]["sunset"]), "temp": "Sunset", "id": 2};
+                update["hourly"][spot] = {
+                    name: fulltime(resp["current"]["sunset"]),
+                    temp: "Sunset",
+                    id: 2,
+                };
                 update["sunset"] = spot;
             }
         }

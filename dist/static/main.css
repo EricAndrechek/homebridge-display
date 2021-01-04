@@ -28,7 +28,7 @@ html {
     width: 300px;
     height: 300px;
     height: 300px;
-    width: 300px;;
+    width: 300px;
 }
 
 #song_title {
@@ -75,7 +75,6 @@ html {
 #heart-box .material-icons {
     color: white;
     font-size: 50px;
-    
 }
 
 #progress {
@@ -103,9 +102,9 @@ html {
     -webkit-appearance: none;
     height: 20px;
     cursor: ew-resize;
-    background: #1DB954;
+    background: #1db954;
     border-radius: 15px;
-    box-shadow: -300px 0 0 290px #1DB954;
+    box-shadow: -300px 0 0 290px #1db954;
     border: 0;
     outline: none;
 }

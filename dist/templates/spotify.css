@@ -47,7 +47,6 @@
 #heart-box .material-icons {
     color: white;
     font-size: 50px;
-    
 }
 
 #progress {
@@ -83,15 +82,15 @@
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background: #1DB954;
+    background: #1db954;
     cursor: pointer;
 }
-  
+
 #progress::-moz-range-thumb {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background: #1DB954;
+    background: #1db954;
     cursor: pointer;
 }
 
