@@ -149,7 +149,7 @@
             }
         },
         "Spotify": {
-            "title": "Create a Spotify API Key to use the Spotify player functionality. ** Note: This only works with Spotify Premium Accounts **",
+            "title": "Spotify",
             "expandable": true,
             "type": "object",
             "properties": {
@@ -173,33 +173,8 @@
                 }
             }
         },
-        "Sonos": {
-            "title": "Create a Sonos API Key to use the Sonos player functionality.",
-            "expandable": true,
-            "type": "object",
-            "properties": {
-                "cid": {
-                    "title": "Client ID",
-                    "type": "string",
-                    "default": "",
-                    "required": false
-                },
-                "cs": {
-                    "title": "Client Secret",
-                    "type": "string",
-                    "default": "",
-                    "required": false
-                },
-                "rurl": {
-                    "title": "Callback URL for Sonos Login",
-                    "type": "string",
-                    "placeholder": "http://homebridge.local:6969/setup",
-                    "required": false
-                }
-            }
-        },
         "Newsfeed": {
-            "title": "Add links to RSS News Feeds below",
+            "title": "RSS News Feeds",
             "expandable": true,
             "type": "object",
             "properties": {
@@ -220,10 +195,19 @@
             }
         },
         "Weather": {
-            "title": "Show the current weather on your display. Register for an API Key with OpenWeather and follow the instructions on my GitHub",
+            "title": "Weather",
             "expandable": true,
             "type": "object",
             "properties": {
+                "units": {
+                    "title": "Units",
+                    "type": "string",
+                    "default": "F",
+                    "oneOf": [
+                        { "title": "Celsius", "enum": ["C"] },
+                        { "title": "Fahrenheit", "enum": ["F"] }
+                    ]
+                },
                 "api_key": {
                     "title": "API Key",
                     "type": "string",

@@ -1,0 +1,37 @@
+<div class="sonos">
+    <img src="/static/placeholder.png" id="sonos_uri" />
+    <div class="sonos_first_row">
+        <div class="sonos_title-text">
+            <span id="sonos_song_title"></span>
+            <span id="sonos_artist"></span>
+        </div>
+        <div id="sonos_heart-box">
+            <span id="sonos_heart" class="material-icons">favorite</span>
+        </div>
+    </div>
+    <input
+        id="sonos_progress"
+        type="range"
+        min="0"
+        max="100"
+        value="0"
+        onchange="seekTime()"
+    />
+    <div id="sonos_mini_timestamps">
+        <span id="sonos_progress_ms">00:00</span>
+        <span id="sonos_duration_ms">00:00</span>
+    </div>
+    <div id="sonos_second_row">
+        <span id="sonos_shuffle" class="material-icons">shuffle</span>
+        <span id="sonos_back" class="material-icons">skip_previous</span>
+        <span id="sonos_toggle" class="material-icons">play_arrow</span>
+        <span id="sonos_next" class="material-icons">skip_next</span>
+        <span id="sonos_repeat" class="material-icons">repeat</span>
+    </div>
+    <div id="sonos_last_row">
+        <select id="sonos_device_selection">
+            <option selected id="sonos_device_name">Not Playing</option>
+        </select>
+        <span id="sonos_speaker" class="material-icons">volume_up</span>
+    </div>
+</div>

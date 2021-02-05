@@ -1,48 +1,50 @@
-let lastupdate = (new Date(0)).getTime();
-let titlescroll = setInterval(function () { }, 100);
-let artistscroll = setInterval(function () { }, 100);
+let lastupdate = new Date(0).getTime();
+let titlescroll = setInterval(function () {}, 100);
+let artistscroll = setInterval(function () {}, 100);
 let lastdata;
 let isplaying = false;
 
-document.getElementById('shuffle').onclick = function () {
-    socket.emit('shuffle', !lastdata.shuffle_state);
+document.getElementById("shuffle").onclick = function () {
+    socket.emit("shuffle", !lastdata.shuffle_state);
 };
 
-document.getElementById('heart-box').onclick = function () {
+document.getElementById("heart-box").onclick = function () {
     if (lastdata.liked == true) {
-        socket.emit('unlike', lastdata.song_id);
+        socket.emit("unlike", lastdata.song_id);
     } else {
-        socket.emit('like', lastdata.song_id);
+        socket.emit("like", lastdata.song_id);
     }
 };
 
-document.getElementById('repeat').onclick = function () {
+document.getElementById("repeat").onclick = function () {
     if (lastdata.repeat_state === "off") {
-        socket.emit('repeat', 'track');
+        socket.emit("repeat", "track");
     } else {
-        socket.emit('repeat', 'off');
+        socket.emit("repeat", "off");
     }
 };
 
-document.getElementById('back').onclick = function () {
-    socket.emit('back');
+document.getElementById("back").onclick = function () {
+    socket.emit("back");
 };
 
-document.getElementById('next').onclick = function () {
-    socket.emit('next');
+document.getElementById("next").onclick = function () {
+    socket.emit("next");
 };
 
-document.getElementById('toggle').onclick = function () {
+document.getElementById("toggle").onclick = function () {
     if (isplaying == true) {
-        socket.emit('pause');
+        socket.emit("pause");
     } else {
-        socket.emit('resume');
+        socket.emit("resume");
     }
 };
 
 function seekTime() {
-    let desired_ms = Math.round(($('#progress').val() / 100) * lastdata.duration_ms);
-    socket.emit('seek', desired_ms);
+    let desired_ms = Math.round(
+        ($("#progress").val() / 100) * lastdata.duration_ms
+    );
+    socket.emit("seek", desired_ms);
 }
 
 function titlescroller(title) {
@@ -51,7 +53,7 @@ function titlescroller(title) {
     let allchars = title + " --- ";
     let charend = allchars.length;
     titlescroll = setInterval(function () {
-        $('#song_title').html(allchars);
+        $("#song_title").html(allchars);
         allchars = allchars.substring(2, charend) + allchars.substring(0, 2);
     }, 600);
 }
@@ -62,7 +64,7 @@ function artistscroller(artist) {
     let allchars = artist + " --- ";
     let charend = allchars.length;
     artistscroll = setInterval(function () {
-        $('#artist').html(allchars);
+        $("#artist").html(allchars);
         allchars = allchars.substring(2, charend) + allchars.substring(0, 2);
     }, 600);
 }
@@ -74,141 +76,186 @@ function msToTime(s) {
     s = (s - secs) / 60;
     var mins = s % 60;
     if (secs == 0) {
-        secs = '00';
+        secs = "00";
     } else if (secs < 10) {
-        secs = '0' + secs;
+        secs = "0" + secs;
     }
 
-    return mins + ':' + secs;
+    return mins + ":" + secs;
 }
 
-socket.on('update', function (msg) {
+socket.on("update", function (msg) {
     let newdata = JSON.parse(msg);
     if (newdata.error == undefined) {
         if (newdata.is_playing) {
-            lastupdate = (new Date()).getTime();
+            lastupdate = new Date().getTime();
 
             if (lastdata == false) {
-                $('#toggle').html('pause');
+                $("#toggle").html("pause");
             }
             if (isplaying == false) {
-                $('#toggle').html('pause');
+                $("#toggle").html("pause");
             }
 
             isplaying = true;
 
-            if (lastdata == undefined || lastdata.avaliable_devices !== newdata.avaliable_devices || lastdata.device !== newdata.device) {
+            if (
+                lastdata == undefined ||
+                lastdata.avaliable_devices !== newdata.avaliable_devices ||
+                lastdata.device !== newdata.device
+            ) {
                 $("#device_selection").empty();
-                Object.entries(newdata.avaliable_devices).forEach(([key, value]) => {
-                    if (key === newdata.device) {
-                        $('#device_selection').append(
-                            "<option selected value='" + value + "'>" + key + "</value>"
-                        );
-                    } else {
-                        $('#device_selection').append(
-                            "<option value='" + value + "'>" + key + "</value>"
-                        );
+                Object.entries(newdata.avaliable_devices).forEach(
+                    ([key, value]) => {
+                        if (key === newdata.device) {
+                            $("#device_selection").append(
+                                "<option selected value='" +
+                                    value +
+                                    "'>" +
+                                    key +
+                                    "</value>"
+                            );
+                        } else {
+                            $("#device_selection").append(
+                                "<option value='" +
+                                    value +
+                                    "'>" +
+                                    key +
+                                    "</value>"
+                            );
+                        }
                     }
-                });
+                );
             }
 
             if (lastdata == undefined || lastdata.volume !== newdata.volume) {
                 if (newdata.volume > 55) {
-                    $('#speaker').html('volume_up');
+                    $("#speaker").html("volume_up");
                 } else if (newdata.volume > 10) {
-                    $('#speaker').html('volume_down');
+                    $("#speaker").html("volume_down");
                 } else if (newdata.volume > 0) {
-                    $('#speaker').html('volume_mute');
+                    $("#speaker").html("volume_mute");
                 } else if (newdata.volume == 0) {
-                    $('#speaker').html('volume_off');
+                    $("#speaker").html("volume_off");
                 }
             }
 
-            if (lastdata == undefined || lastdata.shuffle_state !== newdata.shuffle_state) {
+            if (
+                lastdata == undefined ||
+                lastdata.shuffle_state !== newdata.shuffle_state
+            ) {
                 if (newdata.shuffle_state == true) {
-                    $('#shuffle').css('color', '#1DB954');
+                    $("#shuffle").css("color", "#1DB954");
                 } else {
-                    $('#shuffle').css('color', 'white');
+                    $("#shuffle").css("color", "white");
                 }
             }
 
             if (lastdata == undefined || lastdata.liked !== newdata.liked) {
                 if (newdata.liked == true) {
-                    $('#heart').html('favorite');
+                    $("#heart").html("favorite");
                 } else {
-                    $('#heart').html('favorite_border');
+                    $("#heart").html("favorite_border");
                 }
             }
 
-            if (lastdata == undefined || lastdata.repeat_state !== newdata.repeat_state) {
+            if (
+                lastdata == undefined ||
+                lastdata.repeat_state !== newdata.repeat_state
+            ) {
                 if (newdata.repeat_state == "off") {
-                    $('#repeat').css('color', 'white');
+                    $("#repeat").css("color", "white");
                 } else {
-                    $('#repeat').css('color', '#1DB954');
+                    $("#repeat").css("color", "#1DB954");
                 }
             }
-            if (lastdata == undefined || lastdata.title !== newdata.title) { // check for change and modify this data:
-                socket.emit("lyrics", "https://api.textyl.co/api/lyrics?q=" + newdata.title + "+" + newdata.artists);
-                $('#spotify_uri').attr('src', newdata.img_url)
-                clearInterval(titlescroll)
+            if (lastdata == undefined || lastdata.title !== newdata.title) {
+                // check for change and modify this data:
+                socket.emit(
+                    "lyrics",
+                    "https://api.textyl.co/api/lyrics?q=" +
+                        newdata.title +
+                        "+" +
+                        newdata.artists
+                );
+                $("#spotify_uri").attr("src", newdata.img_url);
+                clearInterval(titlescroll);
                 titlescroll = false;
-                clearInterval(artistscroll)
+                clearInterval(artistscroll);
                 artistscroll = false;
-                $('#duration_ms').html(msToTime(newdata.duration_ms));
-                if ($('#song_title').prop('scrollWidth') > $('#song_title').width()) {
+                $("#duration_ms").html(msToTime(newdata.duration_ms));
+                if (
+                    $("#song_title").prop("scrollWidth") >
+                    $("#song_title").width()
+                ) {
                     titlescroller(newdata.title);
                 } else {
-                    $('#song_title').html(newdata.title);
+                    $("#song_title").html(newdata.title);
                 }
-                if ($('#artist').prop('scrollWidth') > $('#artist').width()) {
+                if ($("#artist").prop("scrollWidth") > $("#artist").width()) {
                     artistscroller(newdata.artists);
                 } else {
-                    $('#artist').html(newdata.artists);
+                    $("#artist").html(newdata.artists);
                 }
-                
-            } else if (lastdata == undefined || lastdata.img_url !== newdata.url) {
-                $('#spotify_uri').attr('src', newdata.img_url)
+            } else if (
+                lastdata == undefined ||
+                lastdata.img_url !== newdata.url
+            ) {
+                $("#spotify_uri").attr("src", newdata.img_url);
             }
 
-            $('#progress').val(Math.round((newdata.progress_ms / newdata.duration_ms) * 100));
-            $('#progress_ms').html(msToTime(newdata.progress_ms));
+            $("#progress").val(
+                Math.round((newdata.progress_ms / newdata.duration_ms) * 100)
+            );
+            $("#progress_ms").html(msToTime(newdata.progress_ms));
 
-            if ($('#song_title').prop('scrollWidth') > $('#song_title').width() && titlescroll == false) {
+            if (
+                $("#song_title").prop("scrollWidth") >
+                    $("#song_title").width() &&
+                titlescroll == false
+            ) {
                 titlescroller(newdata.title);
             }
-            if ($('#artist').prop('scrollWidth') > $('#artist').width() && artistscroll == false) {
+            if (
+                $("#artist").prop("scrollWidth") > $("#artist").width() &&
+                artistscroll == false
+            ) {
                 artistscroller(newdata.artists);
             }
 
             lastdata = newdata;
         } else {
-            let current_time = (new Date()).getTime();
+            let current_time = new Date().getTime();
             isplaying = false;
             let elapsed = current_time - lastupdate;
-            if (elapsed > 300000) { // if no update in 5 minutes
-                $('#spotify').html('No music is currently playing');
-                if ($('#spotify_uri').attr('src') !== '/static/placeholder.png') {
-                    $('#spotify_uri').attr('src', '/static/placeholder.png');
+            if (elapsed > 300000) {
+                // if no update in 5 minutes
+                $("#spotify").html("No music is currently playing");
+                if (
+                    $("#spotify_uri").attr("src") !== "/static/placeholder.png"
+                ) {
+                    $("#spotify_uri").attr("src", "/static/placeholder.png");
                 }
-                clearInterval(titlescroll)
+                clearInterval(titlescroll);
                 titlescroll = false;
-                clearInterval(artistscroll)
+                clearInterval(artistscroll);
                 artistscroll = false;
-                $('#song_title').html('Nothing Playing')
-                $('#artist').html('Nothing Playing')
-                $('#shuffle').css('color', 'white');
-                $('#repeat').css('color', 'white');
-                $('#progress').val(0);
-                $('#progress_ms').html('0:00');
-                $('#duration_ms').html('0:00');
-            } else {// else keep the current info on-screen
-                clearInterval(titlescroll)
+                $("#song_title").html("Nothing Playing");
+                $("#artist").html("Nothing Playing");
+                $("#shuffle").css("color", "white");
+                $("#repeat").css("color", "white");
+                $("#progress").val(0);
+                $("#progress_ms").html("0:00");
+                $("#duration_ms").html("0:00");
+            } else {
+                // else keep the current info on-screen
+                clearInterval(titlescroll);
                 titlescroll = false;
-                clearInterval(artistscroll)
+                clearInterval(artistscroll);
                 artistscroll = false;
-                $('#song_title').html(lastdata.title)
-                $('#artist').html(lastdata.artists)
-                $('#toggle').html('play_arrow');
+                $("#song_title").html(lastdata.title);
+                $("#artist").html(lastdata.artists);
+                $("#toggle").html("play_arrow");
             }
         }
     } else {
@@ -216,10 +263,10 @@ socket.on('update', function (msg) {
     }
 });
 
-socket.emit('update');
+socket.emit("update");
 
 window.setInterval(function () {
-    socket.emit('update');
+    socket.emit("update");
 }, 500);
 
 const container = document.getElementById("spotify_uri");
@@ -244,23 +291,28 @@ function endTouch(e) {
     let totalX = Math.abs(endX - startX);
     let difX = endX - startX;
     // socket.emit('debugger', '(' + startX + ', ' + startY + ') to (' + endX + ', ' + endY + ')');
-    if (totalX > totalY) { // x movement greater than y so either left or right
-        if (difX > 0) { // swipe left to right
+    if (totalX > totalY) {
+        // x movement greater than y so either left or right
+        if (difX > 0) {
+            // swipe left to right
             // alert('Right swipe');
-            spot_swipe('b');
-        } else if (difX < 0) { // swipe right to left
+            spot_swipe("b");
+        } else if (difX < 0) {
+            // swipe right to left
             // alert('Left swipe');
-            spot_swipe('n');
+            spot_swipe("n");
         } else {
             // alert('Horizontal swipe');
         }
     } else if (totalY > totalX) {
-        if (difY > 0) { // swipe top to bottom
+        if (difY > 0) {
+            // swipe top to bottom
             // alert('Down swipe');
-            spot_swipe('d');
-        } else if (difY < 0) { // swipe bottom to top
+            spot_swipe("d");
+        } else if (difY < 0) {
+            // swipe bottom to top
             // alert('Up swipe');
-            spot_swipe('u');
+            spot_swipe("u");
         } else {
             // alert('Vertical swipe');
         }
@@ -271,31 +323,31 @@ function endTouch(e) {
 
 function spot_swipe(d) {
     if (d === "b") {
-        socket.emit('back');
+        socket.emit("back");
     } else if (d === "n") {
-        socket.emit('next');
+        socket.emit("next");
     } else if (d === "u") {
         let curvol = lastdata.volume;
         curvol += 10;
         if (curvol > 100) {
             curvol = 100;
         }
-        socket.emit('volume', curvol);
+        socket.emit("volume", curvol);
     } else if (d === "d") {
         let curvol = lastdata.volume;
         curvol -= 10;
         if (curvol < 0) {
             curvol = 0;
         }
-        socket.emit('volume', curvol);
+        socket.emit("volume", curvol);
     }
 }
 
 document.getElementById("spotify_uri").addEventListener("click", function () {
     if (isplaying == true) {
-        socket.emit('pause');
+        socket.emit("pause");
     } else {
-        socket.emit('resume');
+        socket.emit("resume");
     }
 });
 
@@ -307,6 +359,8 @@ document.getElementById("heart").addEventListener("click", function () {
     }
 });
 
-document.getElementById("device_selection").addEventListener("change", function () {
-    socket.emit('transfer', this.value)
-});
+document
+    .getElementById("device_selection")
+    .addEventListener("change", function () {
+        socket.emit("transfer", this.value);
+    });

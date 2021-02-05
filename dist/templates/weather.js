@@ -1,6 +1,6 @@
 let weather_data;
 
-function add_hour(key) {
+function add_hour(key, unit) {
     let newtime = weather_data.hourly[key].name;
     if (parseInt(newtime.substring(0, 2)) === 0) {
         newtime = "12" + newtime.substring(2) + "AM";
@@ -35,7 +35,7 @@ function add_hour(key) {
     }
     let tempert = weather_data.hourly[key].temp;
     if (tempert !== "Sunrise" && tempert !== "Sunset") {
-        tempert = Math.round(tempert) + "<sup>&#8457;</sup>";
+        tempert = Math.round(tempert) + "<sup>&deg;" + unit + "</sup>";
     }
     if (key === 0) {
         newtime = "NOW";
@@ -53,12 +53,21 @@ function add_hour(key) {
 
 socket.on("weather", function (msg) {
     weather_data = JSON.parse(msg);
+    let unit = weather_data.unit;
+    let unit_dist = "mp";
+    if (unit === "C") {
+        unit_dist = "km/";
+    }
     $("#current_weather").removeClass();
     $("#current_weather").addClass("wi");
     $("#current_weather").addClass("wi-owm-" + weather_data.id);
-    $("#temp").html(Math.round(weather_data.temp) + "<sup>&#8457;</sup>");
-    $("#feels").html(Math.round(weather_data.feels) + "<sup>&#8457;</sup>");
-    $("#windspeed").html(weather_data.wind + " mph");
+    $("#temp").html(
+        Math.round(weather_data.temp) + "<sup>&deg;" + unit + "</sup>"
+    );
+    $("#feels").html(
+        Math.round(weather_data.feels) + "<sup>&deg;" + unit + "</sup>"
+    );
+    $("#windspeed").html(weather_data.wind + " " + unit_dist + "h");
     $("#humid").html(weather_data.humidity + "%");
 
     $("#hours48").empty();
@@ -81,12 +90,12 @@ socket.on("weather", function (msg) {
 
     for (let key = 0; key < 48; key++) {
         if (weather_data.sunrise < key && weather_data.sunrise > key - 1) {
-            add_hour(key - 0.5);
+            add_hour(key - 0.5, unit);
         }
         if (weather_data.sunset < key && weather_data.sunset > key - 1) {
-            add_hour(key - 0.5);
+            add_hour(key - 0.5, unit);
         }
-        add_hour(key);
+        add_hour(key, unit);
     }
 
     let minute_points = [];

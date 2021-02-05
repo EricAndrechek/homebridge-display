@@ -155,57 +155,24 @@ class HomebridgeDisplay {
                         error_trigger = true;
                     }
                 } else if (boxtype[i] === "sonos") {
-                    const sono = require("./sonos");
-                    let sonos_settings = this.config.Sonos || false;
-                    if (sonos_settings !== false) {
-                        let cid = sonos_settings.cid || undefined;
-                        let cs = sonos_settings.cs || undefined;
-                        let refresh = plugin_storage.refresh || undefined;
-                        let rurl = sonos_settings.rurl || undefined;
-                        if (
-                            cid === undefined ||
-                            cs === undefined ||
-                            rurl === undefined
-                        ) {
-                            this.log.error(
-                                "Sonos is not done being set up, got to homebridge-display's settings to add it."
-                            );
-                            error_trigger = true;
-                        } else {
-                            let auth_url =
-                                "https://api.sonos.com/login/v3/oauth?client_id=" +
-                                cid +
-                                "&response_type=code&state=login&scope=playback-control-all&redirect_uri=" +
-                                encodeURIComponent(rurl);
-                            this.sonos_obj = new sono(
-                                cid,
-                                cs,
-                                refresh,
-                                auth_url,
-                                rurl,
-                                this.log,
-                                this.config,
-                                this.api
-                            );
-                            this.box[i] = this.sonos_obj;
-                        }
-                    } else {
-                        this.log.error(
-                            "Sonos not set up, go to homebridge-display's settings to add it."
-                        );
-                        error_trigger = true;
-                    }
+                    const sono = require("./sonos-controller");
+                    this.sonos_obj = new sono(this.log, this.config, this.api);
+                    this.box[i] = this.sonos_obj;
                 } else if (boxtype[i] === "weather") {
                     const wet = require("./weather");
                     let wet_settings = this.config.Weather || false;
                     if (wet_settings !== false) {
                         let api_key = wet_settings.api_key || undefined;
+                        let unit = wet_settings.units || undefined;
                         let lat = wet_settings.lat || undefined;
                         let lon = wet_settings.lon || undefined;
                         if (
                             api_key === undefined ||
+                            unit === undefined ||
                             lat === undefined ||
-                            lon === undefined
+                            lon === undefined ||
+                            unit === null ||
+                            unit === "None"
                         ) {
                             this.log.error(
                                 "Weather is not done being set up, got to homebridge-display's settings to add it."
@@ -214,6 +181,7 @@ class HomebridgeDisplay {
                         } else {
                             this.wet_obj = new wet(
                                 api_key,
+                                unit,
                                 lat,
                                 lon,
                                 this.log,
@@ -592,8 +560,8 @@ class HomebridgeDisplay {
                 res.end("404 not found");
             }
         });
-        const io = require("socket.io").listen(server);
-        io.sockets.on("connection", function (socket) {
+        const io = require("socket.io")(server);
+        io.on("connection", function (socket) {
             socket.on("update", function () {
                 // Spotify update route
                 spot_obj.update(function (result) {
@@ -610,7 +578,7 @@ class HomebridgeDisplay {
                     };
                     request(options, (err, res, body) => {
                         if (err) {
-                            this.log.debug("[LYRICS] - " + err);
+                            log.debug("[LYRICS] - " + err);
                             socket.emit(
                                 "lyrics",
                                 JSON.stringify({ error: err })
@@ -645,7 +613,7 @@ class HomebridgeDisplay {
             socket.on("iot", function () {
                 iot_obj.get_status(function (result) {
                     let iot_data = JSON.stringify(result);
-                    // log.debug('[ACCESSORY CONTROL - ' + iot_data);
+                    // log.debug('[ACCESSORY CONTROL] - ' + iot_data);
                     socket.emit("iot", iot_data);
                 });
             });
@@ -655,7 +623,7 @@ class HomebridgeDisplay {
             socket.on("weather", function () {
                 wet_obj.update(function (result) {
                     let wet_update = JSON.stringify(result);
-                    // log.debug(wet_update);
+                    // log.debug('[WEATHER] - ' + wet_update);
                     socket.emit("weather", wet_update);
                 });
             });
@@ -703,12 +671,20 @@ class HomebridgeDisplay {
                 spot_obj.put("/repeat?state=" + data, null);
                 log.debug("[SPOTIFY] - Repeat set to " + data);
             });
+            socket.on("sonos-update", function () {
+                // Sonos update route
+                sonos_obj.get_status(function (result) {
+                    let update_data = JSON.stringify(result);
+                    log.debug("[SONOS] - " + update_data);
+                    socket.emit("sonos-update", update_data);
+                });
+            });
         });
         server.on("error", (err) => {
-            log.debug(err);
+            log.error(err);
         });
         server.listen(parseInt(this.config.Config.port), () => {
-            log(
+            log.debug(
                 "Starting Homebridge-Display server on port",
                 parseInt(this.config.Config.port)
             );

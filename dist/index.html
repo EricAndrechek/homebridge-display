@@ -120,7 +120,7 @@
                 window.onresize();
             });
 
-            var socket = io();
+            var socket = io({ transports: ["websocket"] });
 
             socket.on("connect", function () {
                 socket.emit("update");

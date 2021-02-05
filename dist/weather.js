@@ -2,8 +2,13 @@ const request = require("request");
 const _ = require("lodash");
 
 class weather {
-    constructor(api_key, lat, lon, log, config, api) {
+    constructor(api_key, unit, lat, lon, log, config, api) {
         this.api_key = api_key;
+        this.unit = unit;
+        this.full_unit = "imperial";
+        if (this.unit === "C") {
+            this.full_unit = "metric";
+        }
         this.lat = lat;
         this.lon = lon;
         this.log = log;
@@ -17,7 +22,9 @@ class weather {
                 this.lat +
                 "&lon=" +
                 this.lon +
-                "&units=imperial&appid=" +
+                "&units=" +
+                this.full_unit +
+                "&appid=" +
                 this.api_key,
             method: "GET",
         };
@@ -35,6 +42,7 @@ class weather {
                         return null;
                     }
                     let update = {};
+                    update["unit"] = this.unit;
                     update["temp"] = resp["current"]["temp"];
                     update["feels"] = resp["current"]["feels_like"];
                     update["humidity"] = resp["current"]["humidity"];
