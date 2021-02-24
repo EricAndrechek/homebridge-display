@@ -1,231 +1,249 @@
 {
-    "pluginAlias": "homebridge-display",
-    "pluginType": "platform",
-    "singular": true,
-    "headerDisplay": "Instructions for setting up the config can be found on the [GitHub Wiki](https://github.com/EricAndrechek/homebridge-display/wiki/Installation)",
-    "schema": {
-        "Config": {
-            "expandable": false,
-            "type": "object",
-            "properties": {
-                "background": {
-                    "title": "Background Image URL",
-                    "type": "string",
-                    "default": "https://i.postimg.cc/MpjZQcnn/background-image.jpg",
-                    "required": true
-                },
-                "app_id": {
-                    "title": "App Icon Image URL",
-                    "type": "string",
-                    "default": "https://i.postimg.cc/jjCsX4gH/home-black-ios.png",
-                    "required": true
-                },
-                "private": {
-                    "title": "Password Protection Enabled (currently not set up to do anything)",
-                    "type": "boolean",
-                    "default": false,
-                    "required": true
-                },
-                "port": {
-                    "title": "Homebridge-Display Port",
-                    "type": "integer",
-                    "default": 6969,
-                    "required": true
-                },
-                "customTitle": {
-                    "title": "Custom Webpage Title",
-                    "type": "string",
-                    "default": "Home2.0",
-                    "required": true
-                },
-                "customCSS": {
-                    "title": "Paste your own CSS to override CSS on the page to tweak things you don't like",
-                    "type": "string",
-                    "required": false
-                }
-            }
+  "pluginAlias": "homebridge-display",
+  "pluginType": "platform",
+  "singular": true,
+  "headerDisplay": "Instructions for setting up the config can be found on the [GitHub Wiki](https://github.com/EricAndrechek/homebridge-display/wiki/Installation)",
+  "schema": {
+    "Config": {
+      "expandable": false,
+      "type": "object",
+      "properties": {
+        "background": {
+          "title": "Background Image URL",
+          "type": "string",
+          "default": "https://i.postimg.cc/MpjZQcnn/background-image.jpg",
+          "required": true
         },
-        "Boxes": {
-            "title": "Decide what each box displays",
-            "type": "object",
-            "expandable": false,
-            "properties": {
-                "Box1": {
-                    "title": "First Box",
-                    "type": "string",
-                    "default": "blank",
-                    "oneOf": [
-                        { "title": "Spotify Control", "enum": ["spotify"] },
-                        { "title": "Sonos Control", "enum": ["sonos"] },
-                        { "title": "Calculator", "enum": ["calculator"] },
-                        { "title": "Weather", "enum": ["weather"] },
-                        { "title": "RSS News Feed", "enum": ["news"] },
-                        { "title": "Lyrics", "enum": ["lyrics"] },
-                        { "title": "Accessory Control", "enum": ["iot"] },
-                        { "title": "Blank", "enum": ["blank"] }
-                    ],
-                    "required": true
-                },
-                "Box2": {
-                    "title": "Second Box",
-                    "type": "string",
-                    "default": "blank",
-                    "oneOf": [
-                        { "title": "Spotify Control", "enum": ["spotify"] },
-                        { "title": "Sonos Control", "enum": ["sonos"] },
-                        { "title": "Calculator", "enum": ["calculator"] },
-                        { "title": "Weather", "enum": ["weather"] },
-                        { "title": "RSS News Feed", "enum": ["news"] },
-                        { "title": "Lyrics", "enum": ["lyrics"] },
-                        { "title": "Accessory Control", "enum": ["iot"] },
-                        { "title": "Blank", "enum": ["blank"] }
-                    ],
-                    "required": true
-                },
-                "Box3": {
-                    "title": "Third Box",
-                    "type": "string",
-                    "default": "blank",
-                    "oneOf": [
-                        { "title": "Spotify Control", "enum": ["spotify"] },
-                        { "title": "Sonos Control", "enum": ["sonos"] },
-                        { "title": "Calculator", "enum": ["calculator"] },
-                        { "title": "Weather", "enum": ["weather"] },
-                        { "title": "RSS News Feed", "enum": ["news"] },
-                        { "title": "Lyrics", "enum": ["lyrics"] },
-                        { "title": "Accessory Control", "enum": ["iot"] },
-                        { "title": "Blank", "enum": ["blank"] }
-                    ],
-                    "required": true
-                },
-                "Box4": {
-                    "title": "Fourth Box",
-                    "type": "string",
-                    "default": "blank",
-                    "oneOf": [
-                        { "title": "Spotify Control", "enum": ["spotify"] },
-                        { "title": "Sonos Control", "enum": ["sonos"] },
-                        { "title": "Calculator", "enum": ["calculator"] },
-                        { "title": "Weather", "enum": ["weather"] },
-                        { "title": "RSS News Feed", "enum": ["news"] },
-                        { "title": "Lyrics", "enum": ["lyrics"] },
-                        { "title": "Accessory Control", "enum": ["iot"] },
-                        { "title": "Blank", "enum": ["blank"] }
-                    ],
-                    "required": true
-                },
-                "Box5": {
-                    "title": "Fifth Box",
-                    "type": "string",
-                    "default": "blank",
-                    "oneOf": [
-                        { "title": "Spotify Control", "enum": ["spotify"] },
-                        { "title": "Sonos Control", "enum": ["sonos"] },
-                        { "title": "Calculator", "enum": ["calculator"] },
-                        { "title": "Weather", "enum": ["weather"] },
-                        { "title": "RSS News Feed", "enum": ["news"] },
-                        { "title": "Lyrics", "enum": ["lyrics"] },
-                        { "title": "Accessory Control", "enum": ["iot"] },
-                        { "title": "Blank", "enum": ["blank"] }
-                    ],
-                    "required": true
-                },
-                "Box6": {
-                    "title": "Sixth Box",
-                    "type": "string",
-                    "default": "blank",
-                    "oneOf": [
-                        { "title": "Spotify Control", "enum": ["spotify"] },
-                        { "title": "Sonos Control", "enum": ["sonos"] },
-                        { "title": "Calculator", "enum": ["calculator"] },
-                        { "title": "Weather", "enum": ["weather"] },
-                        { "title": "RSS News Feed", "enum": ["news"] },
-                        { "title": "Lyrics", "enum": ["lyrics"] },
-                        { "title": "Accessory Control", "enum": ["iot"] },
-                        { "title": "Blank", "enum": ["blank"] }
-                    ],
-                    "required": true
-                }
-            }
+        "app_id": {
+          "title": "App Icon Image URL",
+          "type": "string",
+          "default": "https://i.postimg.cc/jjCsX4gH/home-black-ios.png",
+          "required": true
         },
-        "Spotify": {
-            "title": "Spotify",
-            "expandable": true,
-            "type": "object",
-            "properties": {
-                "cid": {
-                    "title": "Client ID",
-                    "type": "string",
-                    "default": "",
-                    "required": false
-                },
-                "cs": {
-                    "title": "Client Secret",
-                    "type": "string",
-                    "default": "",
-                    "required": false
-                },
-                "rurl": {
-                    "title": "Callback URL for Spotify Login",
-                    "type": "string",
-                    "placeholder": "http://homebridge.local:6969/callback",
-                    "required": false
-                }
-            }
+        "private": {
+          "title": "Password Protection Enabled (currently not set up to do anything)",
+          "type": "boolean",
+          "default": false,
+          "required": true
         },
-        "Newsfeed": {
-            "title": "RSS News Feeds",
-            "expandable": true,
-            "type": "object",
-            "properties": {
-                "feed": {
-                    "type": "array",
-                    "items": {
-                        "title": "RSS Feed URL",
-                        "type": "string"
-                    },
-                    "required": false
-                },
-                "delay": {
-                    "type": "integer",
-                    "title": "Amount of time (in seconds) one story is shown for",
-                    "required": false,
-                    "default": 60
-                }
-            }
+        "port": {
+          "title": "Homebridge-Display Port",
+          "type": "integer",
+          "default": 6969,
+          "required": true
         },
-        "Weather": {
-            "title": "Weather",
-            "expandable": true,
-            "type": "object",
-            "properties": {
-                "units": {
-                    "title": "Units",
-                    "type": "string",
-                    "default": "F",
-                    "oneOf": [
-                        { "title": "Celsius", "enum": ["C"] },
-                        { "title": "Fahrenheit", "enum": ["F"] }
-                    ]
-                },
-                "api_key": {
-                    "title": "API Key",
-                    "type": "string",
-                    "required": false
-                },
-                "lat": {
-                    "title": "Latitude",
-                    "type": "number",
-                    "placeholder": 42.5986,
-                    "required": false
-                },
-                "lon": {
-                    "title": "Latitude",
-                    "type": "number",
-                    "placeholder": -84.5986,
-                    "required": false
-                }
-            }
+        "customTitle": {
+          "title": "Custom Webpage Title",
+          "type": "string",
+          "default": "Home2.0",
+          "required": true
+        },
+        "customCSS": {
+          "title": "Paste your own CSS to override CSS on the page to tweak things you don't like",
+          "type": "string",
+          "required": false
         }
+      }
+    },
+    "Boxes": {
+      "title": "Decide what each box displays",
+      "type": "object",
+      "expandable": false,
+      "properties": {
+        "Box1": {
+          "title": "First Box",
+          "type": "string",
+          "default": "blank",
+          "oneOf": [
+            { "title": "Spotify Control", "enum": ["spotify"] },
+            { "title": "Sonos Control", "enum": ["sonos"] },
+            { "title": "Calculator", "enum": ["calculator"] },
+            { "title": "Clock", "enum": ["clock"] },
+            { "title": "Weather", "enum": ["weather"] },
+            { "title": "RSS News Feed", "enum": ["news"] },
+            { "title": "Lyrics", "enum": ["lyrics"] },
+            { "title": "Accessory Control", "enum": ["iot"] },
+            { "title": "Blank", "enum": ["blank"] }
+          ],
+          "required": true
+        },
+        "Box2": {
+          "title": "Second Box",
+          "type": "string",
+          "default": "blank",
+          "oneOf": [
+            { "title": "Spotify Control", "enum": ["spotify"] },
+            { "title": "Sonos Control", "enum": ["sonos"] },
+            { "title": "Calculator", "enum": ["calculator"] },
+            { "title": "Clock", "enum": ["clock"] },
+            { "title": "Weather", "enum": ["weather"] },
+            { "title": "RSS News Feed", "enum": ["news"] },
+            { "title": "Lyrics", "enum": ["lyrics"] },
+            { "title": "Accessory Control", "enum": ["iot"] },
+            { "title": "Blank", "enum": ["blank"] }
+          ],
+          "required": true
+        },
+        "Box3": {
+          "title": "Third Box",
+          "type": "string",
+          "default": "blank",
+          "oneOf": [
+            { "title": "Spotify Control", "enum": ["spotify"] },
+            { "title": "Sonos Control", "enum": ["sonos"] },
+            { "title": "Calculator", "enum": ["calculator"] },
+            { "title": "Clock", "enum": ["clock"] },
+            { "title": "Weather", "enum": ["weather"] },
+            { "title": "RSS News Feed", "enum": ["news"] },
+            { "title": "Lyrics", "enum": ["lyrics"] },
+            { "title": "Accessory Control", "enum": ["iot"] },
+            { "title": "Blank", "enum": ["blank"] }
+          ],
+          "required": true
+        },
+        "Box4": {
+          "title": "Fourth Box",
+          "type": "string",
+          "default": "blank",
+          "oneOf": [
+            { "title": "Spotify Control", "enum": ["spotify"] },
+            { "title": "Sonos Control", "enum": ["sonos"] },
+            { "title": "Calculator", "enum": ["calculator"] },
+            { "title": "Clock", "enum": ["clock"] },
+            { "title": "Weather", "enum": ["weather"] },
+            { "title": "RSS News Feed", "enum": ["news"] },
+            { "title": "Lyrics", "enum": ["lyrics"] },
+            { "title": "Accessory Control", "enum": ["iot"] },
+            { "title": "Blank", "enum": ["blank"] }
+          ],
+          "required": true
+        },
+        "Box5": {
+          "title": "Fifth Box",
+          "type": "string",
+          "default": "blank",
+          "oneOf": [
+            { "title": "Spotify Control", "enum": ["spotify"] },
+            { "title": "Sonos Control", "enum": ["sonos"] },
+            { "title": "Calculator", "enum": ["calculator"] },
+            { "title": "Clock", "enum": ["clock"] },
+            { "title": "Weather", "enum": ["weather"] },
+            { "title": "RSS News Feed", "enum": ["news"] },
+            { "title": "Lyrics", "enum": ["lyrics"] },
+            { "title": "Accessory Control", "enum": ["iot"] },
+            { "title": "Blank", "enum": ["blank"] }
+          ],
+          "required": true
+        },
+        "Box6": {
+          "title": "Sixth Box",
+          "type": "string",
+          "default": "blank",
+          "oneOf": [
+            { "title": "Spotify Control", "enum": ["spotify"] },
+            { "title": "Sonos Control", "enum": ["sonos"] },
+            { "title": "Calculator", "enum": ["calculator"] },
+            { "title": "Clock", "enum": ["clock"] },
+            { "title": "Weather", "enum": ["weather"] },
+            { "title": "RSS News Feed", "enum": ["news"] },
+            { "title": "Lyrics", "enum": ["lyrics"] },
+            { "title": "Accessory Control", "enum": ["iot"] },
+            { "title": "Blank", "enum": ["blank"] }
+          ],
+          "required": true
+        }
+      }
+    },
+    "Spotify": {
+      "title": "Spotify",
+      "expandable": true,
+      "type": "object",
+      "properties": {
+        "cid": {
+          "title": "Client ID",
+          "type": "string",
+          "default": "",
+          "required": false
+        },
+        "cs": {
+          "title": "Client Secret",
+          "type": "string",
+          "default": "",
+          "required": false
+        },
+        "rurl": {
+          "title": "Callback URL for Spotify Login",
+          "type": "string",
+          "placeholder": "http://homebridge.local:6969/callback",
+          "required": false
+        }
+      }
+    },
+    "Newsfeed": {
+      "title": "RSS News Feeds",
+      "expandable": true,
+      "type": "object",
+      "properties": {
+        "feed": {
+          "type": "array",
+          "items": {
+            "title": "RSS Feed URL",
+            "type": "string"
+          },
+          "required": false
+        },
+        "delay": {
+          "type": "integer",
+          "title": "Amount of time (in seconds) one story is shown for",
+          "required": false,
+          "default": 60
+        }
+      }
+    },
+    "Clock": {
+      "title": "Clock",
+      "expandable": true,
+      "type": "object",
+      "properties": {
+        "format": {
+          "title": "Date/Time format. See wiki for info",
+          "type": "string",
+          "default": "cccc, LLLL d, y\\nh:mm:ss a"
+        }
+      }
+    },
+    "Weather": {
+      "title": "Weather",
+      "expandable": true,
+      "type": "object",
+      "properties": {
+        "units": {
+          "title": "Units",
+          "type": "string",
+          "default": "F",
+          "oneOf": [
+            { "title": "Celsius", "enum": ["C"] },
+            { "title": "Fahrenheit", "enum": ["F"] }
+          ]
+        },
+        "api_key": {
+          "title": "API Key",
+          "type": "string",
+          "required": false
+        },
+        "lat": {
+          "title": "Latitude",
+          "type": "number",
+          "placeholder": 42.5986,
+          "required": false
+        },
+        "lon": {
+          "title": "Latitude",
+          "type": "number",
+          "placeholder": -84.5986,
+          "required": false
+        }
+      }
     }
+  }
 }

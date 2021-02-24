@@ -161,6 +161,22 @@ class HomebridgeDisplay {
           }
         } else if (boxtype[i] === "lyrics") {
           this.box[i] = true;
+        } else if (boxtype[i] === "clock") {
+          const clock = require("./clock");
+          let clock_settings = this.config.Clock || false;
+          if (clock_settings !== false) {
+            let format = clock_settings.format || undefined;
+            if (format === undefined) {
+              this.log.error("Clock is not done being set up, got to homebridge-display's settings to add it.");
+              error_trigger = true;
+            } else {
+              this.clock_obj = new clock(format, this.log, this.config, this.api);
+              this.box[i] = this.clock_obj;
+            }
+          } else {
+            this.log.error("Clock not set up, go to homebridge-display's settings to add it.");
+            error_trigger = true;
+          }
         }
       }
       let background = this.config.Config.background;
@@ -204,6 +220,7 @@ class HomebridgeDisplay {
     let news_obj;
     let iot_obj;
     let lyr_obj;
+    let clock_obj;
     for (let i = 0; i < boxtype.length; i++) {
       if (boxtype[i] === "sonos") {
         sonos_obj = this.box[i];
@@ -217,6 +234,8 @@ class HomebridgeDisplay {
         iot_obj = this.box[i];
       } else if (boxtype[i] === "lyrics") {
         lyr_obj = this.box[i];
+      } else if (boxtype[i] === "clock") {
+        clock_obj = this.box[i];
       }
     }
     const server = http.createServer((req, res) => {
@@ -546,6 +565,9 @@ class HomebridgeDisplay {
           log.debug("[SONOS] - " + update_data);
           socket.emit("sonos-update", update_data);
         });
+      });
+      socket.on("clock", function () {
+        socket.emit("clock", JSON.stringify(clock_obj.getFormat()));
       });
     });
     server.on("error", (err) => {

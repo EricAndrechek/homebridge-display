@@ -1,0 +1,12 @@
+#clock {
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#datetime {
+  color: white;
+  font-size: 50px;
+  text-align: center;
+}
