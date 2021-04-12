@@ -4,9 +4,13 @@
 
 [![NPM Downloads](https://img.shields.io/npm/dt/homebridge-display)](https://www.npmjs.com/package/homebridge-display)
 [![Stars](https://img.shields.io/github/stars/EricAndrechek/homebridge-display)](https://github.com/EricAndrechek/homebridge-display/stargazers)
+[![Version](https://img.shields.io/github/v/release/EricAndrechek/homebridge-display)](https://github.com/EricAndrechek/homebridge-display/releases/latest)
+[![Commits Since Latest Release](https://img.shields.io/github/commits-since/EricAndrechek/homebridge-display/latest)](https://github.com/EricAndrechek/homebridge-display/commits/master)
+[![Latest Release Date](https://img.shields.io/github/release-date/EricAndrechek/homebridge-display)](https://github.com/EricAndrechek/homebridge-display/releases/latest)
 [![Open Issues](https://img.shields.io/github/issues-raw/EricAndrechek/homebridge-display)](https://github.com/EricAndrechek/homebridge-display/issues?q=is%3Aopen+is%3Aissue)
 [![Closed Issues](https://img.shields.io/github/issues-closed-raw/EricAndrechek/homebridge-display)](https://github.com/EricAndrechek/homebridge-display/issues?q=is%3Aissue+is%3Aclosed)
-[![PayPal](https://img.shields.io/badge/PayPal-Donate-green)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=eric%40andrechek.com&currency_code=USD&source=url)
+[![Package Size](https://img.shields.io/bundlephobia/min/homebridge-display)](https://bundlephobia.com/result?p=homebridge-display)
+[![PayPal](https://img.shields.io/badge/PayPal-Donate-green)](https://paypal.me/AndrechekEric)
 [![GitHub Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-Donate-green)](https://github.com/sponsors/EricAndrechek)
 [![Discord](https://img.shields.io/discord/432663330281226270)](https://discord.gg/6u3uvj5)
 
@@ -84,4 +88,4 @@ If your widget idea is not already listed as a future widget request, click [her
 
 ## Support
 
-If you would like to support this project please feel free to create a pull request, create an issue to submit and idea or feature request, or **[donate via PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=eric%40andrechek.com&currency_code=USD&source=url)** or **[GitHub Sponsors](https://github.com/sponsors/EricAndrechek)**! (\*Note, with GitHub Sponsors you have the ability to have your name added to the contributors list and even bring specific features or fixes to the top of my development queue. For more info, see the tier information on my GitHub sponsors page.)
+If you would like to support this project please feel free to create a pull request, create an issue to submit and idea or feature request, or **[donate via PayPal](https://paypal.me/AndrechekEric)** or **[GitHub Sponsors](https://github.com/sponsors/EricAndrechek)**! (\*Note, with GitHub Sponsors you have the ability to have your name added to the contributors list and even bring specific features or fixes to the top of my development queue. For more info, see the tier information on my GitHub sponsors page.)
