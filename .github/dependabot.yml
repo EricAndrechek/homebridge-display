@@ -1,0 +1,22 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "10:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: typescript
+    versions:
+    - 4.1.4
+  - dependency-name: eslint
+    versions:
+    - 7.18.0
+    - 7.19.0
+  - dependency-name: "@types/node"
+    versions:
+    - 14.14.22
+  - dependency-name: socket.io
+    versions:
+    - 3.1.0
