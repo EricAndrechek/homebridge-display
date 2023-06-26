@@ -3,3 +3,5 @@ package-lock.json
 web-preview.jpg
 demo.jpg
 ._.DS_Store
+.idea
+.wakatime-project
