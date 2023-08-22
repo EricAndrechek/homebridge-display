@@ -221,6 +221,7 @@ class HomebridgeDisplay {
     let iot_obj;
     let lyr_obj;
     let clock_obj;
+    let mirror_obj;
     for (let i = 0; i < boxtype.length; i++) {
       if (boxtype[i] === "sonos") {
         sonos_obj = this.box[i];
@@ -236,6 +237,8 @@ class HomebridgeDisplay {
         lyr_obj = this.box[i];
       } else if (boxtype[i] === "clock") {
         clock_obj = this.box[i];
+      } else if (boxtype[i] === "mirror") {
+        mirror_obj = this.box[i];
       }
     }
     const server = http.createServer((req, res) => {
