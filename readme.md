@@ -15,7 +15,7 @@
 [![GitHub Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-Donate-green)](https://github.com/sponsors/EricAndrechek)
 [![Discord](https://img.shields.io/discord/432663330281226270)](https://discord.gg/6u3uvj5)
 
-Homebridge is amazing, but don't you wish there was a way to view it in a prettier, less developer focused dashboard?
+Homebridge is amazing, but don't you wish there was a way to view it in a prettier, less developer-focused dashboard?
 
 ![Preview of Homebridge-Display in action](https://i.postimg.cc/DzgvPyNr/demo.jpg)
 
@@ -72,6 +72,7 @@ Pitch an idea for a new widget to be added [here](https://github.com/EricAndrech
 - [Spotify](https://github.com/EricAndrechek/homebridge-display/wiki/Spotify)
 - [Sonos](https://github.com/EricAndrechek/homebridge-display/wiki/Sonos)
 - [Weather](https://github.com/EricAndrechek/homebridge-display/wiki/Weather)
+- Mirror
 
 #### Future Widgets:
 
@@ -83,9 +84,11 @@ If your widget idea is not already listed as a future widget request, click [her
 
 ## Contributors
 
-<a href="https://github.com/EricAndrechek/homebridge-display/graphs/contributors">
-  <img src="https://contributors-img.web.app/image?repo=EricAndrechek/homebridge-display" />
+<a href="https://github.com/EricAndrechek/Homebridge-Display/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=EricAndrechek/Homebridge-Display" />
 </a>
+
+Made with [contrib.rocks](https://contrib.rocks).
 
 ## Support
 
